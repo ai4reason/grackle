@@ -1,18 +1,18 @@
 
-def active(state, eats):
-   print "ACTIVE CONFIGURATIONS: %d" % len(state.active)
+def active(state, mastered):
+   print "> ACTIVE CONFIGURATIONS: %d" % len(state.active)
    for conf in sorted(state.active):
-      info = "\n".join(["%s%s"%(inst,state.evals.results[conf][inst]) for inst in sorted(eats[conf])])
-      print "%s: best on %d evals" % (conf, len(eats[conf]))
+      info = "\n".join(["%s%s"%(inst,state.evals.results[conf][inst]) for inst in sorted(mastered[conf])])
+      print "> %s: masters %d evals" % (conf, len(mastered[conf]))
       print info
    print
 
 def training(state, bpis):
-   print "TRAINING PERFORMANCE:"
+   print "> TRAINING PERFORMANCE:"
    #(results, bests) = db_trains
    for c in sorted(bpis):
       info = "\n".join(["%s%s"%(i,state.trains.results[c][i]) for i in sorted(bpis[c])])
-      print "%s: best on %d trains" % (c, len(bpis[c]))
+      print "> %s: masters %d trains" % (c, len(bpis[c]))
       print info
    print
 
@@ -40,12 +40,12 @@ def finished(state):
 def improved(state, conf):
    params = state.trains.runner.recall(conf)
    rep = state.trains.runner.repr(params)
-   print "IMPROVED CONFIG: %s: %s" % (conf, rep)
+   print "> IMPROVED CONFIG: %s: %s" % (conf, rep)
 
 def init(state, f_init, conf):
    params = state.trains.runner.recall(conf)
    rep = state.trains.runner.repr(params)
-   print "> Loaded initial config: %s" % f_init
+   print "> Loaded initial config: %s (%s)" % (f_init, conf)
    print "INIT CONFIG: %s: %s" % (conf, rep)
 
 def scenario(ini):

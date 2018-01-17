@@ -1,6 +1,7 @@
-cores = 16
+cores = 4
 tops = 8
 best = 2
+rank = 2
 runner = atpy.grackle.runner.premise.PremiseRunner
 trainer = atpy.grackle.trainer.premise.PremiseTrainer
 inits = inits.txt

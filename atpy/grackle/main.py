@@ -12,14 +12,14 @@ def evaluate(state, db, confs):
       db.save("init")
 
 def reduction(state):
-   eats = {c:state.evals.eaten(c) for c in state.alls}
-   enough = [c for c in state.alls if len(eats[c])>=state.best]
-   active = sorted(enough, key=lambda x: len(eats[x]), reverse=True)
+   mastered = {c:state.evals.mastered(c) for c in state.alls}
+   enough = [c for c in state.alls if len(mastered[c])>=state.best]
+   active = sorted(enough, key=lambda x: len(mastered[x]), reverse=True)
    state.active = active[:state.tops]
-   log.active(state, eats)
+   log.active(state, mastered)
 
 def select(state):
-   bps = {c:state.trains.eaten(c) for c in state.active}
+   bps = {c:state.trains.mastered(c) for c in state.active}
    bps = {c:bps[c] for c in bps if not state.improved(c, bps[c])}
    log.training(state, bps)
    avgs = {c:[state.attention[i] for i in bps[c]] for c in bps}
@@ -32,7 +32,7 @@ def select(state):
    return candidates
 
 def specialize(state, conf):
-   insts = state.trains.eaten(conf)
+   insts = state.trains.mastered(conf)
    log.improving(state, conf, insts)
    new = state.trainer.improve(state, conf, insts)
    state.did(conf, insts)
