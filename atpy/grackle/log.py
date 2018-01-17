@@ -21,9 +21,9 @@ def improving(state, conf, insts):
 
 def iter(state):
    state.it += 1
-   print
-   print "=== ITER %d ===" % state.it
-   print
+   print ">"
+   print "> === ITER %d ===" % state.it
+   print ">"
 
 def update(db, confs):
    print "> Evaluating %d configurations on %s." % (len(confs), db.name)
