@@ -65,7 +65,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
             if (not winner) or q < winner[1]:
                winner = (numRun,q,params)
          if (not bestq) or q < bestq[1]:
-               bestq = (numRun,q,params)
+            bestq = (numRun,q,params)
       if not winner: # when timeout-ing
          if elder[0] is not None: 
             winner = elder
