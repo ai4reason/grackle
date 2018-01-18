@@ -20,8 +20,8 @@ def reduction(state):
 
 def select(state):
    bps = {c:state.trains.mastered(c) for c in state.active}
-   bps = {c:bps[c] for c in bps if not state.improved(c, bps[c])}
    log.training(state, bps)
+   bps = {c:bps[c] for c in bps if not state.improved(c, bps[c])}
    avgs = {c:[state.attention[i] for i in bps[c]] for c in bps}
    avgs = {c:avgs[c] for c in avgs if len(avgs[c])>=1}
    avgs = {c:sum(avgs[c])/len(avgs[c]) for c in avgs}
@@ -45,6 +45,8 @@ def improve(state, candidates):
          log.improved(state, new)
          state.alls.append(new)
          return True
+      else:
+         log.notnew(state, new)
 
    log.finished(state)
    state.evals.save("final")

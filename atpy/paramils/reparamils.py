@@ -19,9 +19,9 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
    elder = (None,None,None)
    it = 1
    log = ""
-   print
-   print "--- TRAIN ITER %d ---" % it
    print 
+   print ">> --- TRAIN ITER %d ---" % it
+   print
    start = time.time()
    iter_start = time.time()
    adult = False
@@ -40,7 +40,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
             stable_len = max(20, time.time() - iter_start)
             stable_time = time.time() + stable_len
             print "%6s> %s" % (int(time.time()-start),log)
-            print "> first young (%d) reached N (=%d); entering stabilization phase (%s seconds)" % (numRun, N, stable_len)
+            print ">> first young (%d) reached N (=%d); entering stabilization phase (%s seconds)" % (numRun, N, stable_len)
             sys.stdout.flush()
       if log != log0:
          print "%6s> %s" % (int(time.time()-start),log)
@@ -55,11 +55,11 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
          if n == N:
             if not winner or q < winner[1]:
                winner = (numRun, q, params)
-      print "> winner: %s with Q = %s" % (winner[0],  winner[1])
+      print ">> winner: %s with Q = %s" % (winner[0],  winner[1])
       sys.stdout.flush()
 
       if elder[0] is not None and int(1000*winner[1]) >= int(1000*elder[1]):
-         print "> no improvement: terminating"
+         print ">> no improvement: terminating"
          print
          sys.stdout.flush()
          elder = winner
@@ -74,7 +74,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
       time.sleep(1)
       for kill in kills:
          if not running[kill].poll():
-            print "> killing: ", kill
+            print ">> killing: ", kill
             try:
                running[kill].kill()
             except:
@@ -91,8 +91,8 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
       fresh += (count-1)
       elder = winner
       it += 1
-      print 
-      print "--- TRAIN ITER %d ---" % it
+      print  
+      print ">> --- TRAIN ITER %d ---" % it
       print
       sys.stdout.flush()
       iter_start = time.time()
@@ -104,7 +104,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
    time.sleep(1)
    for kill in running:
       if not running[kill].poll():
-         print "> killing: ", kill
+         print ">> killing: ", kill
          try:
             running[kill].kill()
          except:

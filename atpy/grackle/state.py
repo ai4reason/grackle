@@ -54,7 +54,6 @@ class State:
       ini = file(f_run).read().strip().split("\n")
       ini = [l.split("=") for l in ini]
       ini = {x.strip():y.strip() for (x,y) in ini}
-      log.scenario(ini)
 
       self.it = 0          # int
       self.done = {}       # { conf : set(frozenset(train)) }
@@ -75,7 +74,7 @@ class State:
       self.trains.insts = file(ini["trains"]).read().strip().split("\n")
       self.trains.insts = [x.strip() for x in self.trains.insts]
       self.attention = {i:0.0 for i in self.trains.insts}
-      log.instances(self)
+      log.scenario(self, ini)
 
       self.alls = []
       inits = file(ini["inits"]).read().strip().split("\n")
@@ -85,6 +84,7 @@ class State:
          init = runner.name(params)
          self.alls.append(init)
          log.init(self, f_init, init)
+      log.inits(self)
 
       self.trainer = _load_class(ini["trainer"])(runner, ini["runner"])
 
