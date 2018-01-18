@@ -63,6 +63,9 @@ class State:
       self.tops = int(ini["tops"]) if "tops" in ini else 10
       self.best = int(ini["best"]) if "best" in ini else 4
       self.rank = int(ini["rank"]) if "rank" in ini else 1
+      self.train_limit = int(ini["train_time"]) if "train_time" in ini else None
+      if self.train_limit < 0:
+         self.train_limit = None
 
       runner = _load_class(ini["runner"])(False, self.cores)
       self.evals = DB("evals", self.rank)

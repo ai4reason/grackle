@@ -7,3 +7,4 @@ trainer = atpy.grackle.trainer.premise.PremiseTrainer
 inits = inits.txt
 trains = trains.txt
 evals = evals.txt
+train_time = 5

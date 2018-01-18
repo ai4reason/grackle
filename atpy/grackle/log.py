@@ -5,7 +5,7 @@ def active(state, mastered):
       info = "\n".join(["%s%s"%(inst,state.evals.results[conf][inst]) for inst in sorted(mastered[conf])])
       print "> %s: masters %d evals" % (conf, len(mastered[conf]))
       print info
-   print
+   print ">"
 
 def training(state, bpis):
    print "> TRAINING PERFORMANCE:"
@@ -14,7 +14,7 @@ def training(state, bpis):
       info = "\n".join(["%s%s"%(i,state.trains.results[c][i]) for i in sorted(bpis[c])])
       print "> %s: masters %d trains" % (c, len(bpis[c]))
       print info
-   print
+   print ">"
 
 def improving(state, conf, insts):
    print "> Improving %s on %d trains." % (conf, len(insts))
@@ -36,6 +36,7 @@ def candidates(candidates, avgs):
 
 def finished(state):
    print "> Nothing more to do. Terminating."
+   print ">"
    print "> FINAL CONFIGURATIONS: %d" % len(state.active)
    for conf in sorted(state.active):
       params = state.trains.runner.recall(conf)
@@ -46,14 +47,17 @@ def improved(state, conf):
    params = state.trains.runner.recall(conf)
    rep = state.trains.runner.repr(params)
    print "> INVENTED CONFIG: %s: %s" % (conf, rep)
+   print ">"
 
 def notnew(state, conf):
    print "> Invented config already known: %s" % conf
+   print ">"
 
 def init(state, f_init, conf):
    print "> Loaded initial config %s from %s" % (conf, f_init)
 
 def inits(state):
+   print ">"
    print "> INITIAL CONFIGURATIONS: %d" % len(state.alls)
    for conf in sorted(state.alls):
       params = state.trains.runner.recall(conf)
