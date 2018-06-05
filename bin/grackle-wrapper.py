@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import json
 from atpy import grackle
 
 RESULT="\nResult for ParamILS: %s, %s, %s, 1000000, %s"
@@ -11,7 +12,7 @@ def run():
 
    if sys.argv[2] == "EXTRA":
       shift = 2
-      extra = sys.argv[3]
+      extra = json.loads(sys.argv[3])
    else:
       shift = 0
       extra = None
