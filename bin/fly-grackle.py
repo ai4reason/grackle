@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-from atpy import grackle
+import grackle
 
 if len(sys.argv) != 2:
    print "usage: %s grackle.fly" % sys.argv[0]

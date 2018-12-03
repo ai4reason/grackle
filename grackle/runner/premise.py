@@ -13,7 +13,7 @@ class PremiseRunner(Runner):
       self.conf_dir = "confs"
       system("mkdir -p %s" % self.conf_dir)
 
-   def cmd(self, params, inst):
+   def cmd(self, params, inst, limit=None):
       args = self.args(params)
       return "%s premise-eval.sh %s %s" % (Runner.PERF, inst, args)
    

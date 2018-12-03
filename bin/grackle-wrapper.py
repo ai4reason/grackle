@@ -2,7 +2,7 @@
 
 import sys
 import json
-from atpy import grackle
+import grackle
 
 RESULT="\nResult for ParamILS: %s, %s, %s, 1000000, %s"
 

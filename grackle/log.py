@@ -1,3 +1,7 @@
+import os
+import time
+
+FATAL_LOG = os.path.join(os.getenv("HOME"),"grackle-errors.log")
 
 def active(state, mastered):
    print "> ACTIVE CONFIGURATIONS: %d" % len(state.active)
@@ -28,6 +32,10 @@ def iter(state):
 def update(db, confs):
    print "> Evaluating %d configurations on %s." % (len(confs), db.name)
 
+def status(state, db):
+   runtime = (time.time() - state.start_time) / 60
+   print "> STATUS @ %d (%s): %s, %.2f, %.4f" % ((runtime,)+db.status())
+
 def candidates(candidates, avgs):
    print "TRAINING CANDIDATES:"
    for c in candidates:
@@ -42,6 +50,16 @@ def finished(state):
       params = state.trains.runner.recall(conf)
       rep = state.trains.runner.repr(params)
       print "> %s: %s" % (conf, rep)
+
+def timeout(state):
+   print "> Timeout: Not enough time for training. Terminating after %s seconds." % (time.time() - state.start_time)
+
+def timestamp(t_start, msg, prog="GRACKLE"):
+   t_elapsed = int(time.time() - t_start)
+   t_hour = t_elapsed / 3600
+   t_min = (t_elapsed % 3600) / 60
+   t_sec = t_elapsed % 60
+   print "> [%02d:%02d:%02d] %s: %s" % (t_hour, t_min, t_sec, prog, msg)
 
 def improved(state, conf):
    params = state.trains.runner.recall(conf)
@@ -73,8 +91,12 @@ def scenario(state, ini):
    print "> best = %s" % state.best
    print "> tops = %s" % state.tops
    print "> rank = %s" % state.rank
-   print "> evals = %s" % ini["evals"]
+   print "> timeout = %s" % state.timeout
    print "> trains = %s" % ini["trains"]
+   if "evals" in ini:
+      print "> evals = %s" % ini["evals"]
+   else:
+      print "> evals = &trains"
    print "> inits = %s" % ini["inits"]
    print "> runner = %s" % ini["runner"]
    print "> trainer = %s" % ini["trainer"]
@@ -82,9 +104,19 @@ def scenario(state, ini):
    print "> Loaded %d evals" % len(state.evals.insts)
    print "> Loaded %d trains" % len(state.trains.insts)
 
+def tuner(nick, i, n):
+   print ">>"
+   print ">> === TUNER[%d/%d]: %s ===" % (i,n,nick)
+
 def msg(m):
    print m
 
 def error(m):
    print m
+
+def fatal(m):
+   error(m)
+   f = file(FATAL_LOG, "a")
+   f.write(m)
+   f.close()
 

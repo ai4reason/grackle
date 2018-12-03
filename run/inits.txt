@@ -1,5 +1,0 @@
-inits/knn-20
-inits/nbayes02
-inits/nbayes-20
-inits/premisils2-1K
-inits/premisils2-knn
