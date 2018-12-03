@@ -6,7 +6,7 @@ import time
 
 from .results import get_paramils_result
 
-def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None):
+def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None):
    def run(numRun, currentInit):
       arg = [binary, "-numRun", str(numRun), "-scenariofile", scenariofile, "-N", str(N), "-validN", validN, "-output_level", "0", "-userunlog", "0", "-init", currentInit]
       return subprocess.Popen(arg,stdout=out,close_fds=True,cwd=cwd)
@@ -19,10 +19,14 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
    elder = (None,None,None)
    it = 1
    log = ""
-   print
-   print "--- TRAIN ITER %d ---" % it
    print 
+   print ">> --- TRAIN ITER %d ---" % it
+   print
    start = time.time()
+   if time_limit:
+      end = time.time() + time_limit
+   else:
+      end = float("inf")
    iter_start = time.time()
    adult = False
    while running:
@@ -40,26 +44,44 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
             stable_len = max(20, time.time() - iter_start)
             stable_time = time.time() + stable_len
             print "%6s> %s" % (int(time.time()-start),log)
-            print "> first young (%d) reached N (=%d); entering stabilization phase (%s seconds)" % (numRun, N, stable_len)
+            print ">> first young (%d) reached N (=%d); entering stabilization phase (%s seconds)" % (numRun, N, stable_len)
             sys.stdout.flush()
       if log != log0:
          print "%6s> %s" % (int(time.time()-start),log)
          sys.stdout.flush()
      
       if not adult or time.time() < stable_time:
-         continue
+         if time.time() < end:
+            continue
+         else:
+            print ">> time limit reached. terminating."
+            sys.stdout.flush()
 
       winner = None
+      bestq = None
       for numRun in running:
          (n,q,params) = get_paramils_result(outdir, numRun)
          if n == N:
-            if not winner or q < winner[1]:
-               winner = (numRun, q, params)
-      print "> winner: %s with Q = %s" % (winner[0],  winner[1])
+            if (not winner) or q < winner[1]:
+               winner = (numRun,q,params)
+         if (not bestq) or q < bestq[1]:
+            bestq = (numRun,q,params)
+      if not winner: # when timeout-ing
+         if elder[0] is not None: 
+            winner = elder
+         else:
+            winner = bestq
+
+      print ">> winner: %s with Q = %s" % (winner[0],  winner[1])
       sys.stdout.flush()
 
+      if time.time() > end:
+         print
+         elder = winner
+         break
+
       if elder[0] is not None and int(1000*winner[1]) >= int(1000*elder[1]):
-         print "> no improvement: terminating"
+         print ">> no improvement. terminating."
          print
          sys.stdout.flush()
          elder = winner
@@ -74,7 +96,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
       time.sleep(1)
       for kill in kills:
          if not running[kill].poll():
-            print "> killing: ", kill
+            print ">> killing: ", kill
             try:
                running[kill].kill()
             except:
@@ -91,8 +113,8 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
       fresh += (count-1)
       elder = winner
       it += 1
-      print 
-      print "--- TRAIN ITER %d ---" % it
+      print  
+      print ">> --- TRAIN ITER %d ---" % it
       print
       sys.stdout.flush()
       iter_start = time.time()
@@ -104,7 +126,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
    time.sleep(1)
    for kill in running:
       if not running[kill].poll():
-         print "> killing: ", kill
+         print ">> killing: ", kill
          try:
             running[kill].kill()
          except:

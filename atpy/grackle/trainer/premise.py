@@ -68,7 +68,8 @@ class PremiseTrainer(Trainer):
          N=len(insts),
          validN=str(len(insts)),
          init="init_00",
-         out=None)
+         out=None,
+         time_limit=state.train_limit)
 
       params = self.runner.clean(params)
       return self.runner.name(params) 

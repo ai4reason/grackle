@@ -3,12 +3,13 @@ from os import path
 from . import _load_class, log
 
 class DB:
-   def __init__(self, name):
+   def __init__(self, name, rank):
       self.name = name
       self.insts = []      # all instances
       self.results = {}    # { conf : {inst:[quality,runtime,..]} }
-      self.bests = {}      # { inst : conf }
+      self.ranking = {}    # { inst : [conf] }
       self.runner = None
+      self.rank = rank
       self.load("cache")
 
    def load(self, prefix):
@@ -21,10 +22,6 @@ class DB:
       json.dump(self.results, file(f_results,"w"))
 
    def update(self, confs):
-      dead = [i for i in self.bests if self.bests[i] not in confs]
-      for i in dead:
-         del self.bests[i]
-   
       # collect (conf,inst) pairs to evaluate
       cis = []
       for conf in confs:
@@ -40,29 +37,23 @@ class DB:
          for ((conf,inst),result) in outs:
             self.results[conf][inst] = result
   
-      # udpate best configs for each instance
-      self.update_bests(confs)
+      # udpate ranking for each instance
+      self.update_ranking(confs)
 
-   def update_bests(self, confs):
-      for conf in confs:
-         for inst in self.insts:
-            if inst not in self.bests:
-               self.bests[inst] = conf
-            else:
-               result = self.results[conf][inst]
-               current_best = self.results[self.bests[inst]][inst]
-               if result[0] < current_best[0]:
-                  self.bests[inst] = conf
+   def update_ranking(self, confs):
+      self.ranking = {}
+      for inst in self.insts:
+         key = lambda conf: self.results[conf][inst][0]
+         self.ranking[inst] = sorted(confs, key=key)
 
-   def eaten(self, conf):
-      return [i for i in self.bests if self.bests[i]==conf]
+   def mastered(self, conf):
+      return [i for i in self.insts if conf in self.ranking[i][:self.rank]]
 
 class State:
    def __init__(self, f_run):
       ini = file(f_run).read().strip().split("\n")
       ini = [l.split("=") for l in ini]
       ini = {x.strip():y.strip() for (x,y) in ini}
-      log.scenario(ini)
 
       self.it = 0          # int
       self.done = {}       # { conf : set(frozenset(train)) }
@@ -71,18 +62,22 @@ class State:
       self.cores = int(ini["cores"]) if "cores" in ini else 4
       self.tops = int(ini["tops"]) if "tops" in ini else 10
       self.best = int(ini["best"]) if "best" in ini else 4
+      self.rank = int(ini["rank"]) if "rank" in ini else 1
+      self.train_limit = int(ini["train_time"]) if "train_time" in ini else None
+      if self.train_limit < 0:
+         self.train_limit = None
 
       runner = _load_class(ini["runner"])(False, self.cores)
-      self.evals = DB("evals")
+      self.evals = DB("evals", self.rank)
       self.evals.runner = runner
       self.evals.insts = file(ini["evals"]).read().strip().split("\n")
       self.evals.insts = [x.strip() for x in self.evals.insts]
-      self.trains = DB("trains")
+      self.trains = DB("trains", self.rank)
       self.trains.runner = runner
       self.trains.insts = file(ini["trains"]).read().strip().split("\n")
       self.trains.insts = [x.strip() for x in self.trains.insts]
       self.attention = {i:0.0 for i in self.trains.insts}
-      log.instances(self)
+      log.scenario(self, ini)
 
       self.alls = []
       inits = file(ini["inits"]).read().strip().split("\n")
@@ -92,6 +87,7 @@ class State:
          init = runner.name(params)
          self.alls.append(init)
          log.init(self, f_init, init)
+      log.inits(self)
 
       self.trainer = _load_class(ini["trainer"])(runner, ini["runner"])
 
