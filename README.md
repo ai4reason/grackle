@@ -1,6 +1,10 @@
 # Grackle
 
-Grackle is an automated system for invention of a set of **well-performing** and **complementary** configurations of an arbitrary parametrized algorithm.
+Grackle is an automated system for invention of a set of **good-performing** and **complementary** configurations of an arbitrary parametrized algorithm.
+
+## Quick Install
+
+   $ pip install . --user
 
 ## Credits
 
