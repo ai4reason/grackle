@@ -60,3 +60,16 @@ class BaseFineTrainer(StageTrainer):
          tuner.ORDER("01-order"),
          tuner.FINE("02-fine")])
 
+class GlobalSineFineTrainer(StageTrainer):
+   def __init__(self, runner, cls):
+      StageTrainer.__init__(self, runner, cls, [
+         tuner.GLOBAL("00-global"),
+         tuner.SINE("01-sine"), 
+         tuner.FINE("02-fine")])
+
+class GlobalFineTrainer(StageTrainer):
+   def __init__(self, runner, cls):
+      StageTrainer.__init__(self, runner, cls, [
+         tuner.GLOBAL("00-global"),
+         tuner.FINE("01-fine")])
+
