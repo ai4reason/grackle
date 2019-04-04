@@ -16,5 +16,8 @@ setup(name='grackle',
          'paramils/param_reader.rb',
          'paramils/stats_ils.rb'
       ],
+      install_requires=[
+          'atpy >= 0.1',
+      ],
       zip_safe=False)
 

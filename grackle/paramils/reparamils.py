@@ -4,9 +4,9 @@ from os import path
 import subprocess
 import time
 
-from .results import get_paramils_result
+import grackle.paramils.results
 
-def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None):
+def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None):
    def run(numRun, currentInit):
       arg = [binary, "-numRun", str(numRun), "-scenariofile", scenariofile, "-N", str(N), "-validN", validN, "-output_level", "0", "-userunlog", "0", "-init", currentInit]
       return subprocess.Popen(arg,stdout=out,close_fds=True,cwd=cwd)
@@ -34,7 +34,7 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
       log0 = log
       log = ""
       for numRun in running:
-         (n,q,params) = get_paramils_result(outdir, numRun)
+         (n,q,params) = grackle.paramils.results.parse(outdir, numRun)
          log += "%2s:%3s (%8.1f)\t" % (numRun,n,q) 
          #print numRun, n, q
          if not adult and numRun is not elder[0] and n == N:
@@ -128,4 +128,34 @@ def run_reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", cou
 
    #print "RES: ", elder[2]
    return elder[2]
+
+def launch(scenario, domains, init, insts, cwd, timeout, cores):
+   system("rm -fr %s" % cwd)
+   system("mkdir -p %s" % cwd)
+
+   f_scenario = path.join(cwd, "scenario.txt")
+   f_params = path.join(cwd, "params.txt")
+   f_instances = path.join(cwd, "instances.txt")
+   f_empty = path.join(cwd, "empty.tst")
+   f_init = path.join(cwd, "init_00")
+   
+   file(f_scenario,"w").write(scenario)
+   file(f_params,"w").write(domains)
+   file(f_instances,"w").write("\n".join(insts))
+   file(f_empty,"w").write("")
+   file(f_init,"w").write(" ".join(["%s %s"%(x,init[x]) for x in sorted(init)]))
+
+   params = reparamils(
+      "scenario.txt",
+      path.join(cwd,"paramils-out"),
+      cwd,
+      count=cores,
+      N=len(insts),
+      validN=str(len(insts)),
+      init="init_00",
+      out=None,
+      #out=file(path.join(cwd,"paramils.out"),"w"),
+      time_limit=timeout)
+
+   return params
 

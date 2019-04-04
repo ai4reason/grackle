@@ -82,7 +82,8 @@ def inits(state):
       rep = state.trains.runner.repr(params)
       print "> %s: %s" % (conf, rep)
 
-def scenario(state, ini):
+def scenario(state, ini, unused=None):
+   show = lambda dic: " ".join(["%s=%s"%(x,dic[x]) for x in sorted(dic)])
    print ">" 
    print "> === GRACKLE RUNNING ==="
    print ">"
@@ -92,17 +93,26 @@ def scenario(state, ini):
    print "> tops = %s" % state.tops
    print "> rank = %s" % state.rank
    print "> timeout = %s" % state.timeout
-   print "> trains = %s" % ini["trains"]
-   if "evals" in ini:
-      print "> evals = %s" % ini["evals"]
+   print "> trains.data = %s" % ini["trains.data"]
+   print "> trains.runner.config: %s" % show(state.trains.runner.config)
+   if "evals.data" in ini:
+      print "> evals.data = %s" % ini["evals.data"]
+      print "> evals.runner.config:  %s" % show(state.evals.runner.config)
    else:
-      print "> evals = &trains"
+      print "> evals = trains"
    print "> inits = %s" % ini["inits"]
-   print "> runner = %s" % ini["runner"]
-   print "> trainer = %s" % ini["trainer"]
+   #print "> runner = %s" % ini["runner"]
+   #print "> trainer = %s" % ini["trainer"]
+
+
    print ">"
    print "> Loaded %d evals" % len(state.evals.insts)
    print "> Loaded %d trains" % len(state.trains.insts)
+
+   if unused:
+      print ">"
+      print "> Grackle Warning: Unrecognized parameters: %s" % sorted(unused)
+      print ">"
 
 def tuner(nick, i, n):
    print ">>"

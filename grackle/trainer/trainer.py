@@ -1,11 +1,10 @@
 
 class Trainer:
    
-   def __init__(self, runner):
+   def __init__(self, runner, config={}):
       self.runner = runner
-      self.config = {}
+      self.config = dict(config)
 
    def improve(self, state, conf, insts):
       pass
-
 

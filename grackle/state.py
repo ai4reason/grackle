@@ -2,6 +2,7 @@ import json
 import time
 from os import path
 from . import _load_class, log
+from atpy import expres
 
 class DB:
    def __init__(self, name, rank):
@@ -84,47 +85,74 @@ class State:
       self.done = {}       # { conf : set(frozenset(train)) }
       self.active = []     # [conf]
 
-      self.cores = int(ini["cores"]) if "cores" in ini else 4
-      self.tops = int(ini["tops"]) if "tops" in ini else 10
-      self.best = int(ini["best"]) if "best" in ini else 4
-      self.rank = int(ini["rank"]) if "rank" in ini else 1
-      self.timeout = int(ini["timeout"]) if "timeout" in ini else 0
-      self.train_limit = int(ini["train_time"]) if "train_time" in ini else None
-      if self.train_limit < 0:
-         self.train_limit = None
+      unused = set(ini)
+      def require(key, default):
+         if key not in ini:
+            return default
+         unused.remove(key)
+         return ini[key] 
 
-      t_runner = _load_class(ini["runner"])(False, self.cores)
-      copy_conf(ini, t_runner.config, "runner.trains.")
+      self.cores = require("cores", 4)
+      self.tops = require("tops", 10)
+      self.best = require("best", 4)
+      self.rank = require("rank", 1)
+      self.timeout = require("timeout", 0)
+
+      def copy(to, prefix):
+         for x in ini:
+            if x.startswith(prefix):
+               ix = ini[x]
+               to[x[len(prefix):]] = int(ix) if ix.isdigit() else ix
+               if x in unused:
+                  unused.remove(x)
+
+      def runner(name):
+         conf = {"direct":False, "cores":self.cores}
+         conf["cls"] = ini["%s.runner"%name]
+         copy(conf, "%s.runner."%name)
+         copy(conf, "runner.")
+         return _load_class(conf["cls"])(conf)
+
+      def data(name):
+         did = ini["%s.data"%name]
+         if did.startswith("atpy:"):
+            bid = did[5:]
+            insts = expres.benchmarks.problems(bid)
+            insts = [path.join(bid,x) for x in insts]
+         else:
+            insts = file(did).read().strip().split("\n")
+            insts = [x.strip() for x in insts]
+         return insts
+
+      def setup(db):
+         db.runner = runner(db.name)
+         db.insts = data(db.name)
+
       self.trains = DB("trains", self.rank)
-      self.trains.runner = t_runner
-      self.trains.insts = file(ini["trains"]).read().strip().split("\n")
-      self.trains.insts = [x.strip() for x in self.trains.insts]
-
-      if "evals" in ini:
-         e_runner = _load_class(ini["runner"])(False, self.cores)
-         copy_conf(ini, e_runner.config, "runner.evals.")
+      setup(self.trains)
+      if "evals.data" in ini:
          self.evals = DB("evals", self.rank)
-         self.evals.runner = e_runner
-         self.evals.insts = file(ini["evals"]).read().strip().split("\n")
-         self.evals.insts = [x.strip() for x in self.evals.insts]
+         setup(self.evals)
       else:
          self.evals = self.trains
+      
+      self.trainer = _load_class(ini["trainer"])(t_runner, ini["runner"])
+      copy(self.trainer.config, "trainer.")
+      
+      log.scenario(self, ini, unused)
 
       self.attention = {i:0.0 for i in self.trains.insts}
-      log.scenario(self, ini)
-
       self.alls = []
       inits = file(ini["inits"]).read().strip().split("\n")
+      runner = self.trains.runner
       for f_init in inits:
-         params = t_runner.params(file(f_init).read().strip().split())
-         params = t_runner.clean(params)
-         init = t_runner.name(params)
+         params = runner.parse(file(f_init).read().strip().split())
+         params = runner.clean(params)
+         init = runner.name(params)
          self.alls.append(init)
          log.init(self, f_init, init)
       log.inits(self)
 
-      self.trainer = _load_class(ini["trainer"])(t_runner, ini["runner"])
-      copy_conf(ini, self.trainer.config, "trainer.")
 
    def did(self, conf, insts):
       for i in insts:

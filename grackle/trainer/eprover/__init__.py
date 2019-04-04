@@ -1,4 +1,4 @@
 import trainer
 
-from trainer import BaseTrainer, BaseFineTrainer
+from trainer import BaseTrainer
 

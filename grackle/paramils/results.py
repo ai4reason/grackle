@@ -1,7 +1,7 @@
 import os
 from os import path
 
-def get_paramils_result(outdir, numRun):
+def parse(outdir, numRun):
    fs = [f for f in os.listdir(outdir) if "traj_%d"%numRun in f and f.endswith(".txt")]
    f0 = fs[0]
    
