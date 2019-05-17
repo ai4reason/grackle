@@ -4,7 +4,7 @@ Grackle is an automated system for invention of a set of **good-performing** and
 
 ## Quick Install
 
-   $ pip install . --user
+   $ pip install grackle
 
 ## Credits
 
