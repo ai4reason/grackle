@@ -3,10 +3,13 @@ from os import path, system
 from ..trainer import Trainer
 from .tuner.tuner import SCENARIO, launch
 from grackle import log
+from grackle.runner.eprover import block2cef
+from . import cefs
 
 class EproverTrainer(Trainer):
    def __init__(self, runner, cls):
       Trainer.__init__(self, runner)
+      self.config["cefs_update"] = False # default, set it to True in config.fly
       self.cls = cls
 
    def tune(self, tuner_cls, domains, init, insts, cwd, cores, extra=None):
@@ -20,6 +23,10 @@ class EproverTrainer(Trainer):
 
    def finish(self, params):
       params = self.runner.clean(params)
+      if self.config["cefs_update"]:
+         keys = ["cef%d"%i for i in range(int(params["slots"]))]
+         cefs0 = [block2cef(params[k]) for k in keys]
+         cefs.update(self.config["cefs_db"], cefs0)
       return self.runner.name(params) 
 
 class StageTrainer(EproverTrainer):

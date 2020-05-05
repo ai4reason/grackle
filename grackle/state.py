@@ -67,11 +67,15 @@ class DB:
                success.add(inst)
       return (self.name, len(success), qsum/total, tsum/total)
 
-def copy_conf(ini, config, prefix):
-   for x in ini:
-      if x.startswith(prefix):
-         ix = ini[x]
-         config[x[len(prefix):]] = int(ix) if ix.isdigit() else ix
+def convert(string):
+   if string == "True":
+      return True
+   elif string == "False":
+      return False
+   elif string.isdigit():
+      return int(string)
+   else:
+      return string
 
 class State:
    def __init__(self, f_run):
@@ -88,10 +92,16 @@ class State:
       unused = set(ini)
       def require(key, default):
          if key not in ini:
+            log.msg("Warning: Setting configuration key '%s' to the default value '%s'" % (key, default))
             return default
          unused.remove(key)
          ix = ini[key] 
-         return int(ix) if ix.isdigit() else ix
+         return convert(ix)
+
+      def check(key):
+         if key not in ini:
+            raise Exception("Required configuration key '%s' not specified" % key)
+         unused.remove(key)
 
       self.cores = require("cores", 4)
       self.tops = require("tops", 10)
@@ -103,7 +113,7 @@ class State:
          for x in ini:
             if x.startswith(prefix):
                ix = ini[x]
-               to[x[len(prefix):]] = int(ix) if ix.isdigit() else ix
+               to[x[len(prefix):]] = convert(ix)
                if x in unused:
                   unused.remove(x)
 
@@ -116,8 +126,8 @@ class State:
 
       def data(name):
          did = ini["%s.data"%name]
-         if did.startswith("atpy:"):
-            bid = did[5:]
+         if did.startswith("pyprove:"):
+            bid = did[8:]
             insts = expres.benchmarks.problems(bid)
             insts = [path.join(bid,x) for x in insts]
          else:
@@ -130,18 +140,24 @@ class State:
          db.insts = data(db.name)
 
       self.trains = DB("trains", self.rank)
+      check("trains.data")
+      check("trains.runner")
       setup(self.trains)
       if "evals.data" in ini:
+         check("evals.data")
+         check("evals.runner")
          self.evals = DB("evals", self.rank)
          setup(self.evals)
       else:
          self.evals = self.trains
-     
+      
+      check("trainer")
       t_runner = runner("trainer")
       self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.config, "trainer.runner.")
       
+      check("inits")
       log.scenario(self, ini, unused)
 
       self.attention = {i:0.0 for i in self.trains.insts}

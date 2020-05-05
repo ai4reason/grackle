@@ -1,4 +1,5 @@
 from . import tuner, base, order, glob
+from .. import cefs
 from grackle.runner.eprover import cef2block
 
 
@@ -68,17 +69,17 @@ class OnlyWpoTuner(glob.GlobalTuner):
          "grackle.trainer.eprover.tuner.OnlyWpoTuner")
 
    def domains(self, config, init=None):
-      cefs = domain.cefs_load(config["cefs_db"])
-      cefs = map(cef2block, domain.cefs_domain(config["cefs_count"], cefs))
+      cefs0 = cefs.load(config["cefs_db"])
+      cefs0 = map(cef2block, cefs.domain(config["cefs_count"], cefs0))
       if init:
          for x in init:
-            if x.startswith("cef") and init[x] not in cefs:
-               cefs.append(init[x])
+            if x.startswith("cef") and init[x] not in cefs0:
+               cefs0.append(init[x])
       return base.PARAMS + ONLY_PARAMS + \
-             base.params(config, cefs) + \
+             base.params(config, cefs0) + \
              base.CONDITIONS + \
              base.conditions(config) + \
-             base.FORBIDDENS + base.forbiddens(config, cefs)
+             base.FORBIDDENS + base.forbiddens(config, cefs0)
 
 class OnlyWpoFakeTuner(glob.GlobalTuner):
    def __init__(self, direct, cores=4, nick="0-global"):

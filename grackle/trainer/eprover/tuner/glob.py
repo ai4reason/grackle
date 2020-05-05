@@ -3,16 +3,16 @@ from .. import cefs
 from . import base, order, tuner
 
 def glob(config, init=None):
-   cefs = cefs.load(config["cefs_db"])
-   cefs = map(cef2block, cefs.domain(config["cefs_count"], cefs))
+   cefs0 = cefs.load(config["cefs_db"])
+   cefs0 = list(map(cef2block, cefs.domain(config["cefs_count"], cefs0)))
    if init:
       for x in init:
-         if x.startswith("cef") and init[x] not in cefs:
-            cefs.append(init[x])
+         if x.startswith("cef") and init[x] not in cefs0:
+            cefs0.append(init[x])
 
-   return base.PARAMS     + order.PARAMS     + base.params(config, cefs) + \
+   return base.PARAMS     + order.PARAMS     + base.params(config, cefs0) + \
           base.CONDITIONS + order.CONDITIONS + base.conditions(config) + \
-          base.FORBIDDENS + base.forbiddens(config, cefs)
+          base.FORBIDDENS + base.forbiddens(config, cefs0)
 
 class GlobalTuner(tuner.Tuner):
    def __init__(self, direct, cores=4, nick="0-global"):

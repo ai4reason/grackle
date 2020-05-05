@@ -32,9 +32,10 @@ def domain(count, cefs):
          cef = bests.pop(0)[1]
          ret.append(cef)
 
-
-
-
-
-
+def update(f_cefs, new):
+   "Update the usage counter for new cefs."
+   cefs = load(f_cefs)
+   for cef in new:
+      cefs[cef] = cefs[cef]+1 if cef in cefs else 1
+   save(f_cefs, cefs)
 
