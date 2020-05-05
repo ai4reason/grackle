@@ -6,9 +6,9 @@ def _load_class(cls):
    mod = __import__(pkg, fromlist=[cls])
    return getattr(mod, cls)
 
-import log
-import state
-import main
-import runner
-import trainer
+from . import log
+from . import state
+from . import main
+from . import runner
+from . import trainer
 

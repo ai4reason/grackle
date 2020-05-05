@@ -15,19 +15,20 @@ def run():
       extra = json.loads(sys.argv[3])
    else:
       shift = 0
-      extra = None
+      extra = {}
 
+   runner.config["cutoff"] = int(float(sys.argv[4+shift]))
+   runner.config["extra"] = extra
    inst = sys.argv[2+shift]
-   limit = int(float(sys.argv[4+shift]))
    seed = sys.argv[6+shift]
-   params = runner.params(sys.argv[7+shift:])
+   params = runner.parse(sys.argv[7+shift:])
 
-   (quality,clock) = runner.run(params, inst, limit=limit, extra=extra)[:2]
+   (quality,clock) = runner.run(params, inst)[:2]
 
-   print RESULT % ("OK", clock, quality, seed)
+   print(RESULT % ("OK", clock, quality, seed))
 
 if len(sys.argv) < 2:
-   print "usage: %s runner_cls instance spec time cutoff seed arg1 val1 ..." % sys.argv[0]
+   print("usage: %s runner_cls instance spec time cutoff seed arg1 val1 ..." % sys.argv[0])
 else:
    run()
 

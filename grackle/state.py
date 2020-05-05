@@ -2,7 +2,7 @@ import json
 import time
 from os import path
 from . import _load_class, log
-from atpy import expres
+from pyprove import expres
 
 class DB:
    def __init__(self, name, rank):
@@ -17,11 +17,11 @@ class DB:
    def load(self, prefix):
       f_results = "db-%s-%s.json" % (self.name,prefix)
       if path.isfile(f_results):
-         self.results = json.load(file(f_results))
+         self.results = json.load(open(f_results))
 
    def save(self, prefix):
       f_results = "db-%s-%s.json" % (self.name,prefix)
-      json.dump(self.results, file(f_results,"w"))
+      json.dump(self.results, open(f_results,"w"))
 
    def update(self, confs):
       # collect (conf,inst) pairs to evaluate
@@ -77,7 +77,7 @@ class State:
    def __init__(self, f_run):
       self.start_time = time.time()
 
-      ini = file(f_run).read().strip().split("\n")
+      ini = open(f_run).read().strip().split("\n")
       ini = [l.split("=") for l in ini if l]
       ini = {x.strip():y.strip() for (x,y) in ini}
 
@@ -90,7 +90,8 @@ class State:
          if key not in ini:
             return default
          unused.remove(key)
-         return ini[key] 
+         ix = ini[key] 
+         return int(ix) if ix.isdigit() else ix
 
       self.cores = require("cores", 4)
       self.tops = require("tops", 10)
@@ -109,8 +110,8 @@ class State:
       def runner(name):
          conf = {"direct":False, "cores":self.cores}
          conf["cls"] = ini["%s.runner"%name]
-         copy(conf, "%s.runner."%name)
          copy(conf, "runner.")
+         copy(conf, "%s.runner."%name)
          return _load_class(conf["cls"])(conf)
 
       def data(name):
@@ -120,7 +121,7 @@ class State:
             insts = expres.benchmarks.problems(bid)
             insts = [path.join(bid,x) for x in insts]
          else:
-            insts = file(did).read().strip().split("\n")
+            insts = open(did).read().strip().split("\n")
             insts = [x.strip() for x in insts]
          return insts
 
@@ -135,18 +136,20 @@ class State:
          setup(self.evals)
       else:
          self.evals = self.trains
-      
-      self.trainer = _load_class(ini["trainer"])(t_runner, ini["runner"])
+     
+      t_runner = runner("trainer")
+      self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
+      copy(self.trainer.config, "trainer.runner.")
       
       log.scenario(self, ini, unused)
 
       self.attention = {i:0.0 for i in self.trains.insts}
       self.alls = []
-      inits = file(ini["inits"]).read().strip().split("\n")
+      inits = open(ini["inits"]).read().strip().split("\n")
       runner = self.trains.runner
       for f_init in inits:
-         params = runner.parse(file(f_init).read().strip().split())
+         params = runner.parse(open(f_init).read().strip().split())
          params = runner.clean(params)
          init = runner.name(params)
          self.alls.append(init)

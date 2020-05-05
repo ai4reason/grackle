@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-import sha
+import hashlib
 import subprocess
 import multiprocessing
 
@@ -32,6 +32,7 @@ class Runner(object):
       cmd = self.cmd(params, inst)
       try:
          out = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+         #out = out.decode()
       except subprocess.CalledProcessError as err:
          out = err.output
       except BaseException as err:
@@ -50,7 +51,8 @@ class Runner(object):
          results = pool.map_async(wrapper, zip([self]*len(cis),cis)).get(10000000)
       except BaseException as err:
          pool.terminate()
-         log.fatal("ERROR(Grackle): Evaluation failed: %s" % (err.message or err.__class__.__name__))
+         log.fatal("ERROR(Grackle): Evaluation failed: %s" % (str(err) or err.__class__.__name__))
+         raise err
          sys.exit(-1)
       else:
          pool.close()
@@ -69,12 +71,13 @@ class GrackleRunner(Runner):
 
    def name(self, params):
       args = self.repr(params).replace("="," ")
-      conf = "%s%s" % (self.config["prefix"], sha.sha(args).hexdigest())
-      file(os.path.join(self.config["dir"],conf),"w").write(args)
+      #conf = "%s%s" % (self.config["prefix"], sha.sha(args).hexdigest())
+      conf = "%s%s" % (self.config["prefix"], hashlib.sha224(args.encode()).hexdigest())
+      open(os.path.join(self.config["dir"],conf),"w").write(args)
       return conf
 
    def recall(self, conf):
-      args = file(os.path.join(self.config["dir"],conf)).read().strip()
+      args = open(os.path.join(self.config["dir"],conf)).read().strip()
       return self.parse(args.split())
    
    def parse(self, lst):
@@ -85,7 +88,7 @@ class GrackleRunner(Runner):
          ps[key] = val
       return ps
    
-   def cmd(self, params):
+   def cmd(self, params): # ? need inst ?
       args = " ".join(["-%s %s"%(p,params[p]) for p in sorted(params)])
       return "%%s %s" % args
 

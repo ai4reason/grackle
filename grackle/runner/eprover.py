@@ -1,9 +1,8 @@
 import re
-import sha
 from os import path, system, getenv
 
 from grackle.runner import GrackleRunner
-import atpy.eprover as e
+import pyprove.eprover as e
 
 # TODO: --prefer-initial-clauses 
 E_PROTO_ARGS = "--definitional-cnf=24 %(splaggr)s %(splcl)s %(srd)s %(simparamod)s %(forwardcntxtsr)s --destructive-er-aggressive --destructive-er -t%(tord)s %(prord)s -F1 --delete-bad-limit=150000000 -W%(sel)s %(sine)s %(heur)s"
@@ -112,7 +111,7 @@ class EproverRunner(GrackleRunner):
       return E_PROTO_ARGS % eargs
    
    def process(self, out, inst):
-      result = e.result.parse(f_out=None, out=out)
+      result = e.result.parse(f_out=None, out=out.decode())
       if e.result.error(result):
          return None
 

@@ -1,0 +1,68 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+DB	state.py	/^class DB:$/;"	c
+FATAL_LOG	log.py	/^FATAL_LOG = os.path.join(os.getenv("HOME"),"grackle-errors.log")$/;"	v
+State	state.py	/^class State:$/;"	c
+__init__	state.py	/^   def __init__(self, f_run):$/;"	m	class:State
+__init__	state.py	/^   def __init__(self, name, rank):$/;"	m	class:DB
+_load_class	__init__.py	/^def _load_class(cls):$/;"	f
+_load_class	state.py	/^from . import _load_class, log$/;"	i
+active	log.py	/^def active(state, mastered):$/;"	f
+candidates	log.py	/^def candidates(candidates, avgs):$/;"	f
+copy	state.py	/^      def copy(to, prefix):$/;"	f	function:State.__init__
+copy_conf	state.py	/^def copy_conf(ini, config, prefix):$/;"	f
+data	state.py	/^      def data(name):$/;"	f	function:State.__init__
+did	state.py	/^   def did(self, conf, insts):$/;"	m	class:State
+error	log.py	/^def error(m):$/;"	f
+evaluate	main.py	/^def evaluate(state, db, confs):$/;"	f
+expres	state.py	/^from pyprove import expres$/;"	i
+fatal	log.py	/^def fatal(m):$/;"	f
+finished	log.py	/^def finished(state):$/;"	f
+improve	main.py	/^def improve(state, candidates):$/;"	f
+improved	log.py	/^def improved(state, conf):$/;"	f
+improved	state.py	/^   def improved(self, conf, insts):$/;"	m	class:State
+improving	log.py	/^def improving(state, conf, insts):$/;"	f
+init	log.py	/^def init(state, f_init, conf):$/;"	f
+inits	log.py	/^def inits(state):$/;"	f
+iter	log.py	/^def iter(state):$/;"	f
+json	main.py	/^import json$/;"	i
+json	state.py	/^import json$/;"	i
+load	state.py	/^   def load(self, prefix):$/;"	m	class:DB
+log	__init__.py	/^from . import log$/;"	i
+log	main.py	/^from . import log$/;"	i
+log	state.py	/^from . import _load_class, log$/;"	i
+loop	main.py	/^def loop(state):$/;"	f
+main	__init__.py	/^from . import main$/;"	i
+mastered	state.py	/^   def mastered(self, conf):$/;"	m	class:DB
+msg	log.py	/^def msg(m):$/;"	f
+notnew	log.py	/^def notnew(state, conf):$/;"	f
+os	log.py	/^import os$/;"	i
+path	main.py	/^from os import path$/;"	i
+path	state.py	/^from os import path$/;"	i
+reduction	main.py	/^def reduction(state):$/;"	f
+require	state.py	/^      def require(key, default):$/;"	f	function:State.__init__
+runner	__init__.py	/^from . import runner$/;"	i
+runner	state.py	/^      def runner(name):$/;"	f	function:State.__init__
+save	state.py	/^   def save(self, prefix):$/;"	m	class:DB
+scenario	log.py	/^def scenario(state, ini, unused=None):$/;"	f
+select	main.py	/^def select(state):$/;"	f
+setup	state.py	/^      def setup(db):$/;"	f	function:State.__init__
+specialize	main.py	/^def specialize(state, conf):$/;"	f
+state	__init__.py	/^from . import state$/;"	i
+status	log.py	/^def status(state, db):$/;"	f
+status	state.py	/^   def status(self, failed=1000000):$/;"	m	class:DB
+time	log.py	/^import time$/;"	i
+time	state.py	/^import time$/;"	i
+timeout	log.py	/^def timeout(state):$/;"	f
+timeouted	state.py	/^   def timeouted(self):$/;"	m	class:State
+timestamp	log.py	/^def timestamp(t_start, msg, prog="GRACKLE"):$/;"	f
+trainer	__init__.py	/^from . import trainer$/;"	i
+training	log.py	/^def training(state, bpis):$/;"	f
+tuner	log.py	/^def tuner(nick, i, n):$/;"	f
+update	log.py	/^def update(db, confs):$/;"	f
+update	state.py	/^   def update(self, confs):$/;"	m	class:DB
+update_ranking	state.py	/^   def update_ranking(self, confs, failed=1000000):$/;"	m	class:DB
