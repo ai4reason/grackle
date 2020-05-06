@@ -13,6 +13,8 @@ def evaluate(state, db, confs):
    if state.it == 1:
       db.save("init")
 
+   state.evals.save("cache")
+   state.trains.save("cache")
    log.status(state, db)
 
 def reduction(state):

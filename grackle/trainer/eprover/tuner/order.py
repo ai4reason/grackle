@@ -1,4 +1,5 @@
 from . import tuner
+from grackle.runner.eprover import convert
 
 PARAMS = """
    tord {Auto,LPO4,KBO6} [LPO4]

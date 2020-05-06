@@ -40,7 +40,7 @@ class Runner(object):
          sys.exit(-1)
       res = self.process(out, inst)
       if not res:
-         msg = "\nERROR(Grackle): Error while evaluating on instance %s!\ncommand: %s\nparams: %s\noutput: \n%s\n"%(inst,cmd,self.repr(params),out)
+         msg = "\nERROR(Grackle): Error while evaluating on instance %s!\ncommand: %s\nparams: %s\noutput: \n%s\n"%(inst,cmd,self.repr(params),out.decode())
          log.fatal(msg)
          return None
       return res
@@ -53,12 +53,12 @@ class Runner(object):
          pool.terminate()
          log.fatal("ERROR(Grackle): Evaluation failed: %s" % (str(err) or err.__class__.__name__))
          raise err
-         sys.exit(-1)
+         #sys.exit(-1)
       else:
          pool.close()
       if None in results:
-         log.fatal("ERROR(Grackle): Evaluation failed, see above for more info.")
-         sys.exit(-1)
+         log.fatal("ERROR(Grackle): Evaluation failed, look around for more info.")
+         #sys.exit(-1)
       return zip(cis, results)
 
 class GrackleRunner(Runner):
@@ -69,11 +69,12 @@ class GrackleRunner(Runner):
       if not self.config["direct"]:
          os.system("mkdir -p %s" % self.config["dir"])
 
-   def name(self, params):
+   def name(self, params, save=True):
       args = self.repr(params).replace("="," ")
       #conf = "%s%s" % (self.config["prefix"], sha.sha(args).hexdigest())
       conf = "%s%s" % (self.config["prefix"], hashlib.sha224(args.encode()).hexdigest())
-      open(os.path.join(self.config["dir"],conf),"w").write(args)
+      if save:
+         open(os.path.join(self.config["dir"],conf),"w").write(args)
       return conf
 
    def recall(self, conf):

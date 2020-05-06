@@ -13,7 +13,7 @@ class EproverTrainer(Trainer):
       self.cls = cls
 
    def tune(self, tuner_cls, domains, init, insts, cwd, cores, extra=None):
-      cutoff = self.config["cutoff"]
+      cutoff = self.runner.config["cutoff"]
       timeout = self.config["timeout"]
       algo = "grackle-wrapper.py %s" % tuner_cls
       if extra:

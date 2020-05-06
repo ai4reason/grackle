@@ -3,6 +3,7 @@ from os import path, system, getenv
 
 from grackle.runner import GrackleRunner
 import pyprove.eprover as e
+import pyprove
 
 # TODO: --prefer-initial-clauses 
 E_PROTO_ARGS = "--definitional-cnf=24 %(splaggr)s %(splcl)s %(srd)s %(simparamod)s %(forwardcntxtsr)s --destructive-er-aggressive --destructive-er -t%(tord)s %(prord)s -F1 --delete-bad-limit=150000000 -W%(sel)s %(sine)s %(heur)s"
@@ -58,11 +59,15 @@ class EproverRunner(GrackleRunner):
       GrackleRunner.__init__(self, config)
       self.default("ebinary", None)
       self.default("eargs", None)
+      self.default("cache", False)
+      self.config["prefix"] = "eprover-"
 
    def cmd(self, params, inst):
       args = self.args(params)
       d_root = getenv("ATPY_BENCHMARKS", getenv("TPTP", "."))
       f_problem = path.join(d_root, inst)
+      if self.config["cache"]:
+         self.pid_cache = self.name(params, save=False)
       return e.runner.cmd(f_problem, args, self.config["cutoff"],
          ebinary=self.config["ebinary"], eargs=self.config["eargs"])
    
@@ -109,9 +114,16 @@ class EproverRunner(GrackleRunner):
       cefs.sort()
       eargs["heur"] = "-H'(%s)'" % ",".join(cefs)
       return E_PROTO_ARGS % eargs
-   
+
    def process(self, out, inst):
       result = e.result.parse(f_out=None, out=out.decode())
+      if self.config["cache"]:
+         s = inst.split("/")
+         bid = "/".join(s[:-1])
+         pid = self.pid_cache # self.cmd must be called to set
+         problem = s[-1]
+         limit = "T%d" % self.config["cutoff"]
+         pyprove.expres.results.save(bid, pid, problem, limit, out.decode())
       if e.result.error(result):
          return None
 

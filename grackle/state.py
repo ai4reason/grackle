@@ -21,7 +21,7 @@ class DB:
 
    def save(self, prefix):
       f_results = "db-%s-%s.json" % (self.name,prefix)
-      json.dump(self.results, open(f_results,"w"))
+      json.dump(self.results, open(f_results,"w"), indent=3, sort_keys=True)
 
    def update(self, confs):
       # collect (conf,inst) pairs to evaluate
@@ -46,7 +46,7 @@ class DB:
       self.ranking = {}
       for inst in self.insts:
          key = lambda conf: (self.results[conf][inst][0], conf)
-         oks = [c for c in confs if self.results[c][inst][0] != failed]
+         oks = [c for c in confs if self.results[c][inst] and self.results[c][inst][0] != failed]
          self.ranking[inst] = sorted(oks, key=key)
 
    def mastered(self, conf):
@@ -60,6 +60,7 @@ class DB:
       for conf in self.results:
          for inst in self.insts:
             result = self.results[conf][inst]
+            result = result if result else (1000*failed, 0)
             qsum += result[0]
             tsum += result[1]
             total += 1
@@ -155,7 +156,7 @@ class State:
       t_runner = runner("trainer")
       self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
-      copy(self.trainer.config, "trainer.runner.")
+      copy(self.trainer.runner.config, "trainer.runner.")
       
       check("inits")
       log.scenario(self, ini, unused)
