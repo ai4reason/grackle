@@ -1,5 +1,6 @@
 from .trainer import BaseTrainer, GlobalTrainer, \
    BaseFineTrainer, GlobalSineFineTrainer, GlobalFineTrainer, \
    WpoTrainer, WpoFakeTrainer, \
-   WpoOnlyTrainer, WpoFakeOnlyTrainer
+   WpoOnlyTrainer, WpoFakeOnlyTrainer, \
+   BaseMainFineTrainer, GivenCoreFineTrainer, CoreGivenFineTrainer
 

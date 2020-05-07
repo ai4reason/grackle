@@ -12,9 +12,9 @@ class EproverTrainer(Trainer):
       self.config["cefs_update"] = False # default, set it to True in config.fly
       self.cls = cls
 
-   def tune(self, tuner_cls, domains, init, insts, cwd, cores, extra=None):
+   def tune(self, tuner_cls, domains, init, insts, cwd, cores, extra=None, timeout=None):
       cutoff = self.runner.config["cutoff"]
-      timeout = self.config["timeout"]
+      timeout = timeout if timeout else self.config["timeout"]
       algo = "grackle-wrapper.py %s" % tuner_cls
       if extra:
          algo += " EXTRA %s" % repr(json.dumps(extra))
@@ -47,7 +47,8 @@ class StageTrainer(EproverTrainer):
       cwd = path.join("training", "iter-%03d-%s"%(state.it,conf), tuner.nick)
       domains = tuner.domains(self.config, params)
       (main, extra) = tuner.split(params)
-      main = self.tune(tuner.cls, domains, main, insts, cwd, state.cores, extra=extra)
+      timeout = self.config["timeout"] // len(self.tuners)
+      main = self.tune(tuner.cls, domains, main, insts, cwd, state.cores, extra=extra, timeout=timeout)
       return tuner.join(main, extra)
 
 

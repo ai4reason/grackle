@@ -35,7 +35,27 @@ class GlobalFineTrainer(StageTrainer):
          tuner.GLOBAL("00-global"),
          tuner.FINE("01-fine")])
 
+# an attempt to split params more equally
+class BaseMainFineTrainer(StageTrainer):
+   def __init__(self, runner, cls):
+      StageTrainer.__init__(self, runner, cls, [
+         tuner.BASE("00-base"),
+         tuner.MAIN("01-main"), 
+         tuner.FINE("02-fine")])
 
+class GivenCoreFineTrainer(StageTrainer):
+   def __init__(self, runner, cls):
+      StageTrainer.__init__(self, runner, cls, [
+         tuner.GIVEN("00-given"),
+         tuner.CORE("01-core"), 
+         tuner.FINE("02-fine")])
+
+class CoreGivenFineTrainer(StageTrainer):
+   def __init__(self, runner, cls):
+      StageTrainer.__init__(self, runner, cls, [
+         tuner.CORE("00-core"), 
+         tuner.GIVEN("01-given"),
+         tuner.FINE("02-fine")])
 
       
 class WpoTrainer(StageTrainer):

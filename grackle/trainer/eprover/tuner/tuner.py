@@ -42,8 +42,8 @@ def launch(scenario, domains, init, insts, cwd, timeout, cores):
       N=len(insts),
       validN=str(len(insts)),
       init="init_00",
-      out=None,
-      #out=open(path.join(cwd,"paramils.out"),"w"),
+      #out=None,
+      out=open(path.join(cwd,"paramils.out"),"w"),
       time_limit=timeout)
 
    return params

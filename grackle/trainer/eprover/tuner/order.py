@@ -17,6 +17,9 @@ CONDITIONS = """
    tord_const  | tord in {KBO6}
 """
 
+def free(key):
+   return key.startswith("tord")
+
 def order():
    return PARAMS + CONDITIONS 
 
@@ -29,8 +32,8 @@ class OrderTuner(tuner.Tuner):
 
    def split(self, params):
       params = convert(params)
-      main = {x:params[x] for x in params if x.startswith("tord")}
-      extra = {x:params[x] for x in params if not x.startswith("tord")}
+      main = {x:params[x] for x in params if free(x)}
+      extra = {x:params[x] for x in params if not free(x)}
       return (main, extra)
 
    def join(self, main, extra):

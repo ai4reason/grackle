@@ -192,7 +192,7 @@ class State:
       if "timeout" not in self.trainer.config:
          return False
 
-      t_train = 3 * self.trainer.config["timeout"] 
+      t_train = self.trainer.config["timeout"] 
       t_elapsed = time.time() - self.start_time 
       t_remains = self.timeout - t_elapsed
 
