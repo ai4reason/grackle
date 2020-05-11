@@ -5,9 +5,13 @@ from grackle.runner import GrackleRunner
 import pyprove.eprover as e
 import pyprove
 
-# TODO: --prefer-initial-clauses 
-E_PROTO_ARGS = "--definitional-cnf=24 %(splaggr)s %(splcl)s %(srd)s %(simparamod)s %(forwardcntxtsr)s --destructive-er-aggressive --destructive-er -t%(tord)s %(prord)s -F1 --delete-bad-limit=150000000 -W%(sel)s %(sine)s %(heur)s"
-E_SINE_ARGS = "--sine='GSinE(%(sineG)s,%(sineh)s,%(sinegf)s,%(sineD)s,%(sineR)s,%(sineL)s,%(sineF)s)'"
+E_FIXED_ARGS = "--delete-bad-limit=150000000 "
+
+#E_PROTO_ARGS = "--definitional-cnf=24 %(splaggr)s %(splcl)s %(srd)s %(simparamod)s %(forwardcntxtsr)s --destructive-er-aggressive --destructive-er -t%(tord)s %(prord)s -F1 --delete-bad-limit=150000000 -W%(sel)s %(sine)s %(heur)s"
+
+E_PROTO_ARGS = "%(splaggr)s%(srd)s%(forwardcntxtsr)s%(defcnf)s%(prefer)s%(presat)s%(condense)s%(splcl)s%(fwdemod)s-t%(tord)s %(prord)s-W%(sel)s %(sine)s%(heur)s"
+
+E_SINE_ARGS = "--sine='GSinE(%(sineG)s,%(sineh)s,%(sinegf)s,%(sineD)s,%(sineR)s,%(sineL)s,%(sineF)s)' "
 
 SINE_DEFAULTS = { 
    "sineG": "CountFormulas", 
@@ -74,30 +78,61 @@ class EproverRunner(GrackleRunner):
    def args(self, params):
       eargs = dict(params)
       eargs = convert(eargs)
-      # global params
-      eargs["splaggr"] = "--split-aggressive" if eargs["splaggr"] == "1" else ""
-      eargs["srd"] = "--split-reuse-defs" if eargs["srd"] == "1" else ""
-      eargs["forwardcntxtsr"] = "--forward-context-sr" if eargs["forwardcntxtsr"] == "1" else ""
-      eargs["splcl"] = "--split-clauses="+eargs["splcl"] if eargs["splcl"]!="0" else ""
-      if eargs["simparamod"] == "none":
-         eargs["simparamod"] = ""
+
+      def simple(arg, option):
+         eargs[arg] = option if eargs[arg] == "1" else ""
+
+      def direct(arg, option, none):
+         if eargs[arg] == none:
+            eargs[arg] = ""
+         else:
+            eargs[arg] = "%s=%s " % (option, eargs[arg])
+
+      # simple binary flags (no value)
+      simple("splaggr",        "--split-aggressive ")
+      simple("srd",            "--split-reuse-defs ")
+      simple("forwardcntxtsr", "--forward-context-sr ")
+      simple("defcnf",         "--definitional-cnf ")
+      simple("prefer",         "--prefer-initial-clauses ")
+      simple("presat",         "--presat-simplify ")
+      simple("condense",       "--condense ")
+
+      # direct valued flags
+      direct("splcl",   "--split-clauses",       "0")
+      direct("fwdemod", "--forward-demod-level", "2")
+
+      # destructive equality resolution
+      if eargs["der"] == "std":
+         eargs["der"] = "--destructive-er "
+      elif eargs["der"] == "strong":
+         eargs["der"] = "--strong-destructive-er "
+      elif eargs["der"] == "agg":
+         eargs["der"] = "--destructive-er --destructive-er-aggressive "
+      else: # should be "none"
+         eargs["der"] = ""
+      
+      # paramodulation
+      if eargs["simparamod"] == "normal":
+         eargs["simparamod"] = "--simul-paramod "
       elif eargs["simparamod"] == "oriented":
-         eargs["simparamod"] = "--oriented-simul-paramod"
-      else:
-         eargs["simparamod"] = "--simul-paramod"
+         eargs["simparamod"] = "--oriented-simul-paramod "
+      else: # should be "none"
+         eargs["simparamod"] = ""
+
       # term ordering
       if eargs["tord"] == "KBO6":
-         eargs["prord"] = "-G%(tord_prec)s -w%(tord_weight)s" % eargs
+         eargs["prord"] = "-G%(tord_prec)s -w%(tord_weight)s " % eargs
          if eargs["tord_const"] != "0":
-            eargs["prord"] += " -c%(tord_const)s" % eargs
+            eargs["prord"] += "-c%(tord_const)s " % eargs
       elif eargs["tord"] == "LPO4":
-         eargs["prord"] = "-G%(tord_prec)s" % eargs
+         eargs["prord"] = "-G%(tord_prec)s " % eargs
       elif eargs["tord"] == "WPO":
-         eargs["prord"] = "-G%(tord_prec)s -w%(tord_weight)s -A%(tord_coefs)s -a%(tord_algebra)s" % eargs
+         eargs["prord"] = "-G%(tord_prec)s -w%(tord_weight)s -A%(tord_coefs)s -a%(tord_algebra)s " % eargs
          if eargs["tord_const"] != "0":
-            eargs["prord"] += " -c%(tord_const)s" % eargs
+            eargs["prord"] += " -c%(tord_const)s " % eargs
       else:
          eargs["prord"] = ""
+
       # SinE
       if eargs["sine"] == "1":
          for x in eargs:
@@ -106,14 +141,16 @@ class EproverRunner(GrackleRunner):
          eargs["sine"] = E_SINE_ARGS % eargs
       else:
          eargs["sine"] = ""
-      # heuristic
+
+      # given clause selection heuristic
       slots = int(eargs["slots"])
       cefs = []
       for i in range(slots):
          cefs += ["%s*%s" % (eargs["freq%d"%i],block2cef(eargs["cef%d"%i]))]
       cefs.sort()
       eargs["heur"] = "-H'(%s)'" % ",".join(cefs)
-      return E_PROTO_ARGS % eargs
+
+      return E_FIXED_ARGS + (E_PROTO_ARGS % eargs)
 
    def process(self, out, inst):
       result = e.result.parse(f_out=None, out=out.decode())
