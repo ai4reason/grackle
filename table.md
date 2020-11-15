@@ -1,5 +1,7 @@
+
+
 | S 	| S . 3s 	| S + 3s 	| sine 	| sel 	| splcl 	| tord_const 	| simparamod 	| tord_weight 	| defcnf 	| presat 	| der 	| splaggr 	| tord_prec 	| forwardcntxtsr 	| srd 	| tord 	| fwdemod 	| condense
-|---|---|---|---|---|---|---|---|---
+| - 	| -	| - | - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| - 	| -
 | blistrtune1572 	| 812 	| 857 	| 1 	| SelectComplexG 	| 0 	| 0 	| oriented 	| arity 	| 1 	| 0 	| agg 	| 1 	| arity 	| 1 	| 1 	| KBO6 	| 1 	| 0
 | paramils157 	| 1685 	| 1805 	| 1 	| SelectComplexG 	| 0 	| 0 	| normal 	| arity 	| 1 	| 0 	| agg 	| 1 	| invfreq 	| 1 	| 1 	| LPO4 	| 1 	| 0
 | mzr04 	| 1833 	| 1918 	| 0 	| SelectComplexG 	| 0 	| 0 	| oriented 	| arity 	| 1 	| 0 	| agg 	| 0 	| arity 	| 0 	| 0 	| Auto 	| 1 	| 0
