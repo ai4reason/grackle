@@ -9,7 +9,7 @@ E_FIXED_ARGS = "--delete-bad-limit=150000000 "
 
 #E_PROTO_ARGS = "--definitional-cnf=24 %(splaggr)s %(splcl)s %(srd)s %(simparamod)s %(forwardcntxtsr)s --destructive-er-aggressive --destructive-er -t%(tord)s %(prord)s -F1 --delete-bad-limit=150000000 -W%(sel)s %(sine)s %(heur)s"
 
-E_PROTO_ARGS = "%(splaggr)s%(srd)s%(forwardcntxtsr)s%(defcnf)s%(prefer)s%(presat)s%(condense)s%(splcl)s%(fwdemod)s-t%(tord)s %(prord)s-W%(sel)s %(sine)s%(heur)s"
+E_PROTO_ARGS = "%(splaggr)s%(srd)s%(forwardcntxtsr)s%(defcnf)s%(prefer)s%(presat)s%(condense)s%(splcl)s%(fwdemod)s%(der)s%(simparamod)s-t%(tord)s %(prord)s-W%(sel)s %(sine)s%(heur)s"
 
 E_SINE_ARGS = "--sine='GSinE(%(sineG)s,%(sineh)s,%(sinegf)s,%(sineD)s,%(sineR)s,%(sineL)s,%(sineF)s)' "
 
@@ -80,9 +80,11 @@ class EproverRunner(GrackleRunner):
       eargs = convert(eargs)
 
       def simple(arg, option):
+         nonlocal eargs
          eargs[arg] = option if eargs[arg] == "1" else ""
 
       def direct(arg, option, none):
+         nonlocal eargs
          if eargs[arg] == none:
             eargs[arg] = ""
          else:
@@ -105,9 +107,11 @@ class EproverRunner(GrackleRunner):
       if eargs["der"] == "std":
          eargs["der"] = "--destructive-er "
       elif eargs["der"] == "strong":
-         eargs["der"] = "--strong-destructive-er "
+         eargs["der"] = "--destructive-er --strong-destructive-er "
       elif eargs["der"] == "agg":
          eargs["der"] = "--destructive-er --destructive-er-aggressive "
+      elif eargs["der"] == "stragg":
+         eargs["der"] = "--destructive-er --destructive-er-aggressive --strong-destructive-er "
       else: # should be "none"
          eargs["der"] = ""
       
@@ -147,7 +151,7 @@ class EproverRunner(GrackleRunner):
       cefs = []
       for i in range(slots):
          cefs += ["%s*%s" % (eargs["freq%d"%i],block2cef(eargs["cef%d"%i]))]
-      cefs.sort()
+      cefs.sort(key=lambda x: int(x.split("*")[0]))
       eargs["heur"] = "-H'(%s)'" % ",".join(cefs)
 
       return E_FIXED_ARGS + (E_PROTO_ARGS % eargs)
