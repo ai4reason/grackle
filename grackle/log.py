@@ -62,6 +62,7 @@ def timestamp(t_start, msg, prog="GRACKLE"):
    print("> [%02d:%02d:%02d] %s: %s" % (t_hour, t_min, t_sec, prog, msg))
 
 def improved(state, conf):
+   print(conf)
    params = state.trains.runner.recall(conf)
    rep = state.trains.runner.repr(params)
    print("> INVENTED CONFIG: %s: %s" % (conf, rep))

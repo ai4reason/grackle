@@ -42,17 +42,18 @@ class DB:
       # udpate ranking for each instance
       self.update_ranking(confs)
 
-   def update_ranking(self, confs, failed=1000000):
+   def update_ranking(self, confs):
       self.ranking = {}
       for inst in self.insts:
          key = lambda conf: (self.results[conf][inst][0], conf)
-         oks = [c for c in confs if self.results[c][inst] and self.results[c][inst][0] != failed]
+         #oks = [c for c in confs if self.results[c][inst] and self.results[c][inst][0] != failed]
+         oks = [c for c in confs if self.results[c][inst] and self.runner.success(self.results[c][inst][2])]
          self.ranking[inst] = sorted(oks, key=key)
 
    def mastered(self, conf):
       return [i for i in self.insts if conf in self.ranking[i][:self.rank]]
 
-   def status(self, failed=1000000):
+   def status(self, failed=1000000000):
       total = 0
       qsum = 0.0
       tsum = 0.0
@@ -60,11 +61,11 @@ class DB:
       for conf in self.results:
          for inst in self.insts:
             result = self.results[conf][inst]
-            result = result if result else (1000*failed, 0)
+            result = result if result else (failed, 0, "error")
             qsum += result[0]
             tsum += result[1]
             total += 1
-            if result[0] != failed:
+            if self.runner.success(result[2]): # result[0] != failed:
                success.add(inst)
       return (self.name, len(success), qsum/total, tsum/total)
 
@@ -118,8 +119,8 @@ class State:
                if x in unused:
                   unused.remove(x)
 
-      def runner(name):
-         conf = {"direct":False, "cores":self.cores}
+      def runner(name, direct=False):
+         conf = {"direct":direct, "cores":self.cores}
          conf["cls"] = ini["%s.runner"%name]
          copy(conf, "runner.")
          copy(conf, "%s.runner."%name)
@@ -153,8 +154,9 @@ class State:
          self.evals = self.trains
       
       check("trainer")
-      t_runner = runner("trainer")
-      self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
+      t_runner = runner("trainer", direct=True)
+      self.trainer = _load_class(ini["trainer"])(t_runner)
+      #self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")
       

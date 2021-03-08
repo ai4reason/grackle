@@ -27,6 +27,9 @@ class Runner(object):
 
    def process(self, out, inst):
       pass
+
+   def success(self, result):
+      pass
    
    def run(self, params, inst):
       cmd = self.cmd(params, inst)
