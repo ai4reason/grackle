@@ -1,4 +1,4 @@
-cores = 4
+cores = 8
 tops = 30
 best = 4
 rank = 3
@@ -6,7 +6,6 @@ inits = inits.txt
 timeout = 3600
 
 runner.prefix = cvc4-
-runner.cores = 8
 
 trains.data = ufnia-train-test
 trains.runner = grackle.runner.cvc4.Cvc4Runner
@@ -14,7 +13,7 @@ trains.runner.cutoff = 100000
 trains.runner.timeout = 1
 trains.runner.penalty = 100000000 
 
-evals.data = ufnia-devel-test
+evals.data = ufnia-train-test
 evals.runner = grackle.runner.cvc4.Cvc4Runner
 evals.runner.cutoff = 500000
 evals.runner.timeout = 5

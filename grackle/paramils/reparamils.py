@@ -6,7 +6,7 @@ import time
 
 import grackle.paramils.results
 
-def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None):
+def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None, restarts=False):
    def run(numRun, currentInit):
       arg = [binary, "-numRun", str(numRun), "-scenariofile", scenariofile, "-N", str(N), "-validN", validN, "-output_level", "0", "-userunlog", "0", "-init", currentInit]
       return subprocess.Popen(arg,stdout=out,close_fds=True,cwd=cwd)
@@ -37,7 +37,7 @@ def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1
          (n,q,params) = grackle.paramils.results.parse(outdir, numRun)
          log += "%2s:%3s (%8.1f)\t" % (numRun,n,q) 
          #print(numRun, n, q)
-         if not adult and numRun is not elder[0] and n == N:
+         if restarts and not adult and numRun is not elder[0] and n == N:
             adult = True
             stable_len = max(20, time.time() - iter_start)
             stable_time = time.time() + stable_len
