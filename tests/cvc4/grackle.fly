@@ -9,19 +9,16 @@ runner.prefix = cvc4-
 
 trains.data = ufnia-train-test
 trains.runner = grackle.runner.cvc4.Cvc4Runner
-trains.runner.cutoff = 100000
 trains.runner.timeout = 1
 trains.runner.penalty = 100000000 
 
 evals.data = ufnia-train-test
 evals.runner = grackle.runner.cvc4.Cvc4Runner
-evals.runner.cutoff = 500000
 evals.runner.timeout = 5
 evals.runner.penalty = 100000000 
 
-trainer = grackle.trainer.cvc4.Cvc4Trainer
+trainer = grackle.trainer.cvc4.smac3.Cvc4Smac3Trainer
 trainer.runner = grackle.runner.cvc4.Cvc4Runner
-trainer.runner.cutoff = 100000
 trainer.runner.timeout = 1
 trainer.runner.penalty = 100000000
 trainer.timeout = 60

@@ -1,10 +1,10 @@
 from os import path, getenv
 from .runner import GrackleRunner
-from grackle.trainer.cvc4 import DEFAULTS
+from grackle.trainer.cvc4.domain import DEFAULTS
 
 CVC4_BINARY = "cvc4"
 CVC4_STATIC = "-L smt2.6 --no-incremental --no-type-checking --no-interactive --stats"
-CVC4_LIMIT = "--rlimit=%s"
+CVC4_LIMIT = " --rlimit=%s"
 
 CVC4_OK = ["sat", "unsat"]
 CVC4_FAILED = ["unknown", "timeout"]
@@ -16,9 +16,7 @@ class Cvc4Runner(GrackleRunner):
 
    def __init__(self, config={}):
       GrackleRunner.__init__(self, config)
-      self.default("cutoff", 100000)
-      cutoff = self.config["cutoff"]
-      self.default("penalty", 1000*cutoff)
+      self.default("penalty", 100000000)
       penalty = self.config["penalty"]
       self.default("penalty.unknown", penalty)
       self.default("penalty.timeout", penalty)
@@ -37,27 +35,28 @@ class Cvc4Runner(GrackleRunner):
 
    def cmd(self, params, inst):
       args = self.args(params)
-      limit = CVC4_LIMIT % self.config["cutoff"]
       problem = path.join(getenv("SMTLIB_BENCHMARKS", "."), inst)
+      rlimit = CVC4_LIMIT % self.config["rlimit"] if "rlimit" in self.config else ""
       timeout = TIMEOUT % self.config["timeout"] if "timeout" in self.config else ""
-      return f"{timeout}{CVC4_BINARY} {CVC4_STATIC} {limit} {args} {problem}"
+      cmdargs = f"{timeout}{CVC4_BINARY} {CVC4_STATIC}{rlimit} {args} {problem}"
+      return cmdargs
 
    def process(self, out, inst):
       out = out.decode().split("\n")
-      res = out[0]
-      if "interrupted" in res:
-         res = "timeout"
-      if res not in CVC4_RESULTS:
+      result = out[0]
+      if "interrupted" in result:
+         result = "timeout"
+      if result not in CVC4_RESULTS:
          return None
-      (runtime, quality) = self.output(out[1:])
-      q = quality
-      if res == "timeout": #or quality > self.config["cutoff"]:  
+      (runtime, resources) = self.output(out[1:])
+      quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
+      if result == "timeout": #or quality > self.config["cutoff"]:  
          quality = self.config["penalty.timeout"]
-      elif res == "unknown":
+      elif result == "unknown":
          quality = self.config["penalty.unknown"]
       if (runtime is None) or (quality is None):
          return None
-      return [quality, runtime, res, q]
+      return [quality, runtime, result, resources]
 
    def output(self, lines):
       (runtime, resources) = (None, None)
@@ -75,4 +74,8 @@ class Cvc4Runner(GrackleRunner):
       params = {x:params[x] for x in params if params[x] != DEFAULTS[x]}
       return params
 
+def wrapper(conf, instance, config={}):
+   runner = Cvc4Runner(config)
+   result = runner.run(conf, instance)
+   return (result[0], result[1:]) if result else None
 
