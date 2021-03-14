@@ -80,7 +80,7 @@ DEFAULTS = {
    'relevant_triggers': 'no', 
    'simplification': 'batch', 
    'term_db_mode': 'all', 
-   'trigger_sel': 'min'
+   'trigger_sel': 'min',
    'fmf_bound': 'no', 
    'fmf_bound_int': 'no', 
    'fmf_bound_lazy': 'no', 
