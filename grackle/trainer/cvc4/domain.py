@@ -32,7 +32,6 @@ fmf_fmc_simple {yes,no} [%(fmf_fmc_simple)s]
 fmf_fresh_dc {yes,no} [%(fmf_fresh_dc)s]
 fmf_fun {yes,no} [%(fmf_fun)s]
 fmf_fun_rlv {yes,no} [%(fmf_fun_rlv)s]
-fmf_inst_engine {yes,no} [%(fmf_inst_engine)s]
 """
 # mbqi {none,fmc,trust} [fmc]  -- `trust` was removed as being incomplete
 # fmf_type_completion_thresh [100,10000] [1000]
@@ -40,14 +39,14 @@ fmf_inst_engine {yes,no} [%(fmf_inst_engine)s]
 CONDITIONS = """
 macros_quant_mode | macros_quant in {yes}
 full_saturate_quant_rd | full_saturate_quant in {yes}
-fmf_bound | finite_model_fine in {yes}
-fmf_bound_int | finite_model_fine in {yes}
-fmf_bound_lazy | finite_model_fine in {yes}
-fmf_fmc_simple | finite_model_fine in {yes}
-fmf_fresh_dc | finite_model_fine in {yes}
-fmf_fun | finite_model_fine in {yes}
-fmf_fun_rlv | finite_model_fine in {yes}
-fmf_inst_engine | finite_model_fine in {yes}
+fmf_bound | finite_model_find in {yes}
+fmf_bound_int | finite_model_find in {yes}
+fmf_bound_lazy | finite_model_find in {yes}
+fmf_fmc_simple | finite_model_find in {yes}
+fmf_fresh_dc | finite_model_find in {yes}
+fmf_fun | finite_model_find in {yes}
+fmf_fun_rlv | finite_model_find in {yes}
+fmf_inst_engine | finite_model_find in {yes}
 fmf_bound_lazy | fmf_bound in {yes}
 fmf_bound_int | fmf_bound in {yes}
 """
