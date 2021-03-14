@@ -5,7 +5,9 @@ from grackle.runner.cvc4 import wrapper as cvc4wrapper
 class Cvc4Smac3Trainer(Smac3Trainer):
 
    def domains(self, params):
-      return (PARAMS % DEFAULTS) + CONDITIONS + FORBIDDENS 
+      defaults = dict(DEFAULTS)
+      defaults.update(params)
+      return (PARAMS % defaults) + CONDITIONS + FORBIDDENS 
 
    def improve(self, state, conf, insts):
       config = dict(self.runner.config)
