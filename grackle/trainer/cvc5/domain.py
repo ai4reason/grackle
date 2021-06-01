@@ -32,6 +32,25 @@ fmf_fmc_simple {yes,no} [%(fmf_fmc_simple)s]
 fmf_fresh_dc {yes,no} [%(fmf_fresh_dc)s]
 fmf_fun {yes,no} [%(fmf_fun)s]
 fmf_fun_rlv {yes,no} [%(fmf_fun_rlv)s]
+# cvc5 new ones:
+cegqi_bv {yes,no} [%(cegqi_bv)s]
+cegqi_bv_ineq {eq_slack,eq_boundary,keep} [%(cegqi_bv_ineq)s]
+cegqi_innermost {yes,no} [%(cegqi_innermost)s]
+cegqi_nested_qe {yes,no} [%(cegqi_nested_qe)s]
+cegqi {yes,no} [%(cegqi)s]
+cegqi_full {yes,no} [%(cegqi_full)s]
+cegqi_model {yes,no} [%(cegqi_model)s]
+cegqi_all {yes,no} [%(cegqi_all)s]
+cegqi_multi_inst {yes,no} [%(cegqi_multi_inst)s]
+fp_exp {yes,no} [%(fp_exp)s]
+fs_sum {yes,no} [%(fs_sum)s]
+global_negate {yes,no} [%(global_negate)s]
+nl_ext_tplanes {yes,no} [%(nl_ext_tplanes)s]
+sygus_inst {yes,no} [%(sygus_inst)s]
+sygus_inference {yes,no} [%(sygus_inference)s]
+sygus_inst_mode {priority_inst,priority_eval,interleave} [%(sygus_inst_mode)s]
+sygus_inst_scope {in,out,both} [%(sygus_inst_scope)s]
+sygus_inst_term_sel {min,max,both} [%(sygus_inst_term_sel)s]
 """
 # mbqi {none,fmc,trust} [fmc]  -- `trust` was removed as being incomplete
 # fmf_type_completion_thresh [100,10000] [1000]
@@ -90,5 +109,23 @@ DEFAULTS = {
    'fmf_fun': 'no', 
    'fmf_fun_rlv': 'no', 
    'fmf_inst_engine': 'yes', 
+   'cegqi_bv': 'yes',
+   'cegqi_bv_ineq': 'eq_boundary',
+   'cegqi_innermost': 'yes',
+   'cegqi_nested_qe': 'no',
+   'cegqi': 'no',
+   'cegqi_full': 'no',
+   'cegqi_model': 'yes',
+   'cegqi_all':  'no',
+   'cegqi_multi_inst': 'no',
+   'fp_exp': 'no',
+   'fs_sum': 'no',
+   'global_negate': 'no',
+   'nl_ext_tplanes': 'no',
+   'sygus_inst': 'no',
+   'sygus_inference': 'no',
+   'sygus_inst_mode': 'priority_inst',
+   'sygus_inst_scope': 'in',
+   'sygus_inst_term_sel': 'min',
 }
 
