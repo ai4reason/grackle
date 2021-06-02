@@ -43,17 +43,16 @@ class Cvc5Runner(GrackleRunner):
 
    def process(self, out, inst):
       out = out.decode().split("\n")
+      while len(out)>1 and out[0].startswith("Warning"):
+         out = out[1:]
       result = out[0]
       if "interrupted" in result:
          result = "timeout"
       if result not in CVC5_RESULTS:
          return None
       (runtime, resources) = self.output(out[1:])
-      if not runtime:
-         print("!!! BEGIN NO RUNTIME !!!")
-         print("\n".join(out))
-         print("!!! END NO RUNTIME !!!")
-         runtime = self.config["penalty.timeout"]
+      if (runtime is None):
+         return None
       quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
       if result == "timeout": #or quality > self.config["cutoff"]:  
          quality = self.config["penalty.timeout"]
