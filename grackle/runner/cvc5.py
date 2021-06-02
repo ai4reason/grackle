@@ -49,6 +49,11 @@ class Cvc5Runner(GrackleRunner):
       if result not in CVC5_RESULTS:
          return None
       (runtime, resources) = self.output(out[1:])
+      if not runtime:
+         print("!!! BEGIN NO RUNTIME !!!")
+         print("\n".join(out))
+         print("!!! END NO RUNTIME !!!")
+         runtime = self.config["penalty.timeout"]
       quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
       if result == "timeout": #or quality > self.config["cutoff"]:  
          quality = self.config["penalty.timeout"]
