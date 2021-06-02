@@ -58,6 +58,7 @@ sygus_inst_term_sel {min,max,both} [%(sygus_inst_term_sel)s]
 CONDITIONS = """
 macros_quant_mode | macros_quant in {yes}
 full_saturate_quant_rd | full_saturate_quant in {yes}
+fs_sum | full_saturate_quant in {yes}
 uf_ss | finite_model_find in {yes}
 mbqi | finite_model_find in {yes}
 fmf_bound | finite_model_find in {yes}
