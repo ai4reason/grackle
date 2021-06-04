@@ -51,6 +51,7 @@ sygus_inference {yes,no} [%(sygus_inference)s]
 sygus_inst_mode {priority_inst,priority_eval,interleave} [%(sygus_inst_mode)s]
 sygus_inst_scope {in,out,both} [%(sygus_inst_scope)s]
 sygus_inst_term_sel {min,max,both} [%(sygus_inst_term_sel)s]
+fmf_type_completion_thresh {100,250,500,750,1000,2500,5000,7500,10000} [%(fmf_type_completion_thresh)s]
 """
 # mbqi {none,fmc,trust} [fmc]  -- `trust` was removed as being incomplete
 # fmf_type_completion_thresh [100,10000] [1000]
@@ -71,13 +72,14 @@ fmf_fun_rlv | finite_model_find in {yes}
 fmf_inst_engine | finite_model_find in {yes}
 fmf_bound_lazy | fmf_bound in {yes}
 fmf_bound_int | fmf_bound in {yes}
+fmf_type_completion_thresh | finite_model_find in {yes}
 sygus_inst_mode | sygus_inst in {yes}
 sygus_inst_scope | sygus_inst in {yes}
 sygus_inst_term_sel | sygus_inst in {yes}
 """
 
 FORBIDDENS = """
-{full_saturate_quant=yes, finite_model_find=yes}
+#{full_saturate_quant=yes, finite_model_find=yes}
 """
 
 DEFAULTS = {
@@ -131,5 +133,6 @@ DEFAULTS = {
    'sygus_inst_mode': 'priority_inst',
    'sygus_inst_scope': 'in',
    'sygus_inst_term_sel': 'min',
+   'fmf_type_completion_thresh': '1000',
 }
 
