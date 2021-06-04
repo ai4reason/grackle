@@ -46,7 +46,7 @@ class Cvc5Runner(GrackleRunner):
       while len(out)>1 and out[0].startswith("Warning"):
          out = out[1:]
       result = out[0]
-      if "interrupted" in result:
+      if ("interrupted" in result) or ("error" in result):
          result = "timeout"
       if result not in CVC5_RESULTS:
          return None
