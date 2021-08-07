@@ -13,6 +13,26 @@ E_PROTO_ARGS = "%(splaggr)s%(srd)s%(forwardcntxtsr)s%(defcnf)s%(prefer)s%(presat
 
 E_SINE_ARGS = "--sine='GSinE(%(sineG)s,%(sineh)s,%(sinegf)s,%(sineD)s,%(sineR)s,%(sineL)s,%(sineF)s)' "
 
+DEFAULTS = {
+   "sel": "SelectMaxLComplexAvoidPosPred",
+   "tord": "LPO4",
+   "tord_prec": "arity",
+   "tord_weight": "arity",
+   "simparamod": "none",
+   "srd": "0",
+   "forwardcntxtsr": "0",
+   "splaggr": "0",
+   "splcl": "0",
+   "tord_const": "0",
+   "sine": "0",
+   "defcnf": "0",
+   "prefer": "0",
+   "fwdemod": "2",
+   "der": "none",
+   "presat": "0",
+   "condense": "0",
+}
+
 SINE_DEFAULTS = { 
    "sineG": "CountFormulas", 
    "sineh": "hypos", 
@@ -55,6 +75,10 @@ def convert(params):
       params = defaults
    else:
       params["sine"] = "0"
+   # add missing defaults
+   defaults = dict(DEFAULTS)
+   defaults.update(params)
+   params = defaults
 
    return params
 
