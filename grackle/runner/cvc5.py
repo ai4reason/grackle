@@ -51,15 +51,16 @@ class Cvc5Runner(GrackleRunner):
       if result not in CVC5_RESULTS:
          result = "unknown"
       (runtime, resources) = self.output(out[1:])
+      failed = [100*self.config["penalty.unknown"], -1, "failed", -1]
       if (runtime is None):
-         return None
+         return failed
       quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
       if result == "timeout": #or quality > self.config["cutoff"]:  
          quality = self.config["penalty.timeout"]
       elif result == "unknown":
          quality = self.config["penalty.unknown"]
       if (runtime is None) or (quality is None):
-         return None
+         return failed
       return [quality, runtime, result, resources]
 
    def output(self, lines):
@@ -81,5 +82,5 @@ class Cvc5Runner(GrackleRunner):
 def wrapper(conf, instance, config={}):
    runner = Cvc5Runner(config)
    result = runner.run(conf, instance)
-   return (result[0], result[1:]) if result else None
+   return (result[0], result[1:]) 
 
