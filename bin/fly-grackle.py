@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import sys
-import grackle
+if __name__ == '__main__':
+   import sys
+   import grackle
 
-if len(sys.argv) != 2:
-   print("usage: %s grackle.fly" % sys.argv[0])
-   sys.exit(-1)
+   if len(sys.argv) != 2:
+      print("usage: %s grackle.fly" % sys.argv[0])
+      sys.exit(-1)
 
-init = grackle.state.State(sys.argv[1])
-grackle.main.loop(init)
+   init = grackle.state.State(sys.argv[1])
+   grackle.main.loop(init)
 

@@ -51,7 +51,7 @@ class Cvc5Runner(GrackleRunner):
       if result not in CVC5_RESULTS:
          result = "unknown"
       (runtime, resources) = self.output(out[1:])
-      failed = [100*self.config["penalty.unknown"], -1, "failed", -1]
+      failed = [100*self.config["penalty.unknown"], self.config["timeout"], "failed", -1]
       if (runtime is None):
          return failed
       quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
