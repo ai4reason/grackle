@@ -156,6 +156,7 @@ class State:
       check("trainer")
       t_runner = runner("trainer", direct=True)
       self.trainer = _load_class(ini["trainer"])(t_runner)
+      self.trainer.config["cls"] = ini["trainer"]
       #self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")

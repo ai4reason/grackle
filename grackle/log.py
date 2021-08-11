@@ -104,7 +104,7 @@ def scenario(state, ini, unused=None):
    print("> inits = %s" % ini["inits"])
    #print("> runner = %s" % ini["runner"])
    #print("> trainer = %s" % ini["trainer"])
-
+   print("> trainer.config: %s" % show(state.trainer.config))
 
    print(">")
    print("> Loaded %d evals" % len(state.evals.insts))
