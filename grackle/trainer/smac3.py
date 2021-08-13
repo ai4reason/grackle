@@ -35,21 +35,29 @@ class Smac3Trainer(Trainer):
       open(f_insts, "w").write("\n".join(insts))
 
       params = self.runner.recall(conf)
-      scn = dict(SCENARIO)
-      scn["execdir"] = cwd
-      scn["train_inst_fn"] = f_insts
-      scn["cs"] = pcs.read(self.domains(params).split("\n"))
-      scn["algo_runs_timelimit"] = self.config["timeout"] * state.cores
-      scn["output_dir"] = cwd
-      scenario = Scenario(scn)
+      if self.config["instance_budget"]:
+         timeout = len(insts) * self.config["instance_budget"]
+         timeout = min(self.config["timeout"], timeout)
+      else:
+         timeout = self.config["timeout"]
+      scenario = Scenario({
+         "deterministic": True,
+         "execdir": cwd,
+         "run_obj": "quality", #"runtime"
+         #"algo_runs_timelimit": 60,
+         "wallclock-limit": timeout,
+         "train_inst_fn": f_insts,
+         "limit_resources": False,
+         "cs": pcs.read(self.domains(params).split("\n")),
+         "output_dir": cwd
+      })
 
       tae = tae if tae else Wrapper(self.runner).run
-      instances = open(f_insts).read().strip().split("\n")
       iargs = {
-         "instances": instances,
+         "instances": insts,
          "min_chall": 1,
          "initial_budget": 1, 
-         "max_budget": len(instances), 
+         "max_budget": len(insts), 
          "eta": 3,
          "deterministic": True,
       }
