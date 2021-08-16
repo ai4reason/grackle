@@ -96,6 +96,8 @@ def scenario(state, ini, unused=None):
    print("> timeout = %s" % state.timeout)
    print("> trains.data = %s" % ini["trains.data"])
    print("> trains.runner.config: %s" % show(state.trains.runner.config))
+   uns = show(state.unsolved) if state.unsolved else "<not used>"
+   print("> unsolved: %s" % uns)
    if "evals.data" in ini:
       print("> evals.data = %s" % ini["evals.data"])
       print("> evals.runner.config:  %s" % show(state.evals.runner.config))
@@ -130,4 +132,24 @@ def fatal(m):
    f = open(FATAL_LOG, "a")
    f.write(m)
    f.close()
+
+def missing(insts):
+   print("> Error: Missing features for the following training instances:")
+   print("\n".join(sorted(insts)))
+
+def kdtree(data):
+   print("> Computing kd-tree for data matrix shape %s." % str(data.shape))
+
+def kdselect(state, conf, idxs, uniq, insts):
+   print("> The selected strategy %s masters %d instances." % (conf, len(insts)))
+   print("> Found %d similar unsolved problems." % len(set(idxs)))
+   print("> Selected %d similar unsolved problems:" % len(uniq))
+   seen = set()
+   for i in range(len(insts)):
+      if idxs[i] in seen:
+         mark = "[ ]"
+      else:
+         mark = "[*]" if idxs[i] in uniq else "[-]"
+      print("%s %s ~ %s" % (mark, state.kdindices[idxs[i]], insts[i]))
+      seen.add(idxs[i])
 

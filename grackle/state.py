@@ -1,7 +1,7 @@
 import json
 import time
 from os import path
-from . import _load_class, log
+from . import _load_class, log, unsolved
 from pyprove import expres
 
 class DB:
@@ -76,6 +76,8 @@ def convert(string):
       return False
    elif string.isdigit():
       return int(string)
+   elif string.count(".") == 1 and all(x.isdigit() for x in string.split(".")):
+      return float(string)
    else:
       return string
 
@@ -90,6 +92,7 @@ class State:
       self.it = 0          # int
       self.done = {}       # { conf : set(frozenset(train)) }
       self.active = []     # [conf]
+      self.unsolved = {}
 
       unused = set(ini)
       def require(key, default):
@@ -103,7 +106,8 @@ class State:
       def check(key):
          if key not in ini:
             raise Exception("Required configuration key '%s' not specified" % key)
-         unused.remove(key)
+         if key in unused:
+            unused.remove(key)
 
       self.cores = require("cores", 4)
       self.tops = require("tops", 10)
@@ -111,12 +115,12 @@ class State:
       self.rank = require("rank", 1)
       self.timeout = require("timeout", 0)
 
-      def copy(to, prefix):
+      def copy(to, prefix, use=True):
          for x in ini:
             if x.startswith(prefix):
                ix = ini[x]
                to[x[len(prefix):]] = convert(ix)
-               if x in unused:
+               if use and (x in unused):
                   unused.remove(x)
 
       def runner(name, direct=False):
@@ -160,6 +164,16 @@ class State:
       #self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")
+
+      copy(self.unsolved, "unsolved.", use=False)
+      if self.unsolved:
+         check("unsolved.features")
+         self.unsolved["ratio"] = require("unsolved.ratio", 1.0)
+         self.unsolved["mode"] = require("unsolved.mode", "inits")
+         modes = ["inits", "all", "actives", "current"]
+         if self.unsolved["mode"] not in modes:
+            raise Exception("Unknown config value for 'unsolved.mode' (%s). Allowed values are: %s." % (self.unsolved["mode"], ", ".join(modes)))
+         unsolved.init(self)
       
       check("inits")
       log.scenario(self, ini, unused)

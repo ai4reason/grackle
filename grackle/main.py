@@ -3,7 +3,7 @@
 import json
 from os import path
 
-from . import log
+from . import log, unsolved
 
 def evaluate(state, db, confs):
    log.timestamp(state.start_time, "Evaluation started")
@@ -40,6 +40,8 @@ def select(state):
 def specialize(state, conf):
    log.timestamp(state.start_time, "Specialization started")
    insts = state.trains.mastered(conf)
+   uns = unsolved.select(state, conf, insts) 
+   insts.extend(uns)
    log.improving(state, conf, insts)
    new = state.trainer.improve(state, conf, insts)
    state.did(conf, insts)

@@ -5,18 +5,8 @@ from grackle.trainer.trainer import Trainer
 from ConfigSpace.read_and_write import pcs
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC 
-from smac.intensification.simple_intensifier import SimpleIntensifier
-from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import SuccessiveHalving
 from .smac3wrapper import Wrapper
-
-SCENARIO = {
-   "deterministic": True,
-   "execdir": ".",
-   "run_obj": "quality", #"runtime"
-   "algo_runs_timelimit": 60,
-   "train_inst_fn": "ufnia-try",
-}
 
 class Smac3Trainer(Trainer):
    
