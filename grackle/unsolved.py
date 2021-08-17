@@ -63,6 +63,8 @@ def update(state, conf):
    state.kdindices = dict(enumerate(uns))
 
 def select(state, conf, insts):
+   if not state.unsolved:
+      return []
    update(state, conf)
    insts = sorted(insts)
    query = numpy.array([state.features[i] for i in insts])
