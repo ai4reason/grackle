@@ -170,6 +170,7 @@ class State:
          check("unsolved.features")
          self.unsolved["ratio"] = require("unsolved.ratio", 1.0)
          self.unsolved["mode"] = require("unsolved.mode", "inits")
+         self.unsolved["maxrank"] = require("unsolved.maxrank", 1)
          modes = ["inits", "all", "actives", "current"]
          if self.unsolved["mode"] not in modes:
             raise Exception("Unknown config value for 'unsolved.mode' (%s). Allowed values are: %s." % (self.unsolved["mode"], ", ".join(modes)))

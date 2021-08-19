@@ -140,16 +140,13 @@ def missing(insts):
 def kdtree(data):
    print("> Computing kd-tree for data matrix shape %s." % str(data.shape))
 
-def kdselect(state, conf, idxs, uniq, insts):
+def kdnone(data):
+   print("> Out of unsolved problems.")
+
+def kdselect(state, conf, insts, selected, info):
    print("> The selected strategy %s masters %d instances." % (conf, len(insts)))
-   print("> Found %d similar unsolved problems." % len(set(idxs)))
-   print("> Selected %d similar unsolved problems:" % len(uniq))
-   seen = set()
-   for i in range(len(insts)):
-      if idxs[i] in seen:
-         mark = "[ ]"
-      else:
-         mark = "[*]" if idxs[i] in uniq else "[-]"
-      print("%s %s ~ %s" % (mark, state.kdindices[idxs[i]], insts[i]))
-      seen.add(idxs[i])
+   print("> Selected %d similar unsolved problems:" % len(selected))
+   for idx in selected:
+      (n,rank) = info[idx]
+      print("%s ~[%d]~ %s" % (state.kdindices[idx], rank, insts[n]))
 
