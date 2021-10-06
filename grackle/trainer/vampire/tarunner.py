@@ -8,5 +8,5 @@ class TARunner:
    def run(self, config, seed, instance):
       result = self.runner.run(config, instance)
       #print("VAMPIRE", instance, result)
-      return (result[0], result[1:]) 
+      return (result[0], result[1:]) if result else None
 
