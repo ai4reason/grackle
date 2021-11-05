@@ -111,58 +111,7 @@ unit_resulting_resolution {ec_only,off,on} [%(unit_resulting_resolution)s]
 unused_predicate_definition_removal {off,on} [%(unused_predicate_definition_removal)s]
 """
 
-CONDITIONS = """
-avatar_add_complementary | avatar in {on}
-avatar_buffered_solver | avatar in {on}
-avatar_congruence_closure | avatar in {on}
-avatar_delete_deactivated | avatar in {on}
-avatar_fast_restart | avatar in {on}
-avatar_flush_period | avatar in {on}
-avatar_flush_quotient | avatar in {on}
-avatar_literal_polarity_advice | avatar in {on}
-avatar_minimize_model | avatar in {on}
-avatar_nonsplittable_components | avatar in {on}
-nonliterals_in_clause_weight | avatar in {on}
-split_at_activation | avatar in {on}
-avatar_split_queue_cutoffs | avatar_split_queue in {on}
-avatar_split_queue_layered_arrangement | avatar_split_queue in {on}
-avatar_split_queue_ratios | avatar_split_queue in {on}
-fmb_enumeration_strategy | fmb_adjust_sorts in {off,group,function}
-global_subsumption_explicit_minim | global_subsumption in {on}
-global_subsumption_sat_solver_power | global_subsumption in {on}
-extensionality_resolution | inequality_splitting in {0}
-restrict_nwc_to_goal_constants | nongoal_weight_coefficient in {1.1,1.2,1.3,1.5,1.7,10,2,2.5,3,4,5}
-positive_literal_split_queue_cutoffs | positive_literal_split_queue in {on}
-positive_literal_split_queue_layered_arrangement | positive_literal_split_queue in {on}
-positive_literal_split_queue_ratios | positive_literal_split_queue in {on}
-equality_proxy | saturation_algorithm in {discount,inst_gen,lrs,otter}
-inst_gen_big_restart_ratio | saturation_algorithm in {inst_gen}
-inst_gen_passive_reactivation | saturation_algorithm in {inst_gen}
-inst_gen_restart_period | saturation_algorithm in {inst_gen}
-inst_gen_restart_period_quotient | saturation_algorithm in {inst_gen}
-inst_gen_selection | saturation_algorithm in {inst_gen}
-inst_gen_with_resolution | saturation_algorithm in {inst_gen}
-sine_selection | saturation_algorithm in {discount,inst_gen,lrs,otter}
-sine_level_split_queue_cutoffs | sine_level_split_queue in {on}
-sine_level_split_queue_layered_arrangement | sine_level_split_queue in {on}
-sine_level_split_queue_ratios | sine_level_split_queue in {on}
-binary_resolution | unit_resulting_resolution in {ec_only,on}
-cc_unsat_cores | avatar_congruence_closure in {model,on}
-fmb_size_weight_ratio | fmb_enumeration_strategy in {contour}
-inst_gen_resolution_ratio | inst_gen_with_resolution in {on}
-sine_tolerance | sine_selection in {axioms,included}
-forward_subsumption | forward_subsumption_resolution in {off}
-global_subsumption_avatar_assumptions | avatar in {on}
-global_subsumption_avatar_assumptions | global_subsumption in {on}
-avatar_eager_removal | avatar in {on}
-avatar_eager_removal | avatar_minimize_model in {all}
-avatar_turn_off_time_frac | avatar in {on}
-inst_gen_selection | saturation_algorithm in {inst_gen}
-sine_depth | sine_selection in {axioms,included}
-sine_generality_threshold | sine_selection in {axioms,included}
-fmb_detect_sort_bounds | fmb_adjust_sorts in {off,expand,group}
-sine_to_pred_levels | literal_comparison_mode in {standard}
-"""
+CONDITIONS = ""
 
 FORBIDDENS = """
 {age_weight_ratio=__1_2,saturation_algorithm=inst_gen,inst_gen_with_resolution=off}
@@ -258,6 +207,251 @@ FORBIDDENS = """
 {selection=1004,inst_gen_with_resolution=off,saturation_algorithm=inst_gen}
 {selection=1010,inst_gen_with_resolution=off,saturation_algorithm=inst_gen}
 {selection=1011,inst_gen_with_resolution=off,saturation_algorithm=inst_gen}
+{avatar_add_complementary=none,avatar=off}
+{avatar_buffered_solver=on,avatar=off}
+{avatar_congruence_closure=model,avatar=off}
+{avatar_congruence_closure=on,avatar=off}
+{avatar_delete_deactivated=large,avatar=off}
+{avatar_delete_deactivated=off,avatar=off}
+{avatar_fast_restart=on,avatar=off}
+{avatar_flush_period=1000,avatar=off}
+{avatar_flush_period=10000,avatar=off}
+{avatar_flush_period=100000,avatar=off}
+{avatar_flush_period=4000,avatar=off}
+{avatar_flush_period=40000,avatar=off}
+{avatar_flush_quotient=1.0,avatar=off}
+{avatar_flush_quotient=1.1,avatar=off}
+{avatar_flush_quotient=1.2,avatar=off}
+{avatar_flush_quotient=1.4,avatar=off}
+{avatar_flush_quotient=2.0,avatar=off}
+{avatar_literal_polarity_advice=false,avatar=off}
+{avatar_literal_polarity_advice=true,avatar=off}
+{avatar_minimize_model=off,avatar=off}
+{avatar_minimize_model=sco,avatar=off}
+{avatar_nonsplittable_components=all,avatar=off}
+{avatar_nonsplittable_components=all_dependent,avatar=off}
+{avatar_nonsplittable_components=none,avatar=off}
+{nonliterals_in_clause_weight=on,avatar=off}
+{split_at_activation=on,avatar=off}
+{avatar_split_queue_cutoffs=1,avatar_split_queue=off}
+{avatar_split_queue_cutoffs=2,avatar_split_queue=off}
+{avatar_split_queue_layered_arrangement=on,avatar_split_queue=off}
+{avatar_split_queue_ratios=__1_4,avatar_split_queue=off}
+{avatar_split_queue_ratios=__4_1,avatar_split_queue=off}
+{fmb_enumeration_strategy=contour,fmb_adjust_sorts=expand}
+{global_subsumption_explicit_minim=off,global_subsumption=off}
+{global_subsumption_explicit_minim=on,global_subsumption=off}
+{global_subsumption_sat_solver_power=full,global_subsumption=off}
+{extensionality_resolution=filter,inequality_splitting=3}
+{extensionality_resolution=known,inequality_splitting=3}
+{restrict_nwc_to_goal_constants=on,nongoal_weight_coefficient=1}
+{positive_literal_split_queue_cutoffs=1,positive_literal_split_queue=off}
+{positive_literal_split_queue_cutoffs=2,positive_literal_split_queue=off}
+{positive_literal_split_queue_layered_arrangement=on,positive_literal_split_queue=off}
+{positive_literal_split_queue_ratios=__1_1,positive_literal_split_queue=off}
+{positive_literal_split_queue_ratios=__4_1,positive_literal_split_queue=off}
+{equality_proxy=R,saturation_algorithm=fmb}
+{equality_proxy=RS,saturation_algorithm=fmb}
+{equality_proxy=RST,saturation_algorithm=fmb}
+{equality_proxy=RSTC,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.1,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.1,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.1,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.1,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.2,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.2,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.2,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.2,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.3,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.3,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.3,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.3,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.4,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.4,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.4,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.4,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.5,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.5,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.5,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.5,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.6,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.6,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.6,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.6,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.7,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.7,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.7,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.7,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=0.8,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=0.8,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=0.8,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=0.8,saturation_algorithm=otter}
+{inst_gen_big_restart_ratio=1.0,saturation_algorithm=discount}
+{inst_gen_big_restart_ratio=1.0,saturation_algorithm=fmb}
+{inst_gen_big_restart_ratio=1.0,saturation_algorithm=lrs}
+{inst_gen_big_restart_ratio=1.0,saturation_algorithm=otter}
+{inst_gen_passive_reactivation=on,saturation_algorithm=discount}
+{inst_gen_passive_reactivation=on,saturation_algorithm=fmb}
+{inst_gen_passive_reactivation=on,saturation_algorithm=lrs}
+{inst_gen_passive_reactivation=on,saturation_algorithm=otter}
+{inst_gen_restart_period=100,saturation_algorithm=discount}
+{inst_gen_restart_period=100,saturation_algorithm=fmb}
+{inst_gen_restart_period=100,saturation_algorithm=lrs}
+{inst_gen_restart_period=100,saturation_algorithm=otter}
+{inst_gen_restart_period=1400,saturation_algorithm=discount}
+{inst_gen_restart_period=1400,saturation_algorithm=fmb}
+{inst_gen_restart_period=1400,saturation_algorithm=lrs}
+{inst_gen_restart_period=1400,saturation_algorithm=otter}
+{inst_gen_restart_period=200,saturation_algorithm=discount}
+{inst_gen_restart_period=200,saturation_algorithm=fmb}
+{inst_gen_restart_period=200,saturation_algorithm=lrs}
+{inst_gen_restart_period=200,saturation_algorithm=otter}
+{inst_gen_restart_period=2000,saturation_algorithm=discount}
+{inst_gen_restart_period=2000,saturation_algorithm=fmb}
+{inst_gen_restart_period=2000,saturation_algorithm=lrs}
+{inst_gen_restart_period=2000,saturation_algorithm=otter}
+{inst_gen_restart_period=400,saturation_algorithm=discount}
+{inst_gen_restart_period=400,saturation_algorithm=fmb}
+{inst_gen_restart_period=400,saturation_algorithm=lrs}
+{inst_gen_restart_period=400,saturation_algorithm=otter}
+{inst_gen_restart_period=4000,saturation_algorithm=discount}
+{inst_gen_restart_period=4000,saturation_algorithm=fmb}
+{inst_gen_restart_period=4000,saturation_algorithm=lrs}
+{inst_gen_restart_period=4000,saturation_algorithm=otter}
+{inst_gen_restart_period=700,saturation_algorithm=discount}
+{inst_gen_restart_period=700,saturation_algorithm=fmb}
+{inst_gen_restart_period=700,saturation_algorithm=lrs}
+{inst_gen_restart_period=700,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=1.05,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=1.05,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=1.05,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=1.05,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=1.1,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=1.1,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=1.1,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=1.1,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=1.2,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=1.2,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=1.2,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=1.2,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=1.3,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=1.3,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=1.3,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=1.3,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=1.5,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=1.5,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=1.5,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=1.5,saturation_algorithm=otter}
+{inst_gen_restart_period_quotient=2.0,saturation_algorithm=discount}
+{inst_gen_restart_period_quotient=2.0,saturation_algorithm=fmb}
+{inst_gen_restart_period_quotient=2.0,saturation_algorithm=lrs}
+{inst_gen_restart_period_quotient=2.0,saturation_algorithm=otter}
+{inst_gen_selection=1,saturation_algorithm=discount}
+{inst_gen_selection=1,saturation_algorithm=fmb}
+{inst_gen_selection=1,saturation_algorithm=lrs}
+{inst_gen_selection=1,saturation_algorithm=otter}
+{inst_gen_selection=1002,saturation_algorithm=discount}
+{inst_gen_selection=1002,saturation_algorithm=fmb}
+{inst_gen_selection=1002,saturation_algorithm=lrs}
+{inst_gen_selection=1002,saturation_algorithm=otter}
+{inst_gen_selection=1003,saturation_algorithm=discount}
+{inst_gen_selection=1003,saturation_algorithm=fmb}
+{inst_gen_selection=1003,saturation_algorithm=lrs}
+{inst_gen_selection=1003,saturation_algorithm=otter}
+{inst_gen_selection=1004,saturation_algorithm=discount}
+{inst_gen_selection=1004,saturation_algorithm=fmb}
+{inst_gen_selection=1004,saturation_algorithm=lrs}
+{inst_gen_selection=1004,saturation_algorithm=otter}
+{inst_gen_selection=1010,saturation_algorithm=discount}
+{inst_gen_selection=1010,saturation_algorithm=fmb}
+{inst_gen_selection=1010,saturation_algorithm=lrs}
+{inst_gen_selection=1010,saturation_algorithm=otter}
+{inst_gen_with_resolution=on,saturation_algorithm=discount}
+{inst_gen_with_resolution=on,saturation_algorithm=fmb}
+{inst_gen_with_resolution=on,saturation_algorithm=lrs}
+{inst_gen_with_resolution=on,saturation_algorithm=otter}
+{sine_selection=axioms,saturation_algorithm=fmb}
+{sine_selection=included,saturation_algorithm=fmb}
+{sine_level_split_queue_cutoffs=__0_2,sine_level_split_queue=off}
+{sine_level_split_queue_cutoffs=__1_2,sine_level_split_queue=off}
+{sine_level_split_queue_layered_arrangement=off,sine_level_split_queue=off}
+{sine_level_split_queue_ratios=__3_2_1,sine_level_split_queue=off}
+{sine_level_split_queue_ratios=__1_3_2,sine_level_split_queue=off}
+{sine_level_split_queue_ratios=__1_1_1,sine_level_split_queue=off}
+{binary_resolution=off,unit_resulting_resolution=off}
+{cc_unsat_cores=first,avatar_congruence_closure=off}
+{cc_unsat_cores=small_ones,avatar_congruence_closure=off}
+{fmb_size_weight_ratio=0,fmb_enumeration_strategy=sbeam}
+{fmb_size_weight_ratio=2,fmb_enumeration_strategy=sbeam}
+{fmb_size_weight_ratio=3,fmb_enumeration_strategy=sbeam}
+{fmb_size_weight_ratio=4,fmb_enumeration_strategy=sbeam}
+{inst_gen_resolution_ratio=__1_128,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_16,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_2,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_32,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_4,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_64,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__1_8,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__128_1,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__16_1,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__32_1,inst_gen_with_resolution=off}
+{inst_gen_resolution_ratio=__64_1,inst_gen_with_resolution=off}
+{sine_tolerance=1.2,sine_selection=off}
+{sine_tolerance=1.5,sine_selection=off}
+{sine_tolerance=2.0,sine_selection=off}
+{sine_tolerance=3.0,sine_selection=off}
+{sine_tolerance=5.0,sine_selection=off}
+{forward_subsumption=off,forward_subsumption_resolution=on}
+{global_subsumption_avatar_assumptions=from_current,avatar=off}
+{global_subsumption_avatar_assumptions=full_model,avatar=off}
+{global_subsumption_avatar_assumptions=from_current,global_subsumption=off}
+{global_subsumption_avatar_assumptions=full_model,global_subsumption=off}
+{avatar_eager_removal=off,avatar=off}
+{avatar_eager_removal=off,avatar_minimize_model=off}
+{avatar_eager_removal=off,avatar_minimize_model=sco}
+{avatar_turn_off_time_frac=0.2,avatar=off}
+{avatar_turn_off_time_frac=0.4,avatar=off}
+{avatar_turn_off_time_frac=0.6,avatar=off}
+{avatar_turn_off_time_frac=0.8,avatar=off}
+{inst_gen_selection=1,saturation_algorithm=discount}
+{inst_gen_selection=1,saturation_algorithm=fmb}
+{inst_gen_selection=1,saturation_algorithm=lrs}
+{inst_gen_selection=1,saturation_algorithm=otter}
+{inst_gen_selection=1002,saturation_algorithm=discount}
+{inst_gen_selection=1002,saturation_algorithm=fmb}
+{inst_gen_selection=1002,saturation_algorithm=lrs}
+{inst_gen_selection=1002,saturation_algorithm=otter}
+{inst_gen_selection=1003,saturation_algorithm=discount}
+{inst_gen_selection=1003,saturation_algorithm=fmb}
+{inst_gen_selection=1003,saturation_algorithm=lrs}
+{inst_gen_selection=1003,saturation_algorithm=otter}
+{inst_gen_selection=1004,saturation_algorithm=discount}
+{inst_gen_selection=1004,saturation_algorithm=fmb}
+{inst_gen_selection=1004,saturation_algorithm=lrs}
+{inst_gen_selection=1004,saturation_algorithm=otter}
+{inst_gen_selection=1010,saturation_algorithm=discount}
+{inst_gen_selection=1010,saturation_algorithm=fmb}
+{inst_gen_selection=1010,saturation_algorithm=lrs}
+{inst_gen_selection=1010,saturation_algorithm=otter}
+{sine_depth=1,sine_selection=off}
+{sine_depth=10,sine_selection=off}
+{sine_depth=2,sine_selection=off}
+{sine_depth=3,sine_selection=off}
+{sine_depth=4,sine_selection=off}
+{sine_depth=5,sine_selection=off}
+{sine_depth=7,sine_selection=off}
+{sine_generality_threshold=1,sine_selection=off}
+{sine_generality_threshold=2,sine_selection=off}
+{sine_generality_threshold=4,sine_selection=off}
+{sine_generality_threshold=8,sine_selection=off}
+{sine_generality_threshold=16,sine_selection=off}
+{sine_generality_threshold=32,sine_selection=off}
+{sine_generality_threshold=64,sine_selection=off}
+{fmb_detect_sort_bounds=on,fmb_adjust_sorts=function}
+{sine_to_pred_levels=no,literal_comparison_mode=predicate}
+{sine_to_pred_levels=no,literal_comparison_mode=reverse}
+{sine_to_pred_levels=on,literal_comparison_mode=predicate}
+{sine_to_pred_levels=on,literal_comparison_mode=reverse}
 """
 
 
