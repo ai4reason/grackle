@@ -34,7 +34,7 @@ def update(db, confs):
 
 def status(state, db):
    runtime = (time.time() - state.start_time) / 60
-   print("> STATUS @ %d (%s): %s, %.2f, %.4f" % ((runtime,)+db.status()))
+   print("> STATUS @ %d (%s): %s, %.2f, %.2f (%.2f, %.4f)" % ((runtime,)+db.status()))
 
 def candidates(candidates, avgs):
    print("TRAINING CANDIDATES:")

@@ -57,6 +57,8 @@ class DB:
       total = 0
       qsum = 0.0
       tsum = 0.0
+      qsumsuc = 0.0
+      tsumsuc = 0.0
       success = set()
       for conf in self.results:
          for inst in self.insts:
@@ -66,8 +68,11 @@ class DB:
             tsum += result[1]
             total += 1
             if self.runner.success(result[2]): # result[0] != failed:
+               qsumsuc += result[0]
+               tsumsuc += result[1]
                success.add(inst)
-      return (self.name, len(success), qsum/total, tsum/total)
+            success = len(success)
+      return (self.name, success, qsumsuc/success, tsumsuc/success, qsum/total, tsum/total)
 
 def convert(string):
    if string == "True":
