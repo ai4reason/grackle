@@ -70,8 +70,9 @@ class VampireRunner(GrackleRunner):
       if (runtime is None) or (result is None):
          return [100*self.config["penalty"], self.config["timeout"], "failed", -1]
       resources = int(resources) if resources else -1
-      runtime = float(runtime)
-      quality = int(1000*runtime)
+      ok = self.success(result)
+      runtime = float(runtime) if ok else self.config["timeout"]
+      quality = int(1000*runtime) if ok else self.config["penalty"]
       return [quality, runtime, result, resources]
 
    def success(self, result):
