@@ -51,6 +51,8 @@ class VampireRunner(GrackleRunner):
       def get(key):
          return res[key] if key in res else None
       out = out.decode()
+      if "WARNING Broken Constraint:" in out:
+         return None
       res = dict(PAT.findall(out))
       runtime = get("Time elapsed:")
       result = get("SZS status")
