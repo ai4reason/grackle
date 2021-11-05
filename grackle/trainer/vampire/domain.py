@@ -23,6 +23,7 @@ binary_resolution {off,on} [%(binary_resolution)s]
 cc_unsat_cores {first,small_ones,all} [%(cc_unsat_cores)s]
 condensation {fast,off,on} [%(condensation)s]
 extensionality_resolution {filter,known,off} [%(extensionality_resolution)s]
+forward_subsumption_resolution {off,on} [%(forward_subsumption_resolution)s]
 function_definition_elimination {all,none,unused} [%(function_definition_elimination)s]
 general_splitting {input_only,off} [%(general_splitting)s]
 global_subsumption {off,on} [%(global_subsumption)s]
@@ -91,6 +92,7 @@ DEFAULTS = {
    "cc_unsat_cores": "all",
    "condensation": "off",
    "extensionality_resolution": "off",
+   "forward_subsumption_resolution": "on",
    "function_definition_elimination": "all",
    "general_splitting": "off",
    "global_subsumption": "off",
