@@ -58,14 +58,15 @@ class VampireRunner(GrackleRunner):
       result = get("SZS status")
       if result not in V_RESULTS:
          reason = get("Termination reason:")
-         if not reason:
-            return None
+         #if not reason:
+         #   return None
          if reason == "Time":
             result = "ResourceOut"
          elif reason == "Refutation":
             result = "GaveUp"
          else:
-            return None
+            #return None
+            result = None
       resources = get("Active clauses:")
       if (runtime is None) or (result is None):
          return [100*self.config["penalty"], self.config["timeout"], "failed", -1]
