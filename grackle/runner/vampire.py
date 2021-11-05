@@ -95,6 +95,8 @@ class VampireRunner(GrackleRunner):
    def conditions(self, s_conds):
       conds = {}
       for line in s_conds.strip().split("\n"):
+         if "|" not in line:
+            continue
          (name, cond) = line.strip().split("|")
          name = name.strip()
          (cname, vals) = cond.split(" in ")

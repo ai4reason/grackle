@@ -50,22 +50,7 @@ unit_resulting_resolution {ec_only,off,on} [%(unit_resulting_resolution)s]
 unused_predicate_definition_removal {off,on} [%(unused_predicate_definition_removal)s]
 """
 
-CONDITIONS = """
-avatar_add_complementary | avatar in {on}
-avatar_congruence_closure | avatar in {on}
-avatar_fast_restart | avatar in {on}
-avatar_flush_period | avatar in {on}
-avatar_flush_quotient | avatar in {on}
-avatar_minimize_model | avatar in {on}
-avatar_nonsplittable_components | avatar in {on}
-nonliterals_in_clause_weight | avatar in {on}
-global_subsumption_explicit_minim | global_subsumption in {on}
-sine_selection | saturation_algorithm in {discount,inst_gen,lrs,otter}
-binary_resolution | unit_resulting_resolution in {ec_only,on}
-cc_unsat_cores | avatar_congruence_closure in {model,on}
-sine_tolerance | sine_selection in {axioms,included}
-sine_depth | sine_selection in {axioms,included}
-"""
+CONDITIONS = ""
 
 FORBIDDENS = """
 {age_weight_ratio=__1_2,saturation_algorithm=inst_gen}
@@ -128,6 +113,45 @@ FORBIDDENS = """
 {selection=1004,saturation_algorithm=inst_gen}
 {selection=1010,saturation_algorithm=inst_gen}
 {selection=1011,saturation_algorithm=inst_gen}
+{avatar_add_complementary=none,avatar=off}
+{avatar_congruence_closure=model,avatar=off}
+{avatar_congruence_closure=on,avatar=off}
+{avatar_fast_restart=on,avatar=off}
+{avatar_flush_period=1000,avatar=off}
+{avatar_flush_period=10000,avatar=off}
+{avatar_flush_period=100000,avatar=off}
+{avatar_flush_period=4000,avatar=off}
+{avatar_flush_period=40000,avatar=off}
+{avatar_flush_quotient=1.0,avatar=off}
+{avatar_flush_quotient=1.1,avatar=off}
+{avatar_flush_quotient=1.2,avatar=off}
+{avatar_flush_quotient=1.4,avatar=off}
+{avatar_flush_quotient=2.0,avatar=off}
+{avatar_minimize_model=off,avatar=off}
+{avatar_minimize_model=sco,avatar=off}
+{avatar_nonsplittable_components=all,avatar=off}
+{avatar_nonsplittable_components=all_dependent,avatar=off}
+{avatar_nonsplittable_components=none,avatar=off}
+{nonliterals_in_clause_weight=on,avatar=off}
+{global_subsumption_explicit_minim=off,global_subsumption=off}
+{global_subsumption_explicit_minim=on,global_subsumption=off}
+{sine_selection=axioms,saturation_algorithm=fmb}
+{sine_selection=included,saturation_algorithm=fmb}
+{binary_resolution=off,unit_resulting_resolution=off}
+{cc_unsat_cores=first,avatar_congruence_closure=off}
+{cc_unsat_cores=small_ones,avatar_congruence_closure=off}
+{sine_tolerance=1.2,sine_selection=off}
+{sine_tolerance=1.5,sine_selection=off}
+{sine_tolerance=2.0,sine_selection=off}
+{sine_tolerance=3.0,sine_selection=off}
+{sine_tolerance=5.0,sine_selection=off}
+{sine_depth=1,sine_selection=off}
+{sine_depth=10,sine_selection=off}
+{sine_depth=2,sine_selection=off}
+{sine_depth=3,sine_selection=off}
+{sine_depth=4,sine_selection=off}
+{sine_depth=5,sine_selection=off}
+{sine_depth=7,sine_selection=off}
 """
 
 
