@@ -1,7 +1,8 @@
 import json
 import time
 from os import path
-from . import _load_class, log, unsolved
+from . import log, unsolved
+from .tools import load_class
 from pyprove import expres
 
 class DB:
@@ -134,7 +135,7 @@ class State:
          conf["cls"] = ini["%s.runner"%name]
          copy(conf, "runner.")
          copy(conf, "%s.runner."%name)
-         return _load_class(conf["cls"])(conf)
+         return load_class(conf["cls"])(conf)
 
       def data(name):
          did = ini["%s.data"%name]
@@ -165,9 +166,9 @@ class State:
       
       check("trainer")
       t_runner = runner("trainer", direct=True)
-      self.trainer = _load_class(ini["trainer"])(t_runner)
+      self.trainer = load_class(ini["trainer"])(t_runner)
       self.trainer.config["cls"] = ini["trainer"]
-      #self.trainer = _load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
+      #self.trainer = load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")
 

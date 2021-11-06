@@ -2,7 +2,7 @@
 
 if __name__ == '__main__':
    import sys
-   import grackle
+   import grackle.state, grackle.main
 
    if len(sys.argv) != 2:
       print("usage: %s grackle.fly" % sys.argv[0])

@@ -3,14 +3,14 @@
 if __name__ == '__main__':
    import sys
    import json
-   import grackle
+   from grackle.tools import load_class
    
    RESULT="\nResult for ParamILS: %s, %s, %s, 1000000, %s"
    
    def run():
       conf = json.loads(sys.argv[1])
       cls = conf["cls"]
-      runner = grackle._load_class(cls)(config=conf)
+      runner = load_class(cls)(config=conf)
       runner.config["cutoff"] = int(float(sys.argv[4]))
       inst = sys.argv[2]
       seed = sys.argv[6]
