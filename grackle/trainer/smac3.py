@@ -1,12 +1,27 @@
 from os import path, system
 import sys
+import logging
+from joblib import Parallel, delayed
 
 from grackle.trainer.trainer import Trainer
 from ConfigSpace.read_and_write import pcs
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC 
-from smac.intensification.successive_halving import SuccessiveHalving
+#from smac.intensification.successive_halving import SuccessiveHalving
 from .smac3wrapper import Wrapper
+
+def optimize(SMAC, scenario, tae, n):
+   logging.basicConfig(filename=path.join(scenario.output_dir, "log_%d" % n))
+   logging.getLogger().setLevel(logging.DEBUG)
+   smac = SMAC(scenario=scenario, tae_runner=tae, run_id=n, rng=n)
+   inc = smac.optimize()
+   #print(inc)
+   try:
+      cost = smac.runhistory.get_cost(inc)
+   except:
+      cost = sys.maxint
+   #print(inc, cost)
+   return (inc, cost)
 
 class Smac3Trainer(Trainer):
    
@@ -25,11 +40,7 @@ class Smac3Trainer(Trainer):
       open(f_insts, "w").write("\n".join(insts))
 
       params = self.runner.recall(conf)
-      if self.config["instance_budget"]:
-         timeout = len(insts) * self.config["instance_budget"]
-         timeout = min(self.config["timeout"], timeout)
-      else:
-         timeout = self.config["timeout"]
+      timeout = self.trainlimit(len(insts))
       scenario = Scenario({
          "deterministic": True,
          "execdir": cwd,
@@ -39,26 +50,39 @@ class Smac3Trainer(Trainer):
          "train_inst_fn": f_insts,
          "limit_resources": False,
          "cs": pcs.read(self.domains(params).split("\n")),
-         "output_dir": cwd
+         "output_dir": cwd,
+         "shared_model": True,
+         "input_psmac_dirs": path.join(cwd, "run_*"),
       })
 
       tae = tae if tae else Wrapper(self.runner).run
-      iargs = {
-         "instances": insts,
-         "min_chall": 1,
-         "initial_budget": 1, 
-         "max_budget": len(insts), 
-         "eta": 3,
-         "deterministic": True,
-      }
-      smac = self.SMAC(
-         scenario=scenario, 
-         tae_runner=tae, 
-         n_jobs=state.cores, 
-         intensifier=SuccessiveHalving, 
-         intensifier_kwargs=iargs
-      )
-      inc = smac.optimize()
+      #iargs = {
+      #   "instances": insts,
+      #   "min_chall": 1,
+      #   "initial_budget": 1, 
+      #   "max_budget": len(insts), 
+      #   "eta": 3,
+      #   "deterministic": True,
+      #}
+      #smac = self.SMAC(
+      #   scenario=scenario, 
+      #   tae_runner=tae, 
+      #   #n_jobs=state.cores, 
+      #   #intensifier=SuccessiveHalving, 
+      #   #intensifier_kwargs=iargs
+      #)
+      #inc = smac.optimize()
+
+      try:
+         res = Parallel(n_jobs=state.cores)(
+            delayed(optimize)(self.SMAC, scenario, tae, n) 
+               for n in range(state.cores)
+         )
+         #print(res)
+         inc = min(res, key=lambda x: x[1])[0]
+      except:
+         inc = params
+
       params = self.runner.clean(inc)
       return self.runner.name(params) 
 

@@ -23,6 +23,7 @@ class ParamilsTrainer(Trainer):
    
    def __init__(self, runner, config={}):
       Trainer.__init__(self, runner, config)
+      self.default("restarts", False)
 
    def domains(self, params):
       pass
@@ -39,7 +40,8 @@ class ParamilsTrainer(Trainer):
          init=params, 
          insts=insts, 
          cwd=cwd, 
-         timeout=self.config["timeout"], 
+         timeout=self.trainlimit(len(insts)), 
+         restarts=self.config["restarts"],
          cores=state.cores)
       params = self.runner.clean(params)
       return self.runner.name(params) 
