@@ -2,6 +2,7 @@ from os import path, system
 import sys
 import logging
 from joblib import Parallel, delayed
+from .. import log
 
 from grackle.trainer.trainer import Trainer
 from ConfigSpace.read_and_write import pcs
@@ -80,7 +81,8 @@ class Smac3Trainer(Trainer):
          )
          #print(res)
          inc = min(res, key=lambda x: x[1])[0]
-      except:
+      except Exception as err:
+         log.msg("ERROR: SMAC failed: %s" % str(err))
          inc = params
 
       params = self.runner.clean(inc)
