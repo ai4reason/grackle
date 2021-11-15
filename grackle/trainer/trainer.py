@@ -5,6 +5,7 @@ class Trainer:
       self.runner = runner
       self.config = dict(config)
       self.default("instance_budget", None)
+      self.default("log", False)
 
    def improve(self, state, conf, insts):
       pass

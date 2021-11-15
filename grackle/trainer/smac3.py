@@ -11,17 +11,16 @@ from smac.facade.smac_ac_facade import SMAC4AC
 #from smac.intensification.successive_halving import SuccessiveHalving
 from .smac3wrapper import Wrapper
 
-def optimize(SMAC, scenario, tae, n):
-   logging.basicConfig(filename=path.join(scenario.output_dir, "log_%d" % n))
-   logging.getLogger().setLevel(logging.DEBUG)
+def optimize(SMAC, scenario, tae, n, logs):
+   if logs:
+      logging.basicConfig(filename=path.join(scenario.output_dir, "log_%d" % n))
+      logging.getLogger().setLevel(logging.DEBUG)
    smac = SMAC(scenario=scenario, tae_runner=tae, run_id=n, rng=n)
    inc = smac.optimize()
-   #print(inc)
    try:
       cost = smac.runhistory.get_cost(inc)
    except:
       cost = sys.maxint
-   #print(inc, cost)
    return (inc, cost)
 
 class Smac3Trainer(Trainer):
@@ -46,7 +45,6 @@ class Smac3Trainer(Trainer):
          "deterministic": True,
          "execdir": cwd,
          "run_obj": "quality", #"runtime"
-         #"algo_runs_timelimit": 60,
          "wallclock-limit": timeout,
          "train_inst_fn": f_insts,
          "limit_resources": False,
@@ -57,29 +55,12 @@ class Smac3Trainer(Trainer):
       })
 
       tae = tae if tae else Wrapper(self.runner).run
-      #iargs = {
-      #   "instances": insts,
-      #   "min_chall": 1,
-      #   "initial_budget": 1, 
-      #   "max_budget": len(insts), 
-      #   "eta": 3,
-      #   "deterministic": True,
-      #}
-      #smac = self.SMAC(
-      #   scenario=scenario, 
-      #   tae_runner=tae, 
-      #   #n_jobs=state.cores, 
-      #   #intensifier=SuccessiveHalving, 
-      #   #intensifier_kwargs=iargs
-      #)
-      #inc = smac.optimize()
 
       try:
          res = Parallel(n_jobs=state.cores)(
-            delayed(optimize)(self.SMAC, scenario, tae, n) 
+            delayed(optimize)(self.SMAC, scenario, tae, n, self.config["log"]) 
                for n in range(state.cores)
          )
-         #print(res)
          inc = min(res, key=lambda x: x[1])[0]
       except Exception as err:
          log.msg("ERROR: SMAC failed: %s" % str(err))

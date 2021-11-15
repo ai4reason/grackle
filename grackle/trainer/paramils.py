@@ -42,7 +42,8 @@ class ParamilsTrainer(Trainer):
          cwd=cwd, 
          timeout=self.trainlimit(len(insts)), 
          restarts=self.config["restarts"],
-         cores=state.cores)
+         cores=state.cores,
+         logs=self.config["log"])
       params = self.runner.clean(params)
       return self.runner.name(params) 
 

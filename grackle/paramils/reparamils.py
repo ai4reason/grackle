@@ -129,7 +129,7 @@ def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1
    #print("RES: ", elder[2])
    return elder[2]
 
-def launch(scenario, domains, init, insts, cwd, timeout, cores, restarts):
+def launch(scenario, domains, init, insts, cwd, timeout, cores, restarts, logs):
    system("rm -fr %s" % cwd)
    system("mkdir -p %s" % cwd)
 
@@ -153,8 +153,7 @@ def launch(scenario, domains, init, insts, cwd, timeout, cores, restarts):
       N=len(insts),
       validN=str(len(insts)),
       init="init_00",
-      out=None,
-      #out=open(path.join(cwd,"paramils.out"),"w"),
+      out=open(path.join(cwd,"paramils.out"),"w") if logs else None,
       restarts=restarts,
       time_limit=timeout)
 
