@@ -49,11 +49,11 @@ def specialize(state, conf):
    return new
 
 def improve(state, candidates):
-   if state.timeouted():
-      log.timeout(state)
-      return False
-
+   
    for conf in candidates:
+      if state.timeouted():
+         log.timeout(state)
+         return False
       new = specialize(state, conf)
       if new not in state.alls:
          log.improved(state, new)
