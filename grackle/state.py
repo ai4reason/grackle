@@ -17,9 +17,10 @@ class State:
       self.unsolved = {}
 
       unused = set(ini)
-      def require(key, default):
+      def require(key, default, warn=True):
          if key not in ini:
-            log.msg("Warning: Setting configuration key '%s' to the default value '%s'" % (key, default))
+            if warn:
+               log.msg("Warning: Setting configuration key '%s' to the default value '%s'" % (key, default))
             return default
          unused.remove(key)
          ix = ini[key] 
@@ -36,6 +37,7 @@ class State:
       self.best = require("best", 4)
       self.rank = require("rank", 1)
       self.timeout = require("timeout", 0)
+      self.atavistic = require("atavistic", True, warn=False)
 
       def copy(to, prefix, use=True):
          for x in ini:
@@ -112,6 +114,16 @@ class State:
          log.init(self, f_init, init)
       log.inits(self)
 
+      if not self.atavistic:
+         self.active = list(self.alls)
+
+   def genofond(self):
+      return self.alls if self.atavistic else self.active
+
+   def newborn(self, conf):
+      self.alls.append(conf)
+      if not self.atavistic:
+         self.active.append(conf)
 
    def did(self, conf, insts):
       for i in insts:

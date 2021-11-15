@@ -18,8 +18,8 @@ def evaluate(state, db, confs):
    log.status(state, db)
 
 def reduction(state):
-   mastered = {c:state.evals.mastered(c) for c in state.alls}
-   enough = [c for c in state.alls if len(mastered[c])>=state.best]
+   mastered = {c:state.evals.mastered(c) for c in state.genofond()}
+   enough = [c for c in state.genofond() if len(mastered[c])>=state.best]
    active = sorted(enough, key=lambda x: len(mastered[x]), reverse=True)
    state.active = active[:state.tops]
    log.active(state, mastered)
@@ -44,6 +44,7 @@ def specialize(state, conf):
    insts.extend(uns)
    if state.timeouted(state.trainer.trainlimit(len(insts))):
       return False
+
    log.improving(state, conf, insts)
    new = state.trainer.improve(state, conf, insts)
    state.did(conf, insts)
@@ -51,7 +52,6 @@ def specialize(state, conf):
    return new
 
 def improve(state, candidates):
-   
    for conf in candidates:
       new = specialize(state, conf)
       if new is False:
@@ -59,7 +59,7 @@ def improve(state, candidates):
          return False
       if new not in state.alls:
          log.improved(state, new)
-         state.alls.append(new)
+         state.newborn(new)
          return True
       else:
          log.notnew(state, new)
@@ -72,7 +72,7 @@ def improve(state, candidates):
 def loop(state):
    while True:
       log.iter(state)
-      evaluate(state, state.evals, state.alls)
+      evaluate(state, state.evals, state.genofond())
       reduction(state)
       evaluate(state, state.trains, state.active)
       candidates = select(state)

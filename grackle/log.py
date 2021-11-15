@@ -94,6 +94,7 @@ def scenario(state, ini, unused=None):
    print("> tops = %s" % state.tops)
    print("> rank = %s" % state.rank)
    print("> timeout = %s" % state.timeout)
+   print("> atavistic = %s" % state.atavistic)
    print("> trains.data = %s" % ini["trains.data"])
    print("> trains.runner.config: %s" % show(state.trains.runner.config))
    uns = show(state.unsolved) if state.unsolved else "<not used>"
