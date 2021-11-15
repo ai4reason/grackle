@@ -83,7 +83,6 @@ class State:
       t_runner = runner("trainer", direct=True)
       self.trainer = load_class(ini["trainer"])(t_runner)
       self.trainer.config["cls"] = ini["trainer"]
-      #self.trainer = load_class(ini["trainer"])(t_runner, ini["trainer.runner"])
       copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")
 
@@ -126,13 +125,11 @@ class State:
          return False
       return frozenset(insts) in self.done[conf]
 
-   def timeouted(self):
-      if not self.timeout:
-         return False
-      if "timeout" not in self.trainer.config:
+   def timeouted(self, trainlimit):
+      if (not self.timeout) or (not trainlimit):
          return False
 
-      t_train = self.trainer.config["timeout"] 
+      t_train = trainlimit
       t_elapsed = time.time() - self.start_time 
       t_remains = self.timeout - t_elapsed
 

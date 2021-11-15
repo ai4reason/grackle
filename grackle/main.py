@@ -42,6 +42,8 @@ def specialize(state, conf):
    insts = state.trains.mastered(conf)
    uns = unsolved.select(state, conf, insts) 
    insts.extend(uns)
+   if state.timeouted(state.trainer.trainlimit(len(insts))):
+      return False
    log.improving(state, conf, insts)
    new = state.trainer.improve(state, conf, insts)
    state.did(conf, insts)
@@ -51,10 +53,10 @@ def specialize(state, conf):
 def improve(state, candidates):
    
    for conf in candidates:
-      if state.timeouted():
+      new = specialize(state, conf)
+      if new is False:
          log.timeout(state)
          return False
-      new = specialize(state, conf)
       if new not in state.alls:
          log.improved(state, new)
          state.alls.append(new)
