@@ -1,8 +1,13 @@
 from ..paramils import ParamilsTrainer
-from .domain import PARAMS, DEFAULTS, CONDITIONS, FORBIDDENS
+from . import domain, domain_full
 
 class VampireParamilsTrainer(ParamilsTrainer):
    
    def domains(self, params):
-      return (PARAMS % DEFAULTS) + CONDITIONS + FORBIDDENS 
+      return (domain.PARAMS % domain.DEFAULTS) + domain.CONDITIONS + domain.FORBIDDENS 
    
+class VampireParamilsFullTrainer(ParamilsTrainer):
+   
+   def domains(self, params):
+      return (domain_full.PARAMS % domain_full.DEFAULTS) + domain_full.CONDITIONS + domain_full.FORBIDDENS 
+

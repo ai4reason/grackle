@@ -1,7 +1,7 @@
 import re
 from os import path, getenv
 from .runner import GrackleRunner
-from grackle.trainer.vampire.domain import DEFAULTS, REPLACE, CONDITIONS
+from grackle.trainer.vampire.domain_full import DEFAULTS, REPLACE #, CONDITIONS
 
 V_BINARY = "vampire"
 V_STATIC = "--proof off -stat full --input_syntax tptp"
@@ -27,7 +27,7 @@ class VampireRunner(GrackleRunner):
    def __init__(self, config={}):
       GrackleRunner.__init__(self, config)
       self.default("penalty", 100000000)
-      self.conds = self.conditions(CONDITIONS)
+      #self.conds = self.conditions(CONDITIONS)
 
    def args(self, params):
       def one(arg, val):
@@ -83,30 +83,30 @@ class VampireRunner(GrackleRunner):
       # clean default values
       params = {x:params[x] for x in params if params[x] != DEFAULTS[x]}
       # clean conditioned arguments
-      delme = []
-      for x in params:
-         if x not in self.conds:
-            continue
-         for y in self.conds[x]:
-            if y in params and params[y] not in self.conds[x][y]:
-               delme.append(x)
-      for x in delme:
-         del params[x]
+      #delme = []
+      #for x in params:
+      #   if x not in self.conds:
+      #      continue
+      #   for y in self.conds[x]:
+      #      if y in params and params[y] not in self.conds[x][y]:
+      #         delme.append(x)
+      #for x in delme:
+      #   del params[x]
       return params
 
-   def conditions(self, s_conds):
-      conds = {}
-      for line in s_conds.strip().split("\n"):
-         if "|" not in line:
-            continue
-         (name, cond) = line.strip().split("|")
-         name = name.strip()
-         (cname, vals) = cond.split(" in ")
-         cname = cname.strip()
-         vals = vals.strip().strip("{}").split(",")
-         vals = frozenset([x.strip() for x in vals])
-         if name not in conds:
-            conds[name] = {}
-         conds[name][cname] = vals
-      return conds
+   #def conditions(self, s_conds):
+   #   conds = {}
+   #   for line in s_conds.strip().split("\n"):
+   #      if "|" not in line:
+   #         continue
+   #      (name, cond) = line.strip().split("|")
+   #      name = name.strip()
+   #      (cname, vals) = cond.split(" in ")
+   #      cname = cname.strip()
+   #      vals = vals.strip().strip("{}").split(",")
+   #      vals = frozenset([x.strip() for x in vals])
+   #      if name not in conds:
+   #         conds[name] = {}
+   #      conds[name][cname] = vals
+   #   return conds
             
