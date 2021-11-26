@@ -165,19 +165,41 @@ end
 # Returns true iff state is forbidden by $forbidden_combos.
 # =========================================
 def forbidden(state, forbidden_combos)
-	forbidden = false
+   #puts "FORBIDDEN CHECK #{state}\n\n"
+   forbid, key, val = is_forbidden(state, forbidden_combos)
+   return false if not forbid 
+   # try to fix it
+   reset = []
+   while not reset.include? key
+      #puts "BEFORE #{state}"
+      state[key] = @default[key]
+      #puts "AFTER #{state}"
+      puts "FORBIDDEN FIX #{key}: #{val} -> #{state[key]}\n"
+      reset.push(key)
+      forbid, key, val = is_forbidden(state, forbidden_combos)
+      #puts "FORBIDDEN STILL? #{forbid}\n"
+      return false if not forbid 
+   end
+   return true
+end
+
+def is_forbidden(state, forbidden_combos)
 	for forbidden_combo in forbidden_combos
 		#A combo is satisfied if all its assignments are satisfied.
 		match = true
 		for assignment in forbidden_combo
 			param, forbidden_value = assignment
 			match = false unless state[param] == forbidden_value
+         if match
+            #puts "FORBIDDEN BECAUSE #{param} = #{forbidden_value} in #{forbidden_combo}\n"
+            return [true, param, forbidden_value]
+         end
 #			puts "#{param}, #{forbidden_value}"
 #			puts "#{param}, #{state[param]}"
 		end
-		return true if match # a forbidden combo is matched.
+		#return true if match # a forbidden combo is matched.
 	end
-	return false
+	return [false, nil, nil]
 end
 
 
