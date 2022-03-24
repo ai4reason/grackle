@@ -26,12 +26,12 @@ class ParamilsTrainer(Trainer):
       self.default("restarts", False)
 
    def domains(self, params):
-      pass
+      raise NotImplementedError("Abstract method not implemented.")
    
    def improve(self, state, conf, insts):
-      cwd = path.join("training", "iter-%03d-%s"%(state.it,conf))
+      cwd = path.join("training", "iter-%03d-%s"%(state.it, self.confname(conf)))
       cwd = path.join(cwd, self.runner.config["nick"]) if "nick" in self.runner.config else cwd
-      params = self.runner.recall(conf)
+      params = self.recall(conf)
       algo = "grackle-wrapper.py %s" % repr(json.dumps(self.runner.config))
       scenario = SCENARIO % (algo, state.trainer.runner.config["timeout"], state.trainer.config["timeout"])
       params = reparamils.launch(
@@ -45,5 +45,14 @@ class ParamilsTrainer(Trainer):
          cores=state.cores,
          logs=self.config["log"])
       params = self.runner.clean(params)
-      return self.runner.name(params) 
+      return self.name(params) 
+
+   def recall(self, conf):
+      return self.runner.recall(conf)
+
+   def name(self, params):
+      return self.runner.name(params)
+
+   def confname(self, conf):
+      return conf
 

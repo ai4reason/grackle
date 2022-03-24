@@ -1,7 +1,7 @@
 import re
 from os import path, system, getenv
 
-from grackle.runner import GrackleRunner
+from .runner import GrackleRunner
 import pyprove.eprover as e
 import pyprove
 
@@ -83,6 +83,7 @@ def convert(params):
    return params
 
 class EproverRunner(GrackleRunner):
+
    def __init__(self, config={}):
       GrackleRunner.__init__(self, config)
       self.default("ebinary", None)
@@ -92,7 +93,7 @@ class EproverRunner(GrackleRunner):
 
    def cmd(self, params, inst):
       args = self.args(params)
-      d_root = getenv("ATPY_BENCHMARKS", getenv("TPTP", "."))
+      d_root = getenv("PYPROVE_BENCHMARKS", ".")
       f_problem = path.join(d_root, inst)
       if self.config["cache"]:
          self.pid_cache = self.name(params, save=False)
@@ -195,8 +196,12 @@ class EproverRunner(GrackleRunner):
       cutoff = self.config["cutoff"]
       runtime = result["RUNTIME"] if "RUNTIME" in result else cutoff
       quality = result["PROCESSED"] if e.result.solved(result, cutoff) else 1000000
-      return [quality, runtime]
-         
+      status = result["STATUS"] if "STATUS" in result else "Error"
+      return [quality, runtime, status]
+   
+   def success(self, result):
+      return result in e.result.STATUS_OK
+
    def clean(self, params):
       """Remove unused slots from params
       

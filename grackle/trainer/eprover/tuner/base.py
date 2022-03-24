@@ -1,6 +1,7 @@
 from grackle.runner.eprover import cef2block, convert
 from .. import cefs as cefs_mod
-from . import tuner, given
+from . import given
+from .tuner import EproverTuner
 
 PARAMS = """
    sel {SelectMaxLComplexAvoidPosPred,SelectNewComplexAHP,SelectComplexG,SelectCQPrecWNTNp} [SelectMaxLComplexAvoidPosPred]
@@ -28,10 +29,7 @@ def base(config, init=None):
 
 
 
-class BaseTuner(tuner.Tuner):
-   def __init__(self, direct, cores=4, nick="0-base"):
-      tuner.Tuner.__init__(self, direct, cores, nick, 
-         "grackle.trainer.eprover.tuner.BaseTuner")
+class BaseTuner(EproverTuner):
 
    def split(self, params):
       params = convert(params)

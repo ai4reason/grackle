@@ -1,6 +1,7 @@
 from grackle.runner.eprover import cef2block, convert
 from .. import cefs as cefs_mod
-from . import tuner, fine
+from . import fine
+from .tuner import EproverTuner
 
 def params(config, cefs):
    pars = ""
@@ -52,10 +53,7 @@ def given(config, init=None):
 
 
 
-class GivenTuner(tuner.Tuner):
-   def __init__(self, direct, cores=4, nick="0-given"):
-      tuner.Tuner.__init__(self, direct, cores, nick, 
-         "grackle.trainer.eprover.tuner.GivenTuner")
+class GivenTuner(EproverTuner):
 
    def split(self, params):
       params = convert(params)

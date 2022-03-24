@@ -1,5 +1,5 @@
 from grackle.runner.eprover import cef2block
-from . import tuner
+from .tuner import EproverTuner
 
 DOMAIN = {
 	"freq": "1,2,3,4,5,8,10,13,21,34", 
@@ -89,10 +89,7 @@ def fine(params):
 
 
 
-class FineTuner(tuner.Tuner):
-   def __init__(self, direct, cores=4, nick="2-fine"):
-      tuner.Tuner.__init__(self, direct, cores, nick, 
-         "grackle.trainer.eprover.tuner.FineTuner")
+class FineTuner(EproverTuner):
 
    def split(self, params):
       main0 = main(params)

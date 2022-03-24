@@ -23,13 +23,13 @@ class Runner(object):
          self.config[key] = val
 
    def cmd(self, params, inst):
-      pass
+      raise NotImplementedError("Abstract method `Runner.cmd` not implemented.")
 
    def process(self, out, inst):
-      pass
+      raise NotImplementedError("Abstract method `Runner.process` not implemented.")
 
    def success(self, result):
-      pass
+      raise NotImplementedError("Abstract method `Runner.success` not implemented.")
    
    def run(self, params, inst):
       cmd = self.cmd(params, inst)
