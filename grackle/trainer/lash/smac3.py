@@ -2,7 +2,7 @@ from ..smac3 import Smac3Trainer, Smac3TrainerBB, Smac3TrainerHPO, Smac3TrainerR
 from . import domain
 from .tarunner import TARunner
 
-class VampireSmac3Trainer(Smac3Trainer):
+class LashSmac3Trainer(Smac3Trainer):
 
    def __init__(self, runner, config={}):
       Smac3Trainer.__init__(self, runner, config)
@@ -18,20 +18,20 @@ class VampireSmac3Trainer(Smac3Trainer):
       return Smac3Trainer.improve(self, state, conf, insts, tae=tae)
 
 
-class VampireSmac3TrainerAC(VampireSmac3Trainer):
+class LashSmac3TrainerAC(LashSmac3Trainer):
    pass
    
-class VampireSmac3TrainerBB(VampireSmac3Trainer):
+class LashSmac3TrainerBB(LashSmac3Trainer):
    
    def __init__(self, runner, config={}):
       Smac3TrainerBB.__init__(self, runner, config)
 
-class VampireSmac3TrainerHPO(VampireSmac3Trainer):
+class LashSmac3TrainerHPO(LashSmac3Trainer):
    
    def __init__(self, runner, config={}):
       Smac3TrainerHPO.__init__(self, runner, config)
 
-class VampireSmac3TrainerROAR(VampireSmac3Trainer):
+class LashSmac3TrainerROAR(LashSmac3Trainer):
 
    def __init__(self, runner, config={}):
       Smac3TrainerROAR.__init__(self, runner, config)

@@ -1,4 +1,4 @@
-from grackle.runner.vampire import LashRunner
+from grackle.runner.lash import LashRunner
 
 class TARunner:
 
