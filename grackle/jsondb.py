@@ -51,10 +51,12 @@ def perf(counts):
    print("\n".join("%s\t%s" % x for x in data))
 
 def greedy(results, max_n=None):
+   cover = []
    total = 0
    n = 0
    while results:
       best = max(results, key=lambda s: len(results[s]))
+      cover.append(best)
       eaten = frozenset(results[best])
       total += len(eaten)
       n += 1
@@ -65,4 +67,5 @@ def greedy(results, max_n=None):
       if max_n and n >= max_n:
          break
    print("# TOTAL = %s (by %d)" % (total, n))
+   return cover
    

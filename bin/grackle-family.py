@@ -61,12 +61,12 @@ if __name__ == "__main__":
 
    parser = argparse.ArgumentParser(
       description='Display all ancestor roots of a given configuration.')
-   parser.add_argument("-f", "--family", nargs="?", default="grackle.flee-family.json",
+   parser.add_argument("-f", "--family", default="grackle.flee-family.json", metavar="JSON",
       help="specify a family tree (default: grackle.flee-family.json)")
-   parser.add_argument("-c", "--confs", nargs="?", default="./confs",
-      help="specify the directory with configurations")
+   parser.add_argument("-c", "--confs", default="confs", metavar="DIR",
+         help="specify the directory with configurations (default: ./confs)")
    parser.add_argument("-d", "--diffs", action="store_true",
-      help="show configuration differences (requires --family)")
+      help="show configuration differences (requires configuration definitions -c)")
    group = parser.add_mutually_exclusive_group()
    group.add_argument("-l", "--list", action="store_true",
       help="list family members (configurations)")
