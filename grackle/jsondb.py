@@ -27,10 +27,14 @@ def update(todb, fromdb):
    for s in news:
       todb[s] = fromdb[s] 
 
-def join(dbs):
+def join(dbs, prefs=None):
+   prefs = prefs if prefs else [None for x in dbs]
    joint = {}
-   for db in dbs:
-      update(joint, load(db))
+   for (db, pref) in zip(dbs, prefs):
+      js = load(db)
+      if pref:
+         js = {(pref+x):js[x] for x in js}
+      update(joint, js)
    return joint
 
 def solved1(result):

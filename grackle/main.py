@@ -33,7 +33,12 @@ def select(state):
    avgs = {c:sum(avgs[c])/len(avgs[c]) for c in avgs}
    avgs = {c:(avgs[c],-len(bps[c])) for c in avgs}
 
-   candidates = sorted(avgs, key=lambda c:avgs[c])
+   if state.selection == "strong":
+      candidates = sorted(avgs, key=lambda c:avgs[c])
+   elif state.selection == "weak":
+      candidates = sorted(avgs, key=lambda c:avgs[c], reverse=True)
+   else:
+      raise Exception("Unsupported selection strategy: %s" % state.selection)
    log.candidates(candidates, avgs)
    return candidates
 

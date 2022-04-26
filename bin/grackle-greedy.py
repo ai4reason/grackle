@@ -12,10 +12,13 @@ if __name__ == "__main__":
       help="limit the size of the greedy cover")
    parser.add_argument("-i", "--iterate", nargs="?", type=int, default=None, const=True,
       help="iterated greedy cover construction")
+   parser.add_argument("-b", "--bests", type=int, default=1,
+      help="how many best strategies not to use for an iterated  greedy cover"),
    parser.add_argument("-t", "--table", nargs="?", const="translate.txt", default=None,
       help="specify a translation table (default: translate.txt)")
    parser.add_argument('dbfile', nargs="?", default="db-trains-cache.json", 
       help="grackle db json filename (default: db-trains-cache.json)")
+
    group = parser.add_mutually_exclusive_group()
    group.add_argument("--new", action="store_true", 
       help="consider only newly genereted strategies (requires translation table)")
@@ -35,7 +38,8 @@ if __name__ == "__main__":
          print("### GREEDY COVER #%s" % i)
          cover = jsondb.greedy(results, max_n=args.n)
          print()
-         done.add(cover[0])
+         #done.add(cover[0])
+         done.update(cover[:args.bests])
          results = {x:set(y) for (x,y) in backup.items() if x not in done}
          i += 1
    else:

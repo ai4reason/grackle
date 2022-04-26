@@ -16,6 +16,10 @@ if __name__ == '__main__':
       seed = sys.argv[6]
       params = runner.parse(sys.argv[7:])
       (quality,clock) = runner.run(params, inst)[:2]
+
+      #res = runner.run(params, inst)
+      #if not res: res = [1000000, 10]
+      #(quality, clock) = res[:2]
    
       print(RESULT % ("OK", clock, quality, seed))
    

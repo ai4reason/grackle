@@ -38,6 +38,7 @@ class State:
       self.rank = require("rank", 1)
       self.timeout = require("timeout", 0)
       self.atavistic = require("atavistic", True, warn=False)
+      self.selection = require("selection", "strong", warn=False)
 
       def copy(to, prefix, use=True):
          for x in ini:
