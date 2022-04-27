@@ -38,7 +38,7 @@ class State:
       self.rank = require("rank", 1)
       self.timeout = require("timeout", 0)
       self.atavistic = require("atavistic", True, warn=False)
-      self.selection = require("selection", "strong", warn=False)
+      self.selection = require("selection", "default", warn=False)
 
       def copy(to, prefix, use=True):
          for x in ini:
@@ -107,11 +107,17 @@ class State:
       self.alls = []
       inits = open(ini["inits"]).read().strip().split("\n")
       runner = self.trains.runner
-      for f_init in inits:
+      self.nicks = {}
+      self.elders = {}
+      self.origins = {}
+      for (n, f_init) in enumerate(inits):
          params = runner.parse(open(f_init).read().strip().split())
          params = runner.clean(params)
          init = runner.name(params)
          self.alls.append(init)
+         self.nickname(init, f"s{n:02d}")
+         self.elders[init] = init
+         self.origins[init] = (n, f_init)
          log.init(self, f_init, init)
       log.inits(self)
 
@@ -121,10 +127,18 @@ class State:
    def genofond(self):
       return self.alls if self.atavistic else self.active
 
-   def newborn(self, conf):
-      self.alls.append(conf)
+   def nickname(self, conf, nick):
+      self.nicks[conf] = nick
+      log.nickname(conf, nick)
+
+   def newborn(self, child, parent):
+      elder = self.elders[parent]
+      self.elders[child] = elder
+      clan = self.nicks[elder]
+      self.nickname(child, f"i{self.it:03d}{clan}")
+      self.alls.append(child)
       if not self.atavistic:
-         self.active.append(conf)
+         self.active.append(child)
 
    def did(self, conf, insts):
       for i in insts:

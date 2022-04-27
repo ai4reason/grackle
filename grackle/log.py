@@ -5,23 +5,23 @@ FATAL_LOG = os.path.join(os.getenv("HOME"),"grackle-errors.log")
 
 def active(state, mastered):
    print("> ACTIVE CONFIGURATIONS: %d" % len(state.active))
-   for conf in sorted(state.active):
+   for conf in sorted(state.active, key = lambda x: state.nicks[x]):
       info = "\n".join(["%s%s"%(inst,state.evals.results[conf][inst]) for inst in sorted(mastered[conf])])
-      print("> %s: masters %d evals" % (conf, len(mastered[conf])))
+      print("> %s: masters %d evals" % (state.nicks[conf], len(mastered[conf])))
       print(info)
    print(">")
 
 def training(state, bpis):
    print("> TRAINING PERFORMANCE:")
    #(results, bests) = db_trains
-   for c in sorted(bpis):
+   for c in sorted(bpis, key = lambda x: state.nicks[x]):
       info = "\n".join(["%s%s"%(i,state.trains.results[c][i]) for i in sorted(bpis[c])])
-      print("> %s: masters %d trains" % (c, len(bpis[c])))
+      print("> %s: masters %d trains" % (state.nicks[c], len(bpis[c])))
       print(info)
    print(">")
 
 def improving(state, conf, insts):
-   print("> Improving %s on %d trains." % (conf, len(insts)))
+   print("> Improving %s on %d trains." % (state.nicks[conf], len(insts)))
 
 def iter(state):
    state.it += 1
@@ -36,20 +36,20 @@ def status(state, db):
    runtime = (time.time() - state.start_time) / 60
    print("> STATUS @ %d (%s): %s, %.2f, %.2f (%.2f, %.4f)" % ((runtime,)+db.status()))
 
-def candidates(candidates, avgs):
+def candidates(state, candidates, avgs):
    print("TRAINING CANDIDATES:")
    for c in candidates:
-      print("%s: %s" % (c, avgs[c]))
+      print("%s: %s" % (state.nicks[c], avgs[c]))
    print
 
 def finished(state):
    print("> Nothing more to do. Terminating.")
    print(">")
    print("> FINAL CONFIGURATIONS: %d" % len(state.active))
-   for conf in sorted(state.active):
+   for conf in sorted(state.active, key = lambda x: state.nicks[x]):
       params = state.trains.runner.recall(conf)
       rep = state.trains.runner.repr(params)
-      print("> %s: %s" % (conf, rep))
+      print("> %s: %s" % (state.nicks[conf], rep))
 
 def timeout(state):
    print("> Timeout: Not enough time for training. Terminating after %s seconds." % (time.time() - state.start_time))
@@ -69,8 +69,11 @@ def improved(state, conf):
    print(">")
 
 def notnew(state, conf):
-   print("> Invented config already known: %s" % conf)
+   print("> Invented config already known: %s" % state.nicks[conf] if conf in state.nicks else conf)
    print(">")
+
+def nickname(conf, nick):
+   print("> NICKNAME: %s = %s" % (nick, conf))
 
 def init(state, f_init, conf):
    print("> Loaded initial config %s from %s" % (conf, f_init))
@@ -78,10 +81,10 @@ def init(state, f_init, conf):
 def inits(state):
    print(">")
    print("> INITIAL CONFIGURATIONS: %d" % len(state.alls))
-   for conf in sorted(state.alls):
+   for conf in sorted(state.alls, key = lambda x: state.nicks[x]):
       params = state.trains.runner.recall(conf)
       rep = state.trains.runner.repr(params)
-      print("> %s: %s" % (conf, rep))
+      print("> %s: %s" % (state.nicks[conf], rep))
 
 def scenario(state, ini, unused=None):
    show = lambda dic: " ".join(["%s=%s"%(x,dic[x]) for x in sorted(dic)])
@@ -95,6 +98,7 @@ def scenario(state, ini, unused=None):
    print("> rank = %s" % state.rank)
    print("> timeout = %s" % state.timeout)
    print("> atavistic = %s" % state.atavistic)
+   print("> selection = %s" % state.selection)
    print("> trains.data = %s" % ini["trains.data"])
    print("> trains.runner.config: %s" % show(state.trains.runner.config))
    uns = show(state.unsolved) if state.unsolved else "<not used>"

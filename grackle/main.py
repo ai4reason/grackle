@@ -2,8 +2,10 @@
 
 import json
 from os import path
-
+import random
 from . import log, unsolved
+
+random.seed(43)
 
 def evaluate(state, db, confs):
    log.timestamp(state.start_time, "Evaluation started")
@@ -27,19 +29,37 @@ def reduction(state):
 def select(state):
    bps = {c:state.trains.mastered(c) for c in state.active}
    log.training(state, bps)
+   # default selection is by (attention, -solved) [ascending]
    bps = {c:bps[c] for c in bps if not state.improved(c, bps[c])}
    avgs = {c:[state.attention[i] for i in bps[c]] for c in bps}
    avgs = {c:avgs[c] for c in avgs if len(avgs[c])>=1}
    avgs = {c:sum(avgs[c])/len(avgs[c]) for c in avgs}
-   avgs = {c:(avgs[c],-len(bps[c])) for c in avgs}
-
-   if state.selection == "strong":
-      candidates = sorted(avgs, key=lambda c:avgs[c])
-   elif state.selection == "weak":
-      candidates = sorted(avgs, key=lambda c:avgs[c], reverse=True)
+   # "weak": selection by (attention, solved)
+   mult = 1 if "weak" in state.selection else -1
+   avgs = {c:(avgs[c],mult*len(bps[c])) for c in avgs}
+   if "random" in state.selection:
+      # random selection
+      candidates = list(avgs.keys())
+      random.shuffle(candidates)
+      avgs = {c:("random",n)+avgs[c] for (n,c) in enumerate(candidates)}
    else:
-      raise Exception("Unsupported selection strategy: %s" % state.selection)
-   log.candidates(candidates, avgs)
+      if "mul" in state.selection:
+         # "mul": selection by (attention * solved, ...)
+         avgs = {c:(x[0]*x[1],)+x for (c,x) in avgs.items()}
+      elif "div" in state.selection:
+         # "div": selection by (attention / solved, ...)
+         avgs = {c:(x[0]/x[1],)+x for (c,x) in avgs.items()}
+      if "reverse" in state.selection:
+         # "reverse": reversed selection
+         avgs = {c:tuple(-x for x in xs) for (c,xs) in avgs.items()}
+   if "family" in state.selection:
+      # "family": prefer one family in each iteration
+      family = {c:state.origins[state.elders[c]][0] for c in avgs}
+      happy = (state.it - 1) % len(state.origins)
+      family = {c:1000*((i-happy)%len(state.origins))+i for (c,i) in family.items()}
+      avgs = {c:(family[c],)+x for (c,x) in avgs.items()}
+   candidates = sorted(avgs, key=lambda c:avgs[c])
+   log.candidates(state, candidates, avgs)
    return candidates
 
 def specialize(state, conf):
@@ -64,7 +84,7 @@ def improve(state, candidates):
          return False
       if new not in state.alls:
          log.improved(state, new)
-         state.newborn(new)
+         state.newborn(new, conf)
          return True
       else:
          log.notnew(state, new)
