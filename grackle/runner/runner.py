@@ -106,3 +106,19 @@ class GrackleRunner(Runner):
       params = entity if self.config["direct"] else self.recall(entity)
       return Runner.run(self, params, inst)
          
+   def conditions(self, s_conds):
+      conds = {}
+      for line in s_conds.strip().split("\n"):
+         if "|" not in line:
+            continue
+         (name, cond) = line.strip().split("|")
+         name = name.strip()
+         (cname, vals) = cond.split(" in ")
+         cname = cname.strip()
+         vals = vals.strip().strip("{}").split(",")
+         vals = frozenset([x.strip() for x in vals])
+         if name not in conds:
+            conds[name] = {}
+         conds[name][cname] = vals
+      return conds
+

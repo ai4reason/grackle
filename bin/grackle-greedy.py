@@ -13,7 +13,7 @@ if __name__ == "__main__":
    parser.add_argument("-i", "--iterate", nargs="?", type=int, default=None, const=True,
       help="iterated greedy cover construction")
    parser.add_argument("-b", "--bests", type=int, default=1,
-      help="how many best strategies not to use for an iterated  greedy cover"),
+      help="how many best strategies not to use for an iterated greedy cover"),
    parser.add_argument("-t", "--table", nargs="?", const="translate.txt", default=None,
       help="specify a translation table (default: translate.txt)")
    parser.add_argument('dbfile', nargs="?", default="db-trains-cache.json", 

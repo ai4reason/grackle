@@ -1,6 +1,7 @@
 import json
 
 SOLVED = ['Satisfiable', 'Unsatisfiable', 'Theorem', 'CounterSatisfiable', 'ContradictoryAxioms']
+SOLVED = ['sat', 'unsat']
 
 def transcript(fin):
    try:
@@ -45,6 +46,37 @@ def solved(results, apply=solved1):
 
 def counts(results):
    return solved(results, apply=lambda r: len(solved1(r)))
+
+def solves(results, solved0=None):
+   solved0 = solved0 if solved0 else solved(results)
+   probs = frozenset(p for c in results for p in results[c])
+   probs = {p:frozenset(c for c in results if p in solved0[c]) for p in probs}
+   return probs
+
+def scores(results, fellows, solved0=None):
+   fellows = {x:results[x] for x in fellows}
+   solved0 = solved(fellows) if not solved0 else solved0
+   solves0 = solves(fellows, solved0)
+
+   #morsel = lambda p: len(fellows) / len(solves0[p])
+   #morsel = lambda p: (1 / len(solves0[p])) 
+   #morsel = lambda p: (len(fellows)/len(solves0[p])) * (1/(len(fellows)**1)) 
+   morsel = lambda p: (len(fellows)/len(solves0[p])) * (1/(2**(len(fellows)-1))) 
+   #morsel = lambda p: (1/len(solves0[p])) * (1/(len(fellows)**2)) 
+   score = lambda c: sum(morsel(p) for p in solved0[c])
+   #score = lambda c: sum(morsel(p) for p in solved0[c])/len(solved0[c])
+   return {c:score(c) for c in fellows}
+
+def similars(results, fellows, solves0=None):
+   solves0 = solves0 if solves0 else solves({x:results[x] for x in fellows}) 
+   sims = {x:{} for x in fellows}
+   for p in solves0:
+      linked = solves0[p]
+      for (s,t) in [(s,t) for s in linked for t in linked if s!=t]:
+         if t not in sims[s]: sims[s][t] = 0
+         sims[s][t] += 1
+   return sims
+
 
 # printing
 #
