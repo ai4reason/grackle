@@ -30,6 +30,15 @@ sort_aigvec {0,1} [%(sort_aigvec)s]
 sort_exp {0,1} [%(sort_exp)s]
 ucopt {0,1} [%(ucopt)s]
 var_subst {0,1} [%(var_subst)s]
+# new ones:
+declsort_bv_width {0,1,2,8,16} [%(declsort_bv_width)s]
+prop_const_bits {0,1} [%(prop_const_bits)s]
+prop_infer_ineq_bounds {0,1} [%(prop_infer_ineq_bounds)s]
+prop_nprops {0,2000,10000,100000} [%(prop_nprops)s]
+prop_nupdates {0,90000,2000000,9000000} [%(prop_nupdates)s]
+prop_prob_rand_input {0,10,100} [%(prop_prob_rand_input)s]
+prop_sext {0,1} [%(prop_sext)s]
+prop_use_inv_lt_concat {0,1} [%(prop_use_inv_lt_concat)s]
 """
 
 CONDITIONS = """
