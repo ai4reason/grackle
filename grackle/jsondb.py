@@ -1,7 +1,6 @@
 import json
 
-SOLVED = ['Satisfiable', 'Unsatisfiable', 'Theorem', 'CounterSatisfiable', 'ContradictoryAxioms']
-SOLVED = ['sat', 'unsat']
+SOLVED = ['Satisfiable', 'Unsatisfiable', 'Theorem', 'CounterSatisfiable', 'ContradictoryAxioms', 'sat', 'unsat']
 
 def transcript(fin):
    try:
