@@ -158,6 +158,6 @@ DEFAULTS = {
    "ucopt": "0",
    "unsat_cores": "0",
    "var_subst": "1",
+   "smt_comp_mode": "0",
 }
-
 
