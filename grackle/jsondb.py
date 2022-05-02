@@ -39,7 +39,7 @@ def join(dbs, prefs=None):
    return joint
 
 def solved1(result):
-   return set(p for p in result if p and result[p][2] in SOLVED)
+   return set(p for p in result if p and result[p] and result[p][2] in SOLVED)
 
 def solved(results, apply=solved1):
    return {s:apply(results[s]) for s in results}
