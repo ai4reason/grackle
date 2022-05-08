@@ -16,9 +16,10 @@ if __name__ == "__main__":
       help="how many best strategies not to use for an iterated greedy cover"),
    parser.add_argument("-t", "--table", nargs="?", const="translate.txt", default=None,
       help="specify a translation table (default: translate.txt)")
+   parser.add_argument("-r", "--restrict", default=None,
+      help="restrict the set of problems to the problems from file")
    parser.add_argument('dbfile', nargs="?", default="db-trains-cache.json", 
       help="grackle db json filename (default: db-trains-cache.json)")
-
    group = parser.add_mutually_exclusive_group()
    group.add_argument("--new", action="store_true", 
       help="consider only newly genereted strategies (requires translation table)")
@@ -27,7 +28,7 @@ if __name__ == "__main__":
    args = parser.parse_args()
    
    fm = True if args.old else (False if args.new else None)
-   results = jsondb.load(args.dbfile, args.table, filter_mode=fm)
+   results = jsondb.load(args.dbfile, args.table, filter_mode=fm, f_restrict=args.restrict)
    results = jsondb.solved(results)
 
    if args.iterate:

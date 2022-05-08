@@ -10,9 +10,12 @@ def transcript(fin):
    lines = {line[4]: line[-1] for line in lines}
    return lines
 
-def load(f, f_trans=None, filter_mode=None): 
+def load(f, f_trans=None, filter_mode=None, f_restrict=None): 
    # `filter_mode` is `None`, `True`, or `False`.
    res = json.load(open(f))
+   if f_restrict:
+      probs = set(open(f_restrict).read().strip().split("\n"))
+      res = {c:{p:r for (p,r) in res.items() if p in probs} for c in res}
    if f_trans:
       renames = transcript(f_trans)
       if renames:
