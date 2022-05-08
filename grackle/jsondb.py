@@ -15,7 +15,7 @@ def load(f, f_trans=None, filter_mode=None, f_restrict=None):
    res = json.load(open(f))
    if f_restrict:
       probs = set(open(f_restrict).read().strip().split("\n"))
-      res = {c:{p:r for (p,r) in res.items() if p in probs} for c in res}
+      res = {c:{p:r for (p,r) in res[c].items() if p in probs} for c in res}
    if f_trans:
       renames = transcript(f_trans)
       if renames:
