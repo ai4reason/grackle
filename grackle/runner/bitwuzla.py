@@ -12,12 +12,19 @@ BWZ_RESULTS = BWZ_OK + BWZ_FAILED
 
 TIMEOUT = "timeout --kill-after=1 --foreground %s " # note the space at the end
 
+# patterns to be matched in the output
 PATS = {
    "STATUS"  : re.compile(r"^(sat|unsat|unknown)$", flags=re.MULTILINE),
    "LOGIC"   : re.compile(r"^\[bitwuzla\>parse\] logic (\S*)$", flags=re.MULTILINE),
    "EXPECTED": re.compile(r"^\[bitwuzla\>parse\] status (\S*)$", flags=re.MULTILINE),
    "USERTIME": re.compile(r"\buser\s*(\d*\.\d*)\b")
 }
+
+# list of ignored errors
+IGNORED = [
+   "configure_sat_mgr: selected SAT solver 'Kissat' does not support incremental mode",
+   "'declare-sort' not supported if it is not interpreted  as a bit-vector",
+]
 
 def format1(notfound="error", apply=str):
    def handle(mo):
@@ -63,7 +70,10 @@ class BitwuzlaRunner(GrackleRunner):
       res = {key:VALS[key](PATS[key].search(out)) for key in PATS}
       result = res["STATUS"]
       if result not in BWZ_RESULTS:
-         return None
+         if any(x in out for x in IGNORED):
+            result = "unknown"
+         else:
+            return None
       ok = self.success(result)
       runtime = res["USERTIME"] if ok else self.config["timeout"]
       quality = 10+int(1000*runtime) if ok else self.config["penalty"]
