@@ -24,6 +24,7 @@ PATS = {
 IGNORED = [
    "configure_sat_mgr: selected SAT solver 'Kissat' does not support incremental mode",
    "'declare-sort' not supported if it is not interpreted  as a bit-vector",
+   "timeout: the monitored command dumped core",
 ]
 
 def format1(notfound="error", apply=str):
