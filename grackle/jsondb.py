@@ -40,25 +40,28 @@ def join(dbs, prefs=None):
       update(joint, js)
    return joint
 
-def solved1(result):
-   return set(p for p in result if p and result[p] and result[p][2] in SOLVED)
+def solved1(result, limit=None):
+   def is_solved(res):
+      if not res: return False
+      return res[2] in SOLVED and ((res[1]<=limit) if limit else True)
+   return set(p for p in result if is_solved(result[p]))
 
-def solved(results, apply=solved1):
-   return {s:apply(results[s]) for s in results}
+def solved(results, apply=solved1, limit=None):
+   return {s:apply(results[s],limit) for s in results}
 
-def counts(results):
-   return solved(results, apply=lambda r: len(solved1(r)))
+def counts(results, limit=None):
+   return solved(results, apply=lambda r,l: len(solved1(r,l)), limit=limit)
 
-def solves(results, solved0=None):
-   solved0 = solved0 if solved0 else solved(results)
+def solves(results, solved0=None, limit=None):
+   solved0 = solved0 if solved0 else solved(results, limit=limit)
    probs = frozenset(p for c in results for p in results[c])
    probs = {p:frozenset(c for c in results if p in solved0[c]) for p in probs}
    return probs
 
-def scores(results, fellows, solved0=None):
+def scores(results, fellows, solved0=None, limit=None):
    fellows = {x:results[x] for x in fellows}
-   solved0 = solved(fellows) if not solved0 else solved0
-   solves0 = solves(fellows, solved0)
+   solved0 = solved(fellows, limit=limit) if not solved0 else solved0
+   solves0 = solves(fellows, solved0, limit=limit)
 
    #morsel = lambda p: len(fellows) / len(solves0[p])
    #morsel = lambda p: (1 / len(solves0[p])) 
@@ -69,8 +72,8 @@ def scores(results, fellows, solved0=None):
    #score = lambda c: sum(morsel(p) for p in solved0[c])/len(solved0[c])
    return {c:score(c) for c in fellows}
 
-def similars(results, fellows, solves0=None):
-   solves0 = solves0 if solves0 else solves({x:results[x] for x in fellows}) 
+def similars(results, fellows, solves0=None, limit=None):
+   solves0 = solves0 if solves0 else solves({x:results[x] for x in fellows}, limit=limit) 
    sims = {x:{} for x in fellows}
    for p in solves0:
       linked = solves0[p]

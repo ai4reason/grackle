@@ -69,19 +69,20 @@ class BitwuzlaRunner(GrackleRunner):
    def process(self, out, inst):
       out = out.decode()
       res = {key:VALS[key](PATS[key].search(out)) for key in PATS}
-      result = res["STATUS"]
-      if result not in BWZ_RESULTS:
+      status = res["STATUS"]
+      if status not in BWZ_RESULTS:
          if any(x in out for x in IGNORED):
-            result = "unknown"
+            status = "unknown"
          else:
             return None
-      ok = self.success(result)
+      ok = self.success(status)
       runtime = res["USERTIME"] if ok else self.config["timeout"]
       quality = 10+int(1000*runtime) if ok else self.config["penalty"]
-      return [quality, runtime, result]
+      return [quality, runtime, status]
 
-   def success(self, result):
-      return result in BWZ_OK
+   def success(self, status):
+      return status in BWZ_OK
+      #return (result in BWZ_OK) and (result[1] < self.config["timeout"])
 
    def clean(self, params):
       # clean default values
