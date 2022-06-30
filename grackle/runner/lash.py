@@ -52,7 +52,8 @@ class LashRunner(GrackleRunner):
       res = {key:VALS[key](PATS[key].search(out)) for key in PATS}
       result = res["STATUS"]
       if result not in L_RESULTS:
-         return None
+         if not 'Exception: Failure("unimplemented")' in out:
+            return None
       ok = self.success(result)
       runtime = res["USERTIME"] if ok else self.config["timeout"]
       quality = 10+int(1000*runtime) if ok else self.config["penalty"]
