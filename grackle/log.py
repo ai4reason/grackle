@@ -145,7 +145,7 @@ def missing(insts):
 def kdtree(data):
    print("> Computing kd-tree for data matrix shape %s." % str(data.shape))
 
-def kdnone(data):
+def kdnone():
    print("> Out of unsolved problems.")
 
 def kdselect(state, conf, insts, selected, info):
