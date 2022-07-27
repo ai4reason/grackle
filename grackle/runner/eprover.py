@@ -25,7 +25,7 @@ DEFAULTS = {
    "splcl": "0",
    "tord_const": "0",
    "sine": "0",
-   "defcnf": "0",
+   "defcnf": "24",
    "prefer": "0",
    "fwdemod": "2",
    "der": "none",
@@ -119,12 +119,12 @@ class EproverRunner(GrackleRunner):
       simple("splaggr",        "--split-aggressive ")
       simple("srd",            "--split-reuse-defs ")
       simple("forwardcntxtsr", "--forward-context-sr ")
-      simple("defcnf",         "--definitional-cnf ")
       simple("prefer",         "--prefer-initial-clauses ")
       simple("presat",         "--presat-simplify ")
       simple("condense",       "--condense ")
 
       # direct valued flags
+      direct("defcnf",  "--definitional-cnf", "none")
       direct("splcl",   "--split-clauses",       "0")
       direct("fwdemod", "--forward-demod-level", "2")
 

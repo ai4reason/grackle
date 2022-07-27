@@ -1,3 +1,0 @@
-inits/cvc01
-inits/cvc02
-inits/cvc03
