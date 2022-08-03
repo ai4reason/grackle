@@ -15,6 +15,7 @@ FIXED = """\
    sineF {1.0,0.8,0.6} [1.0]
 """
 
+
 # slots, cef{n}, freq{n}
 
 PARAMS = """\
@@ -29,7 +30,30 @@ PARAMS = """\
    fwdemod {0,1,2} [2]
    der {none,std,strong,agg,stragg} [none]
    simparamod {none,normal,oriented} [normal]
+
+   slots {1,2,3,4,5,6,7,8,9} [2]
+   piece0 {1,2,3} [1]
+   piece1 {1,2,3} [2]
+   piece2 {1,2,3} [3]
 """
+
+def conditions(config):
+   conds = ""
+   for i in range(config["min_slots"], config["max_slots"]):
+       dom = ",".join(map(str,range(i+1, config["max_slots"]+1)))
+       conds += "   %s | slots in {%s}\n" % ("piece%d"%i, dom)
+   return conds
+
+#def forbiddens(config, cefs):
+#   bans = ""
+#   for n in range(config["min_slots"], config["max_slots"]+1):
+#      bans += "#%d\n" % n
+#      ns = range(0,n)
+#      pairs = [(i,j) for i in ns for j in ns if i<j]
+#      for cef in cefs:
+#         for (i,j) in pairs:
+#            bans += "   {%s=%s,%s=%s,%s=%s}\n" % ("slots",n,"cef%d"%i,cef,"cef%d"%j,cef)
+#   return bans 
 
 CONDITIONS = ""
 
