@@ -1,0 +1,10 @@
+inits/vampire_aim00_init
+inits/vampire_aim01_init
+inits/vampire_aim02_init
+inits/vampire_aim03_init
+inits/vampire_aim04_init
+inits/vampire_aim05_init
+inits/vampire_aim10_init
+inits/vampire_aim07_init
+inits/vampire_aim08_init
+inits/vampire_aim09_init

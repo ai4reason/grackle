@@ -1,0 +1,26 @@
+cores = 56
+tops = 50
+best = 3
+rank = 1
+inits = greedy15
+timeout = 86400
+atavistic = False
+selection = default
+
+runner.prefix = lash-
+
+trains.data = problems.ok
+trains.runner = grackle.runner.lash.LashRunner
+trains.runner.timeout = 1
+trains.runner.penalty = 10000000
+trains.runner.cores = 50
+
+trainer = grackle.trainer.lash.paramils.LashParamilsTrainer
+#trainer = grackle.trainer.lash.smac3.LashSmac3Trainer
+trainer.runner = grackle.runner.lash.LashRunner
+trainer.runner.timeout = 1
+trainer.runner.penalty = 10000000
+trainer.timeout = 300
+trainer.restarts = True
+trainer.log = True
+

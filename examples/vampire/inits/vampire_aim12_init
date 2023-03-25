@@ -1,0 +1,1 @@
+age_weight_ratio __1_2 avatar off global_subsumption on global_subsumption_explicit_minim on literal_maximality_aftercheck on naming 16 nongoal_weight_coefficient 1 sat_solver minisat saturation_algorithm lrs selection 4 sos on unit_resulting_resolution on

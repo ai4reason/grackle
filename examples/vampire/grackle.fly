@@ -1,0 +1,24 @@
+cores = 4
+tops = 8
+best = 1
+rank = 1
+inits = inits_init.txt
+timeout = 86400
+atavistic = False
+
+runner.prefix = vampire-
+
+trains.data = aim_train
+trains.runner = grackle.runner.vampire.VampireRunner
+trains.runner.timeout = 5
+trains.runner.penalty = 10000000
+
+##trainer = grackle.trainer.vampire.smac3.VampireSmac3TrainerAC
+trainer = grackle.trainer.vampire.paramils.VampireParamilsTrainer
+trainer.runner = grackle.runner.vampire.VampireRunner
+trainer.restarts = True
+trainer.runner.timeout = 1
+trainer.runner.cores = 1
+trainer.runner.penalty = 10000000
+trainer.timeout = 3600
+

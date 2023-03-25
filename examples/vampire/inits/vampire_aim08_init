@@ -1,0 +1,1 @@
+age_weight_ratio __2_3 avatar off global_subsumption on global_subsumption_explicit_minim off nongoal_weight_coefficient 1.5 saturation_algorithm lrs selection 1011 sos theory symbol_precedence occurrence unit_resulting_resolution ec_only unused_predicate_definition_removal off

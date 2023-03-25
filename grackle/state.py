@@ -3,7 +3,6 @@ from os import path
 from . import log, unsolved
 from .tools import load_class, convert, parse_ini
 from .db import DB
-from pyprove import expres
 
 class State:
    def __init__(self, f_run):
@@ -58,6 +57,7 @@ class State:
       def data(name):
          did = ini["%s.data"%name]
          if did.startswith("pyprove:"):
+            from pyprove import expres
             bid = did[8:]
             insts = expres.benchmarks.problems(bid)
             insts = [path.join(bid,x) for x in insts]

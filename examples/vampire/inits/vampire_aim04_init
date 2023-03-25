@@ -1,0 +1,1 @@
+age_weight_ratio __1_3 avatar off forward_subsumption_resolution off literal_comparison_mode predicate literal_maximality_aftercheck on naming 4 nongoal_weight_coefficient 1 saturation_algorithm discount selection 11 sine_depth 3 sine_selection axioms sine_tolerance 1.2 sos on unused_predicate_definition_removal off
