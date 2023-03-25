@@ -109,7 +109,7 @@ The final part decribes parameters for the *training phase (strategy invention)*
 |trainer|Fully qualified Python path of the trainer class.  The trainer should be derived from class `grackle.trainer.trainer.Trainer`.|
 |trainer.runner|Runner to be used in the training phase.  Typically the same as `trains.runner` but with a higher timeout.|
 |trainer.timeout|The timeout for the execution of one training phase in seconds.|
-|trainer.?|Aditinally, trainer-specific parameters can be specified here.|
+|trainer.?|Additional trainer-specific parameters can be specified here.|
 
 Common parameters for both evaluation and training runners can be specified using the `runner.?` items.
 Optionally, `tests.?` items (similar to `trains.?` items) can be used to define separate testing problems used to select the strategy for the training, thusly preventing overfitting.
