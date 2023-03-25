@@ -1,10 +1,20 @@
 # Grackle
 
 Grackle is an automated system for invention of a set of **good-performing** and **complementary** configurations of an arbitrary parametrized algorithm.
+The Grackle system was recently described here.
+
+> Jan Hula, Jan Jakubuv, Mikolás Janota, Lukás Kubej:
+> [Targeted Configuration of an SMT Solver](https://github.com/ai4reason/grackle/raw/master/grackle-paper.pdf). CICM 2022: 256-271
+
+
+## Disclaimer
+
+This is a software prototype but it is usable with some effort.
+Please [contact the author](mailto:jakubuv_AT_gmail_DOT_com) to obtain help and support.
 
 ## Quick Install
 
-Clone the repository from *github* and install Grackle through `pip`.
+Clone the repository from [Github](https://github.com/ai4reason/grackle) and install Grackle through `pip`.
 
 ```bash
 git clone https://github.com/ai4reason/grackle.git
