@@ -39,18 +39,18 @@ Note that the link must point to the "inner" `grackle` directory (inside the rep
 
 ## Running Grackle
 
-Grackle is launched by the command `fly-grackle.py` which takes as the only parameter a configuration file
-typically named `grackle.fly`.
-
 In order to launch Grackle, you need the following.
 
 1. A set of benchmark problems for which you want to invent new strategies.
 2. Some initial strategies to start with (at least 2).
 
+Grackle is launched by the command `fly-grackle.py` which takes as the only parameter a configuration file
+typically named `grackle.fly`.
+
 ### Configuration file `grackle.fly`
 
-The configuration file provides all necessary information about the experiment to be ran.
-Typically, it looks as follows.
+The configuration file provides all necessary information about the experiment to be run.
+It contains the following fields.
 
 ```
 cores = 56
@@ -79,11 +79,59 @@ trainer.restarts = True
 trainer.log = True
 ```
 
+The first part decribes general experiment setup.
+
+|name|description|
+|-|-|
+|cores|Default number of CPUs to be used (at least 2).|
+|tops|The maximal number of strategies in the current generation (eg. 10)|
+|best|The minimal number of problems where a strategy needs to be good-performing in order to survive (eg. 3)|
+|rank|How many best strategies are good-performing on a problem (`1` means only the best strategy is good-performing, `2` means the two best strategies, etc.)|
+|inits|The filename with the list of initial strategies.  The file consists of a list of strategy filenames relative to the current working directory (where you launch Grackle from).  Each strategy filename describes one solver strategy and its content is solver-specific.|
+|timeout|The overall runtime limit in seconds.|
+|atavistic|Use the atavistic mode (`True` or`False`).|
+|selection|How to select the strategy for improvement.  Allowed values are `default`, `weak`, `random`, `mul`, `div`, `reverse`, `family` and (some of) their combinations like `weak+mul+reverse`.  The `default` is a good choice to begin with.|
+
+Next part describes the benchmark problems and parameters for the *evaluation phase*.  The main values are:
+
+|name|description|
+|-|-|
+|trains.data|Filename with the bencharks.  The file contains one problem file per line.  The problem files are relative to the current working directory.    This benchmark root directory can be adjusted by the `PYPROVE_BENCHMARKS` environment variable.|
+|trains.runner|Runner to be used for the evaluation phase.  This is a fully qualified Python class path.  The runner class should be derived from `grackle.runner.runner.Runner` class.|
+|trains.runner.prefix|A prefix to be used to name invented strategies of this runner.|
+|trains.runner.penalty|The penalty for unsolved problems.  For solved problems, the runtime in miliseconds is (typically) used as a quality measure.  Hence the penalty should be much higher than the highest possible quality.|
+|trains.runner.?|Runner specific configuration.  Typically this contains the timeout in seconds per problem.|
+
+The final part decribes parameters for the *training phase (strategy invention)*.
+
+|name|description|
+|-|-|
+|trainer|Fully qualified Python path of the trainer class.  The trainer should be derived from class `grackle.trainer.trainer.Trainer`.|
+|trainer.runner|Runner to be used in the training phase.  Typically the same as `trains.runner` but with a higher timeout.|
+|trainer.timeout|The timeout for the execution of one training phase in seconds.|
+|trainer.?|Aditinally, trainer-specific parameters can be specified here.|
+
+Common parameters for both evaluation and training runners can be specified using the `runner.?` items.
+Optionally, `tests.?` items (similar to `trains.?` items) can be used to define separate testing problems used to select the strategy for the training, thusly preventing overfitting.
+
 ### Examples
 
 Example run scripts can be found in the directory `examples` in this repository for `vampire` and `lash` ATP provers.
 At first, extract the benchmark problems in the file `benchmarks.tar.gz`.
 Then the script `run-grackle.sh` shows how to run Grackle.
+Note that the corresponding prover must be installed separately (not included in this repo).
+
+## Grackle output and restarts
+
+After a successful Grackle run, the final portfolio of strategies will be printed on the standard output.
+All the invented strategies (including the initial strategies) can be found in the directory `confs`.
+
+Aditionally, Grackle outputs the database of results as a JSON file `db-trains-final.json` (and `db-tests-final.json` if test problems are used).
+This file contains the results of all evaluated strategies (both initial and invented).
+The results of initial strategies are dumped to a JSON file `db-trains-init.json`.
+When running Grackle again, this can database can be used to speedup the evaluation of initial strategies.
+To achieve that, Grackle searches for a file named `db-trains-cache.json` and loads the results from this file.
+Hence rename `db-trains-init.json` to `db-trains-cache.json` before restarting Grackle.
 
 ## Credits
 
