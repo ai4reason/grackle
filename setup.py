@@ -17,7 +17,8 @@ setup(name='grackle',
          'paramils/stats_ils.rb'
       ],
       install_requires=[
-          'atpy >= 0.1',
+          'scipy >= 0.1',
+          'smac >= 0.1'
       ],
       zip_safe=False)
 
