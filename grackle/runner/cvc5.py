@@ -3,7 +3,7 @@ from .runner import GrackleRunner
 from grackle.trainer.cvc5.domain import DEFAULTS
 
 CVC5_BINARY = "cvc5"
-CVC5_STATIC = "-L smt2.6 --no-incremental --no-type-checking --no-interactive --stats --stats-expert"
+CVC5_STATIC = "-L smt2.6 --no-incremental --no-type-checking --no-interactive --stats --stats-internal"
 CVC5_LIMIT = " --rlimit=%s"
 
 CVC5_OK = ["sat", "unsat"]
@@ -51,7 +51,8 @@ class Cvc5Runner(GrackleRunner):
       if result not in CVC5_RESULTS:
          result = "unknown"
       (runtime, resources) = self.output(out[1:])
-      failed = [100*self.config["penalty.unknown"], self.config["timeout"], "failed", -1]
+      #failed = [100*self.config["penalty.unknown"], self.config["timeout"], "failed", -1]
+      failed = None
       if (runtime is None):
          return failed
       quality = resources if "rlimit" in self.config else 1000*runtime # use ms as quality
@@ -69,6 +70,8 @@ class Cvc5Runner(GrackleRunner):
          if line.startswith("resource::resourceUnitsUsed"):
             resources = int(line.split("=")[1])
          elif line.startswith("driver::totalTime"):
+            runtime = float(line.split("=")[1])
+         elif line.startswith("global::totalTime"):
             runtime = float(line.split("=")[1])
       return (runtime, resources)
 
