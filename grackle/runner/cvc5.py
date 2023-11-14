@@ -72,7 +72,7 @@ class Cvc5Runner(GrackleRunner):
          elif line.startswith("driver::totalTime"):
             runtime = float(line.split("=")[1])
          elif line.startswith("global::totalTime"):
-            runtime = float(line.split("=")[1])
+            runtime = float(line.split("=")[1].rstrip("ms"))
       return (runtime, resources)
 
    def success(self, result):
