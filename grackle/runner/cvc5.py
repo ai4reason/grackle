@@ -1,6 +1,6 @@
 from os import path, getenv
 from .runner import GrackleRunner
-from grackle.trainer.cvc5.domain import DEFAULTS
+from grackle.trainer.cvc5.domain import DEFAULTS, CONDITIONS
 
 CVC5_BINARY = "cvc5"
 CVC5_STATIC = "-L smt2.6 --no-incremental --no-type-checking --no-interactive --stats --stats-internal"
@@ -20,6 +20,8 @@ class Cvc5Runner(GrackleRunner):
       penalty = self.config["penalty"]
       self.default("penalty.unknown", penalty)
       self.default("penalty.timeout", penalty)
+      self.default("penalty.sat", False)
+      self.conds = self.conditions(CONDITIONS)
 
    def args(self, params):
       def one(arg, val):
@@ -60,6 +62,8 @@ class Cvc5Runner(GrackleRunner):
          quality = self.config["penalty.timeout"]
       elif result == "unknown":
          quality = self.config["penalty.unknown"]
+      elif result == "sat" and self.config["penalty.sat"]:
+         quality = self.config["penalty.sat"]
       if (runtime is None) or (quality is None):
          return failed
       return [quality, runtime, result, resources]
@@ -72,14 +76,32 @@ class Cvc5Runner(GrackleRunner):
          elif line.startswith("driver::totalTime"):
             runtime = float(line.split("=")[1])
          elif line.startswith("global::totalTime"):
-            runtime = float(line.split("=")[1].rstrip("ms"))
+            runtime = float(line.split("=")[1].rstrip("ms")) / 1000
       return (runtime, resources)
 
    def success(self, result):
       return result in CVC5_OK
 
    def clean(self, params):
+      # clean default values
       params = {x:params[x] for x in params if params[x] != DEFAULTS[x]}
+      # clean conditioned arguments
+      delme = set()
+      idle = False
+      while not idle:
+         idle = True
+         for x in params:
+            if x not in self.conds:
+               continue
+            for y in self.conds[x]:
+               val = params[y] if y in params else DEFAULTS[y]
+               if val not in self.conds[x][y]:
+                  delme.add(x)
+                  break
+         for x in delme:
+            del params[x]
+            idle = False
+         delme.clear()
       return params
 
 def wrapper(conf, instance, config={}):
