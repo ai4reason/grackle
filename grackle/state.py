@@ -38,6 +38,7 @@ class State:
       self.timeout = require("timeout", 0)
       self.atavistic = require("atavistic", True, warn=False)
       self.selection = require("selection", "default", warn=False)
+      self.ntfy = require("ntfy", False, warn=False)
 
       def copy(to, prefix, use=True):
          for x in ini:
