@@ -1,7 +1,15 @@
 import os
 import time
+import requests
+import socket
 
 FATAL_LOG = os.path.join(os.getenv("HOME"),"grackle-errors.log")
+
+def ntfy(state, msg):
+   if not state.ntfy:
+      return
+   hostname = socket.gethostname()
+   requests.post(f"https://ntfy.sh/{state.ntfy}", data=f"{hostname}: {msg}")
 
 def active(state, mastered):
    print("> ACTIVE CONFIGURATIONS: %d" % len(state.active))
@@ -28,13 +36,16 @@ def iter(state):
    print(">")
    print("> === ITER %d ===" % state.it)
    print(">")
+   ntfy(state, f"grackle runing iter #{state.it}")
 
 def update(db, confs):
    print("> Evaluating %d configurations on %s." % (len(confs), db.name))
 
 def status(state, db):
    runtime = (time.time() - state.start_time) / 60
-   print("> STATUS @ %d (%s): %s, %.2f, %.2f (%.2f, %.4f)" % ((runtime,)+db.status()))
+   msg = "> STATUS @ %d (%s): %s, %.2f, %.2f (%.2f, %.4f)" % ((runtime,)+db.status())
+   print(msg)
+   ntfy(state, msg[2:].split(",")[0])
 
 def candidates(state, candidates, avgs):
    print("TRAINING CANDIDATES:")
@@ -50,9 +61,11 @@ def finished(state):
       params = state.trains.runner.recall(conf)
       rep = state.trains.runner.repr(params)
       print("> %s: %s" % (state.nicks[conf], rep))
+   ntfy(state, "grackle finished")
 
 def timeout(state):
    print("> Timeout: Not enough time for training. Terminating after %s seconds." % (time.time() - state.start_time))
+   ntfy(state, "grackle timed out")
 
 def timestamp(t_start, msg, prog="GRACKLE"):
    t_elapsed = int(time.time() - t_start)
