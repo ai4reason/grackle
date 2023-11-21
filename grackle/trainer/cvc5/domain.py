@@ -130,9 +130,9 @@ fmf_bound | finite_model_find in {yes}
 fmf_fun | finite_model_find in {yes}
 """
 
+#{full_saturate_quant=yes, enum_inst=no}
+#{full_saturate_quant=no, enum_inst=yes}
 FORBIDDENS = """
-{full_saturate_quant=yes, enum_inst=no}
-{full_saturate_quant=no, enum_inst=yes}
 """
 
 DEFAULTS = {
