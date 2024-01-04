@@ -17,6 +17,7 @@ if __name__ == '__main__':
       params = runner.parse(sys.argv[7:])
       #(quality,clock) = runner.run(params, inst)[:2]
 
+      params = runner.clean(params)
       res = runner.run(params, inst)
       if not res: res = [1000000, 10]
       (quality, clock) = res[:2]
