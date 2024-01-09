@@ -97,7 +97,7 @@ def inits(state):
    for conf in sorted(state.alls, key = lambda x: state.nicks[x]):
       params = state.trains.runner.recall(conf)
       rep = state.trains.runner.repr(params)
-      print("> %s: %s" % (state.nicks[conf], rep))
+      print("> INIT CONFIG: %s: %s" % (state.nicks[conf], rep))
 
 def scenario(state, ini, unused=None):
    show = lambda dic: " ".join(["%s=%s"%(x,dic[x]) for x in sorted(dic)])

@@ -91,6 +91,14 @@ unconstrained_simp {yes,no} [%(unconstrained_simp)s]
 user_pat {use,trust,strict,resort,ignore,interleave} [%(user_pat)s]
 var_elim_quant {yes,no} [%(var_elim_quant)s]
 var_ineq_elim_quant {yes,no} [%(var_ineq_elim_quant)s]
+
+cbqi_eager_check_rd {yes,no} [%(cbqi_eager_check_rd)s]
+cbqi_eager_test {yes,no} [%(cbqi_eager_test)s]
+cbqi_skip_rd {yes,no} [%(cbqi_skip_rd)s]
+cbqi_tconstraint {yes,no} [%(cbqi_tconstraint)s]
+cbqi_vo_exp {yes,no} [%(cbqi_vo_exp)s]
+mbqi {yes,no} [%(mbqi)s]
+mbqi_interleave {yes,no} [%(mbqi_interleave)s]
 """
 
 CONDITIONS = """
@@ -128,11 +136,19 @@ sygus_verify_timeout | sygus in {yes}
 
 fmf_bound | finite_model_find in {yes}
 fmf_fun | finite_model_find in {yes}
+
+cbqi_eager_check_rd | cbqi in {yes}
+cbqi_eager_test | cbqi in {yes}
+cbqi_skip_rd | cbqi in {yes}
+cbqi_tconstraint | cbqi in {yes}
+cbqi_vo_exp | cbqi in {yes}
+mbqi_interleave | mbqi in {yes}
+mbqi_one_inst_per_round | mbqi in {yes}
 """
 
+#{full_saturate_quant=yes, enum_inst=no}
+#{full_saturate_quant=no, enum_inst=yes}
 FORBIDDENS = """
-{full_saturate_quant=yes, enum_inst=no}
-{full_saturate_quant=no, enum_inst=yes}
 """
 
 DEFAULTS = {
@@ -227,5 +243,13 @@ DEFAULTS = {
    'user_pat': 'trust',
    'var_elim_quant': 'yes',
    'var_ineq_elim_quant': 'yes',
+
+   'cbqi_eager_check_rd': 'yes',
+   'cbqi_eager_test': 'yes',
+   'cbqi_skip_rd': 'no',
+   'cbqi_tconstraint': 'no',
+   'cbqi_vo_exp': 'no',
+   'mbqi': 'no',
+   'mbqi_interleave': 'no',
 }
 
