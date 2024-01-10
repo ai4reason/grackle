@@ -35,7 +35,7 @@ def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1
       log0 = log
       log = ""
       for numRun in running:
-         (n,q,params) = grackle.paramils.results.parse(outdir, numRun)
+         (n,q,_) = grackle.paramils.results.parse(outdir, numRun, getparams=False)
          log += "%2s:%3s (%8.1f)\t" % (numRun,n,q) 
          #print(numRun, n, q)
          if restarts and not adult and numRun is not elder[0] and n == N:
