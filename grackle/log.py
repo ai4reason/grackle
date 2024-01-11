@@ -8,8 +8,11 @@ FATAL_LOG = os.path.join(os.getenv("HOME"),"grackle-errors.log")
 def ntfy(state, msg):
    if not state.ntfy:
       return
-   hostname = socket.gethostname()
-   requests.post(f"https://ntfy.sh/{state.ntfy}", data=f"{hostname}: {msg}")
+   try:
+      hostname = socket.gethostname()
+      requests.post(f"https://ntfy.sh/{state.ntfy}", data=f"{hostname}: {msg}")
+   except IOError as e:
+      print(f"> Warning: ntfy I/O error ({e})")
 
 def active(state, mastered):
    print("> ACTIVE CONFIGURATIONS: %d" % len(state.active))
