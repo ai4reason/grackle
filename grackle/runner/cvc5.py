@@ -69,7 +69,7 @@ class Cvc5Runner(GrackleRunner):
          quality = self.config["penalty.sat"]
       elif self.config["log_solved"]:
          with open("solved.log","a",buffering=1) as f:
-            f.write(f"{inst} {result} {self._args}\n")
+            f.write(f"{inst} {result} {quality} {self._args}\n")
 
       if (runtime is None) or (quality is None):
          return failed
