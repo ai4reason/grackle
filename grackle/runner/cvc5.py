@@ -21,7 +21,9 @@ class Cvc5Runner(GrackleRunner):
       self.default("penalty.unknown", penalty)
       self.default("penalty.timeout", penalty)
       self.default("penalty.sat", False)
+      self.default("log_solved", False)
       self.conds = self.conditions(CONDITIONS)
+      self._args = None
 
    def args(self, params):
       def one(arg, val):
@@ -37,6 +39,7 @@ class Cvc5Runner(GrackleRunner):
 
    def cmd(self, params, inst):
       args = self.args(params)
+      self._args = args
       problem = path.join(getenv("PYPROVE_BENCHMARKS", "."), inst)
       rlimit = CVC5_LIMIT % self.config["rlimit"] if "rlimit" in self.config else ""
       timeout = TIMEOUT % self.config["timeout"] if "timeout" in self.config else ""
@@ -64,6 +67,10 @@ class Cvc5Runner(GrackleRunner):
          quality = self.config["penalty.unknown"]
       elif result == "sat" and self.config["penalty.sat"]:
          quality = self.config["penalty.sat"]
+      elif self.config["log_solved"]:
+         with open("solved.log","a",buffering=1) as f:
+            f.write(f"{inst} {result} {self._args}\n")
+
       if (runtime is None) or (quality is None):
          return failed
       return [quality, runtime, result, resources]
