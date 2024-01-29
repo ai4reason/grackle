@@ -54,7 +54,8 @@ class Cvc5Runner(GrackleRunner):
       if ("interrupted" in result):
          result = "timeout"
       if result not in CVC5_RESULTS:
-         result = "unknown"
+         return None
+         #result = "unknown"
       (runtime, resources) = self.output(out[1:])
       #failed = [100*self.config["penalty.unknown"], self.config["timeout"], "failed", -1]
       failed = None
