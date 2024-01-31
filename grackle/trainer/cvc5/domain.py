@@ -1,8 +1,90 @@
+#print_cores_full {yes,no} [%(print_cores_full)s]
+#print_inst_full {yes,no} [%(print_inst_full)s]
+#print_inst {list,num} [%(print_inst)s]
+#produce_abducts {yes,no} [%(produce_abducts)s]
+#produce_assertions {yes,no} [%(produce_assertions)s]
+#produce_assignments {yes,no} [%(produce_assignments)s]
+#produce_difficulty {yes,no} [%(produce_difficulty)s]
+#produce_interpolants {yes,no} [%(produce_interpolants)s]
+#produce_learned_literals {yes,no} [%(produce_learned_literals)s]
+#produce_models {yes,no} [%(produce_models)s]
+#produce_proofs {yes,no} [%(produce_proofs)s]
+#produce_unsat_assumptions {yes,no} [%(produce_unsat_assumptions)s]
+#produce_unsat_cores {yes,no} [%(produce_unsat_cores)s]
+#proof_mode {off,pp_only,sat_proof,full_proof} [%(proof_mode)s]
+#ackermann {yes,no} [%(ackermann)s]
+#bv_to_int_use_pow2 {yes,no} [%(bv_to_int_use_pow2)s]
+#sygus {yes,no} [%(sygus)s]
+#sygus_add_const_grammar {yes,no} [%(sygus_add_const_grammar)s]
+#sygus_arg_relevant {yes,no} [%(sygus_arg_relevant)s]
+#sygus_auto_unfold {yes,no} [%(sygus_auto_unfold)s]
+#sygus_bool_ite_return_const {yes,no} [%(sygus_bool_ite_return_const)s]
+#sygus_core_connective {yes,no} [%(sygus_core_connective)s]
+#sygus_crepair_abort {yes,no} [%(sygus_crepair_abort)s]
+#sygus_enum {smart,fast,random,var_agnostic,auto} [%(sygus_enum)s]
+#sygus_eval_unfold {none,single,single_bool,multi} [%(sygus_eval_unfold)s]
+#sygus_filter_sol_rev {yes,no} [%(sygus_filter_sol_rev)s]
+#sygus_filter_sol {none,strong,weak} [%(sygus_filter_sol)s]
+#sygus_grammar_cons {simple,any_const,any_term,any_term_concise} [%(sygus_grammar_cons)s]
+#sygus_grammar_norm {yes,no} [%(sygus_grammar_norm)s]
+#sygus_grammar_use_disj {yes,no} [%(sygus_grammar_use_disj)s]
+#sygus_inference {yes,no} [%(sygus_inference)s]
+#sygus_inst {yes,no} [%(sygus_inst)s]
+#sygus_inst_mode {priority_inst,priority_eval,interleave} [%(sygus_inst_mode)s]
+#sygus_inst_scope {in,out,both} [%(sygus_inst_scope)s]
+#sygus_inst_term_sel {min,max,both} [%(sygus_inst_term_sel)s]
+#sygus_inv_templ_when_sg {yes,no} [%(sygus_inv_templ_when_sg)s]
+#sygus_inv_templ {none,pre,post} [%(sygus_inv_templ)s]
+#sygus_min_grammar {yes,no} [%(sygus_min_grammar)s]
+#sygus_out {status,status_and_def,sygus_standard} [%(sygus_out)s]
+#sygus_pbe {yes,no} [%(sygus_pbe)s]
+#sygus_pbe_multi_fair {yes,no} [%(sygus_pbe_multi_fair)s]
+#sygus_qe_preproc {yes,no} [%(sygus_qe_preproc)s]
+#sygus_query_gen_dump_files {none,all,unsolved} [%(sygus_query_gen_dump_files)s]
+#sygus_query_gen_filter_solved {yes,no} [%(sygus_query_gen_filter_solved)s]
+#sygus_query_gen {basic,sample_sat,unsat} [%(sygus_query_gen)s]
+#sygus_rec_fun {yes,no} [%(sygus_rec_fun)s]
+#sygus_repair_const {yes,no} [%(sygus_repair_const)s]
+#sygus_rr_synth_accel {yes,no} [%(sygus_rr_synth_accel)s]
+#sygus_rr_synth_check {yes,no} [%(sygus_rr_synth_check)s]
+#sygus_rr_synth_filter_cong {yes,no} [%(sygus_rr_synth_filter_cong)s]
+#sygus_rr_synth_filter_match {yes,no} [%(sygus_rr_synth_filter_match)s]
+#sygus_rr_synth_filter_nl {yes,no} [%(sygus_rr_synth_filter_nl)s]
+#sygus_rr_synth_filter_order {yes,no} [%(sygus_rr_synth_filter_order)s]
+#sygus_rr_synth_rec {yes,no} [%(sygus_rr_synth_rec)s]
+#sygus_sample_fp_uniform {yes,no} [%(sygus_sample_fp_uniform)s]
+#sygus_sample_grammar {yes,no} [%(sygus_sample_grammar)s]
+#sygus_si_abort {yes,no} [%(sygus_si_abort)s]
+#sygus_si_rcons {none,all_limit,all} [%(sygus_si_rcons)s]
+#sygus_si {none,use,all} [%(sygus_si)s]
+#sygus_stream {yes,no} [%(sygus_stream)s]
+#sygus_unif_cond_independent_no_repeat_sol {yes,no} [%(sygus_unif_cond_independent_no_repeat_sol)s]
+#sygus_unif_pi {none,complete,cond_enum,cond_enum_igain} [%(sygus_unif_pi)s]
+#sygus_unif_shuffle_cond {yes,no} [%(sygus_unif_shuffle_cond)s]
+#nl_cov {yes,no} [%(nl_cov)s]
+#nl_cov_force {yes,no} [%(nl_cov_force)s]
+#nl_cov_lift {regular,lazard} [%(nl_cov_lift)s]
+#nl_cov_linear_model {none,initial,persistent} [%(nl_cov_linear_model)s]
+#nl_cov_proj {mccallum,lazard,lazard_mod} [%(nl_cov_proj)s]
+#nl_cov_prune {yes,no} [%(nl_cov_prune)s]
+#nl_cov_var_elim {yes,no} [%(nl_cov_var_elim)s]
+#nl_ext_ent_conf {yes,no} [%(nl_ext_ent_conf)s]
+#nl_ext_factor {yes,no} [%(nl_ext_factor)s]
+#nl_ext_inc_prec {yes,no} [%(nl_ext_inc_prec)s]
+#nl_ext_purify {yes,no} [%(nl_ext_purify)s]
+#nl_ext_rbound {yes,no} [%(nl_ext_rbound)s]
+#nl_ext_rewrite {yes,no} [%(nl_ext_rewrite)s]
+#nl_ext_split_zero {yes,no} [%(nl_ext_split_zero)s]
+#nl_ext_tf_tplanes {yes,no} [%(nl_ext_tf_tplanes)s]
+#nl_ext_tplanes {yes,no} [%(nl_ext_tplanes)s]
+#nl_ext_tplanes_interleave {yes,no} [%(nl_ext_tplanes_interleave)s]
+#nl_ext {none,light,full} [%(nl_ext)s]
+#nl_icp {yes,no} [%(nl_icp)s]
+#nl_rlv_assert_bounds {yes,no} [%(nl_rlv_assert_bounds)s]
+#nl_rlv {none,interleave,always} [%(nl_rlv)s]
 
 PARAMS = """
 abstract_values {yes,no} [%(abstract_values)s]
-ackermann {yes,no} [%(ackermann)s]
-bv_to_int_use_pow2 {yes,no} [%(bv_to_int_use_pow2)s]
 cbqi {yes,no} [%(cbqi)s]
 cbqi_all_conflict {yes,no} [%(cbqi_all_conflict)s]
 cbqi_eager_check_rd {yes,no} [%(cbqi_eager_check_rd)s]
@@ -110,20 +192,6 @@ pre_skolem_quant {off,on,agg} [%(pre_skolem_quant)s]
 prenex_quant_user {yes,no} [%(prenex_quant_user)s]
 prenex_quant {none,simple,norm} [%(prenex_quant)s]
 preregister_mode {eager,lazy} [%(preregister_mode)s]
-print_cores_full {yes,no} [%(print_cores_full)s]
-print_inst_full {yes,no} [%(print_inst_full)s]
-print_inst {list,num} [%(print_inst)s]
-produce_abducts {yes,no} [%(produce_abducts)s]
-produce_assertions {yes,no} [%(produce_assertions)s]
-produce_assignments {yes,no} [%(produce_assignments)s]
-produce_difficulty {yes,no} [%(produce_difficulty)s]
-produce_interpolants {yes,no} [%(produce_interpolants)s]
-produce_learned_literals {yes,no} [%(produce_learned_literals)s]
-produce_models {yes,no} [%(produce_models)s]
-produce_proofs {yes,no} [%(produce_proofs)s]
-produce_unsat_assumptions {yes,no} [%(produce_unsat_assumptions)s]
-produce_unsat_cores {yes,no} [%(produce_unsat_cores)s]
-proof_mode {off,pp_only,sat_proof,full_proof} [%(proof_mode)s]
 purify_triggers {yes,no} [%(purify_triggers)s]
 quant_alpha_equiv {yes,no} [%(quant_alpha_equiv)s]
 quant_dsplit {none,default,agg} [%(quant_dsplit)s]
@@ -142,53 +210,6 @@ solve_bv_as_int {off,sum,iand,bv,bitwise} [%(solve_bv_as_int)s]
 solve_real_as_int {yes,no} [%(solve_real_as_int)s]
 sort_inference {yes,no} [%(sort_inference)s]
 static_learning {yes,no} [%(static_learning)s]
-sygus {yes,no} [%(sygus)s]
-sygus_add_const_grammar {yes,no} [%(sygus_add_const_grammar)s]
-sygus_arg_relevant {yes,no} [%(sygus_arg_relevant)s]
-sygus_auto_unfold {yes,no} [%(sygus_auto_unfold)s]
-sygus_bool_ite_return_const {yes,no} [%(sygus_bool_ite_return_const)s]
-sygus_core_connective {yes,no} [%(sygus_core_connective)s]
-sygus_crepair_abort {yes,no} [%(sygus_crepair_abort)s]
-sygus_enum {smart,fast,random,var_agnostic,auto} [%(sygus_enum)s]
-sygus_eval_unfold {none,single,single_bool,multi} [%(sygus_eval_unfold)s]
-sygus_filter_sol_rev {yes,no} [%(sygus_filter_sol_rev)s]
-sygus_filter_sol {none,strong,weak} [%(sygus_filter_sol)s]
-sygus_grammar_cons {simple,any_const,any_term,any_term_concise} [%(sygus_grammar_cons)s]
-sygus_grammar_norm {yes,no} [%(sygus_grammar_norm)s]
-sygus_grammar_use_disj {yes,no} [%(sygus_grammar_use_disj)s]
-sygus_inference {yes,no} [%(sygus_inference)s]
-sygus_inst {yes,no} [%(sygus_inst)s]
-sygus_inst_mode {priority_inst,priority_eval,interleave} [%(sygus_inst_mode)s]
-sygus_inst_scope {in,out,both} [%(sygus_inst_scope)s]
-sygus_inst_term_sel {min,max,both} [%(sygus_inst_term_sel)s]
-sygus_inv_templ_when_sg {yes,no} [%(sygus_inv_templ_when_sg)s]
-sygus_inv_templ {none,pre,post} [%(sygus_inv_templ)s]
-sygus_min_grammar {yes,no} [%(sygus_min_grammar)s]
-sygus_out {status,status_and_def,sygus_standard} [%(sygus_out)s]
-sygus_pbe {yes,no} [%(sygus_pbe)s]
-sygus_pbe_multi_fair {yes,no} [%(sygus_pbe_multi_fair)s]
-sygus_qe_preproc {yes,no} [%(sygus_qe_preproc)s]
-sygus_query_gen_dump_files {none,all,unsolved} [%(sygus_query_gen_dump_files)s]
-sygus_query_gen_filter_solved {yes,no} [%(sygus_query_gen_filter_solved)s]
-sygus_query_gen {basic,sample_sat,unsat} [%(sygus_query_gen)s]
-sygus_rec_fun {yes,no} [%(sygus_rec_fun)s]
-sygus_repair_const {yes,no} [%(sygus_repair_const)s]
-sygus_rr_synth_accel {yes,no} [%(sygus_rr_synth_accel)s]
-sygus_rr_synth_check {yes,no} [%(sygus_rr_synth_check)s]
-sygus_rr_synth_filter_cong {yes,no} [%(sygus_rr_synth_filter_cong)s]
-sygus_rr_synth_filter_match {yes,no} [%(sygus_rr_synth_filter_match)s]
-sygus_rr_synth_filter_nl {yes,no} [%(sygus_rr_synth_filter_nl)s]
-sygus_rr_synth_filter_order {yes,no} [%(sygus_rr_synth_filter_order)s]
-sygus_rr_synth_rec {yes,no} [%(sygus_rr_synth_rec)s]
-sygus_sample_fp_uniform {yes,no} [%(sygus_sample_fp_uniform)s]
-sygus_sample_grammar {yes,no} [%(sygus_sample_grammar)s]
-sygus_si_abort {yes,no} [%(sygus_si_abort)s]
-sygus_si_rcons {none,all_limit,all} [%(sygus_si_rcons)s]
-sygus_si {none,use,all} [%(sygus_si)s]
-sygus_stream {yes,no} [%(sygus_stream)s]
-sygus_unif_cond_independent_no_repeat_sol {yes,no} [%(sygus_unif_cond_independent_no_repeat_sol)s]
-sygus_unif_pi {none,complete,cond_enum,cond_enum_igain} [%(sygus_unif_pi)s]
-sygus_unif_shuffle_cond {yes,no} [%(sygus_unif_shuffle_cond)s]
 symmetry_breaker {yes,no} [%(symmetry_breaker)s]
 term_db_cd {yes,no} [%(term_db_cd)s]
 term_db_mode {all,relevant} [%(term_db_mode)s]
@@ -223,27 +244,6 @@ fp_lazy_wb {yes,no} [%(fp_lazy_wb)s]
 lemmas_on_replay_failure {yes,no} [%(lemmas_on_replay_failure)s]
 miplib_trick {yes,no} [%(miplib_trick)s]
 new_prop {yes,no} [%(new_prop)s]
-nl_cov {yes,no} [%(nl_cov)s]
-nl_cov_force {yes,no} [%(nl_cov_force)s]
-nl_cov_lift {regular,lazard} [%(nl_cov_lift)s]
-nl_cov_linear_model {none,initial,persistent} [%(nl_cov_linear_model)s]
-nl_cov_proj {mccallum,lazard,lazard_mod} [%(nl_cov_proj)s]
-nl_cov_prune {yes,no} [%(nl_cov_prune)s]
-nl_cov_var_elim {yes,no} [%(nl_cov_var_elim)s]
-nl_ext_ent_conf {yes,no} [%(nl_ext_ent_conf)s]
-nl_ext_factor {yes,no} [%(nl_ext_factor)s]
-nl_ext_inc_prec {yes,no} [%(nl_ext_inc_prec)s]
-nl_ext_purify {yes,no} [%(nl_ext_purify)s]
-nl_ext_rbound {yes,no} [%(nl_ext_rbound)s]
-nl_ext_rewrite {yes,no} [%(nl_ext_rewrite)s]
-nl_ext_split_zero {yes,no} [%(nl_ext_split_zero)s]
-nl_ext_tf_tplanes {yes,no} [%(nl_ext_tf_tplanes)s]
-nl_ext_tplanes {yes,no} [%(nl_ext_tplanes)s]
-nl_ext_tplanes_interleave {yes,no} [%(nl_ext_tplanes_interleave)s]
-nl_ext {none,light,full} [%(nl_ext)s]
-nl_icp {yes,no} [%(nl_icp)s]
-nl_rlv_assert_bounds {yes,no} [%(nl_rlv_assert_bounds)s]
-nl_rlv {none,interleave,always} [%(nl_rlv)s]
 pb_rewrites {yes,no} [%(pb_rewrites)s]
 restrict_pivots {yes,no} [%(restrict_pivots)s]
 revert_arith_models_on_unsat {yes,no} [%(revert_arith_models_on_unsat)s]
@@ -283,43 +283,6 @@ cegqi_nopt | cegqi in {yes}
 cegqi_round_up_lia | cegqi in {yes}
 mbqi_interleave | mbqi in {yes}
 mbqi_one_inst_per_round | mbqi in {yes}
-sygus_add_const_grammar | sygus in {yes}
-sygus_arg_relevant | sygus in {yes}
-sygus_auto_unfold | sygus in {yes}
-sygus_bool_ite_return_const | sygus in {yes}
-sygus_core_connective | sygus in {yes}
-sygus_crepair_abort | sygus in {yes}
-sygus_enum | sygus in {yes}
-sygus_inst_scope | sygus in {yes}
-sygus_inst_term_sel | sygus in {yes}
-sygus_inv_templ_when_sg | sygus in {yes}
-sygus_inv_templ | sygus in {yes}
-sygus_min_grammar | sygus in {yes}
-sygus_out | sygus in {yes}
-sygus_pbe | sygus in {yes}
-sygus_pbe_multi_fair | sygus in {yes}
-sygus_qe_preproc | sygus in {yes}
-sygus_query_gen_dump_files | sygus in {yes}
-sygus_query_gen_filter_solved | sygus in {yes}
-sygus_query_gen | sygus in {yes}
-sygus_rec_fun | sygus in {yes}
-sygus_repair_const | sygus in {yes}
-sygus_rr_synth_accel | sygus in {yes}
-sygus_rr_synth_check | sygus in {yes}
-sygus_rr_synth_filter_cong | sygus in {yes}
-sygus_rr_synth_filter_match | sygus in {yes}
-sygus_rr_synth_filter_nl | sygus in {yes}
-sygus_rr_synth_filter_order | sygus in {yes}
-sygus_rr_synth_rec | sygus in {yes}
-sygus_sample_fp_uniform | sygus in {yes}
-sygus_sample_grammar | sygus in {yes}
-sygus_si_abort | sygus in {yes}
-sygus_si_rcons | sygus in {yes}
-sygus_si | sygus in {yes}
-sygus_stream | sygus in {yes}
-sygus_unif_cond_independent_no_repeat_sol | sygus in {yes}
-sygus_unif_pi | sygus in {yes}
-sygus_unif_shuffle_cond | sygus in {yes}
 
 fmf_bound | finite_model_find in {yes}
 fmf_fun | finite_model_find in {yes}
@@ -329,8 +292,6 @@ FORBIDDENS = ""
 
 DEFAULTS = {
    'abstract_values': 'no',
-   'ackermann': 'no',
-   'bv_to_int_use_pow2': 'no',
    'cbqi': 'yes',
    'cbqi_all_conflict': 'no',
    'cbqi_eager_check_rd': 'yes',
@@ -438,20 +399,6 @@ DEFAULTS = {
    'prenex_quant_user': 'no',
    'prenex_quant': 'simple',
    'preregister_mode': 'eager',
-   'print_cores_full': 'no',
-   'print_inst_full': 'yes',
-   'print_inst': 'list',
-   'produce_abducts': 'no',
-   'produce_assertions': 'yes',
-   'produce_assignments': 'no',
-   'produce_difficulty': 'no',
-   'produce_interpolants': 'no',
-   'produce_learned_literals': 'no',
-   'produce_models': 'no',
-   'produce_proofs': 'no',
-   'produce_unsat_assumptions': 'no',
-   'produce_unsat_cores': 'no',
-   'proof_mode': 'off',
    'purify_triggers': 'no',
    'quant_alpha_equiv': 'yes',
    'quant_dsplit': 'default',
@@ -470,53 +417,6 @@ DEFAULTS = {
    'solve_real_as_int': 'no',
    'sort_inference': 'no',
    'static_learning': 'yes',
-   'sygus': 'no',
-   'sygus_add_const_grammar': 'yes',
-   'sygus_arg_relevant': 'no',
-   'sygus_auto_unfold': 'yes',
-   'sygus_bool_ite_return_const': 'yes',
-   'sygus_core_connective': 'yes',
-   'sygus_crepair_abort': 'no',
-   'sygus_enum': 'auto',
-   'sygus_eval_unfold': 'single_bool',
-   'sygus_filter_sol_rev': 'no',
-   'sygus_filter_sol': 'none',
-   'sygus_grammar_cons': 'simple',
-   'sygus_grammar_norm': 'no',
-   'sygus_grammar_use_disj': 'yes',
-   'sygus_inference': 'no',
-   'sygus_inst': 'no',
-   'sygus_inst_mode': 'priority_inst',
-   'sygus_inst_scope': 'in',
-   'sygus_inst_term_sel': 'min',
-   'sygus_inv_templ_when_sg': 'no',
-   'sygus_inv_templ': 'post',
-   'sygus_min_grammar': 'yes',
-   'sygus_out': 'sygus_standard',
-   'sygus_pbe': 'yes',
-   'sygus_pbe_multi_fair': 'no',
-   'sygus_qe_preproc': 'no',
-   'sygus_query_gen_dump_files': 'none',
-   'sygus_query_gen_filter_solved': 'no',
-   'sygus_query_gen': 'basic',
-   'sygus_rec_fun': 'yes',
-   'sygus_repair_const': 'no',
-   'sygus_rr_synth_accel': 'no',
-   'sygus_rr_synth_check': 'yes',
-   'sygus_rr_synth_filter_cong': 'yes',
-   'sygus_rr_synth_filter_match': 'yes',
-   'sygus_rr_synth_filter_nl': 'no',
-   'sygus_rr_synth_filter_order': 'yes',
-   'sygus_rr_synth_rec': 'no',
-   'sygus_sample_fp_uniform': 'no',
-   'sygus_sample_grammar': 'yes',
-   'sygus_si_abort': 'no',
-   'sygus_si_rcons': 'all',
-   'sygus_si': 'none',
-   'sygus_stream': 'no',
-   'sygus_unif_cond_independent_no_repeat_sol': 'yes',
-   'sygus_unif_pi': 'none',
-   'sygus_unif_shuffle_cond': 'no',
    'symmetry_breaker': 'yes',
    'term_db_cd': 'yes',
    'term_db_mode': 'all',
@@ -550,27 +450,6 @@ DEFAULTS = {
    'lemmas_on_replay_failure': 'no',
    'miplib_trick': 'no',
    'new_prop': 'yes',
-   'nl_cov': 'no',
-   'nl_cov_force': 'no',
-   'nl_cov_lift': 'regular',
-   'nl_cov_linear_model': 'none',
-   'nl_cov_proj': 'mccallum',
-   'nl_cov_prune': 'no',
-   'nl_cov_var_elim': 'yes',
-   'nl_ext_ent_conf': 'no',
-   'nl_ext_factor': 'yes',
-   'nl_ext_inc_prec': 'yes',
-   'nl_ext_purify': 'no',
-   'nl_ext_rbound': 'no',
-   'nl_ext_rewrite': 'yes',
-   'nl_ext_split_zero': 'no',
-   'nl_ext_tf_tplanes': 'yes',
-   'nl_ext_tplanes': 'yes',
-   'nl_ext_tplanes_interleave': 'no',
-   'nl_ext': 'full',
-   'nl_icp': 'no',
-   'nl_rlv_assert_bounds': 'no',
-   'nl_rlv': 'none',
    'pb_rewrites': 'no',
    'restrict_pivots': 'yes',
    'revert_arith_models_on_unsat': 'no',
