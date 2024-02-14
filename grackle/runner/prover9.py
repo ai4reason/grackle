@@ -46,6 +46,8 @@ class Prover9Runner(GrackleRunner):
    def create_temp_strategy_file(self, params):
       with tempfile.NamedTemporaryFile(mode='w+', delete=False, prefix="prover9-strat-") as temp_file:
          for key in params:
+            if key == "max_megs":
+               continue
             value = params[key]
             converted_parameter = f"assign({key}, {value}).\n"
             temp_file.write(converted_parameter)
