@@ -49,6 +49,7 @@ class Prover9Runner(GrackleRunner):
             value = params[key]
             converted_parameter = f"assign({key}, {value}).\n"
             temp_file.write(converted_parameter)
+         temp_file.write("assign(max_megs, 2048).\n")
       return temp_file.name
    
 
