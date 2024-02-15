@@ -26,7 +26,7 @@ class ParamilsTrainer(Trainer):
       self.default("restarts", False)
 
    def domains(self, params):
-      return self.runner.domain.dump(params)
+      return self.runner.domain.dump()
    
    def improve(self, state, conf, insts):
       cwd = path.join("training", "iter-%03d-%s"%(state.it, self.confname(conf)))
