@@ -27,6 +27,78 @@ PAT = re.compile(r"^%% (%s) (\S*)" % "|".join(KEYS), flags=re.MULTILINE)
 pattern_wall_clock = r'User_CPU=(\d+\.\d+)' # We can take User_CPU, System_CPU, Wall_clock
 pattern_kept = r'Kept=(\d+)'                # kept Clauses
 
+INTS=frozenset("""
+weight
+literals
+variables
+depth
+level
+""".strip().split("\n"))
+
+def make_action_flag(cur, selector=None):
+   return "%(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
+
+def make_action_change(cur, selector=None):
+   return "%(counter)s=%(cond)s -> assign(%(action)s, %(value)s).\n" % cur
+
+def make_cond(cur, selector=None):
+   cont = "" if "connect" not in cur else (" & " if cur['connect'] == "and" else " | ")
+   if "cond" not in cur:
+      return ""
+   if cur['cond'] in INTS:
+      sign = "<" if cur['neg'] == "no" else ">="
+      return f"{cur['cond']}{sign}{cur['val']}{cont}"
+   else:
+      sign = "" if cur['neg'] == "no" else "-"
+      return f"{sign}{cur['cond']}{cont}"
+
+def make_given_low(cur, selector=None):
+   prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
+   return f"part({selector}, low, {cur['order']}, {prop}) = {cur['ratio']}.\n"
+
+def make_given_high(cur, selector=None):
+   prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
+   return f"part({selector}, high, {cur['order']}, {prop}) = {cur['ratio']}.\n"
+
+def make_lines(params, selector, builder, master="counter", deactive="none"):
+   def move(val=None):
+      nonlocal n, key, cur
+      n = val if val is not None else (n+1)
+      key = f"{n}_{master}"
+      cur = {x[2:]:y for (x,y) in params.items() if  x.startswith(str(n))}
+
+   lines = ""
+   params = {x[len(selector):]:y for (x,y) in params.items() if x.startswith(f"{selector}")}
+   n = None
+   key = None
+   cur = None
+   move(0)
+   while key in params and params[key] != deactive:
+      lines += builder(cur, selector+key[0])
+      move()
+   return lines
+
+def make_actions(params):
+   lines = "\nlist(actions).\n"
+   lines += make_lines(params, "flg", make_action_flag, "counter", "none")
+   lines += make_lines(params, "cng", make_action_change, "counter", "none")
+   lines += "end_of_list.\n"
+   return lines
+
+def make_given(params):
+   lines = "\nlist(given_selection).\n"
+   lines += make_lines(params, "hgh", make_given_high, "ratio", "0")
+   lines += make_lines(params, "low", make_given_low, "ratio", "0")
+   lines += "end_of_list.\n"
+   return lines
+
+def make_strategy(params):
+   for x in DEFAULTS:
+      if x.startswith("a__") and x not in params:
+         params[x] = DEFAULTS[x]
+   params = {x[3:]:y for (x,y) in params.items() if x.startswith(f"a__")}
+   return make_actions(params) + make_given(params)
+
 class Prover9Runner(GrackleRunner):
 
    def __init__(self, config={}):
@@ -46,11 +118,16 @@ class Prover9Runner(GrackleRunner):
    def create_temp_strategy_file(self, params):
       with tempfile.NamedTemporaryFile(mode='w+', delete=False, prefix="prover9-strat-") as temp_file:
          for key in params:
-            if key == "max_megs":
+            if key == "max_megs" or key.startswith("a__"): # advanced features
                continue
             value = params[key]
-            converted_parameter = f"assign({key}, {value}).\n"
+            if value in ["set", "clear"]:
+               converted_parameter = f"{value}({key}).\n"
+            else:
+               converted_parameter = f"assign({key}, {value}).\n"
             temp_file.write(converted_parameter)
+         advanced = make_strategy(params)
+         temp_file.write(advanced+"\n")
          temp_file.write("assign(max_megs, 2048).\n")
       return temp_file.name
    
@@ -76,6 +153,8 @@ class Prover9Runner(GrackleRunner):
       if "THEOREM PROVED" in out:
         result = "THEOREM PROVED"
       else:
+         if ("SEARCH FAILED" not in out) and ("Fatal error" in out):
+            return None # report error
          result = "SEARCH FAILED"  
       ok = self.success(result)
 
@@ -109,3 +188,4 @@ class Prover9Runner(GrackleRunner):
    def clean(self, params):
       params = {x:params[x] for x in params if params[x] != DEFAULTS[x]}
       return params
+
