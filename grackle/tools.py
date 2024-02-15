@@ -23,7 +23,7 @@ def parse_ini(f_run):
    for (n,line) in enumerate(ini):
       if "#" in line:
          ini[n] = line[:line.index("#")]
-   ini = [l.split("=") for l in ini if l]
+   ini = [l.split("=") for l in ini if l and ("=" in l)]
    ini = {x.strip():y.strip() for (x,y) in ini}
    return ini
 

@@ -5,7 +5,9 @@ import hashlib
 import subprocess
 import multiprocessing
 
-from grackle import log
+from .. import log
+from ..tools import load_class
+from ..trainer.multidomain import MultiDomain
 
 def wrapper(args):
    (runner, (entity, inst)) = args
@@ -30,6 +32,10 @@ class Runner(object):
 
    def success(self, result):
       raise NotImplementedError("Abstract method `Runner.success` not implemented.")
+
+   @property
+   def domain(self):
+      raise NotImplementedError("Abstract method `Runner.domain` not implemented.")
    
    def run(self, params, inst):
       cmd = self.cmd(params, inst)
@@ -71,6 +77,8 @@ class GrackleRunner(Runner):
       self.default("prefix", "conf-")
       if not self.config["direct"]:
          os.system("mkdir -p %s" % self.config["dir"])
+      domcfg = {x:y for (x,y) in config.items() if x.startswith("domain")}
+      self.load_domain(domcfg)
 
    def name(self, params, save=True):
       args = self.repr(params).replace("="," ")
@@ -105,6 +113,24 @@ class GrackleRunner(Runner):
    def run(self, entity, inst):
       params = entity if self.config["direct"] else self.recall(entity)
       return Runner.run(self, params, inst)
+
+   def default_domain(self, maker, **kwargs):
+      if not self._domain:
+         self._domain = maker(**kwargs)
+  
+   def load_domain(self, cfg):
+      self._domain = None
+      names = [x for x in cfg if "." not in x]
+      domains = []
+      for key in sorted(names):
+         prf = f"{key}."
+         args = {x[len(prf):]:y for (x,y) in cfg.items() if x.startswith(prf)}
+         dom = load_class(cfg[key])(**args)
+         domains.append(dom)
+      if len(domains) == 1:
+         self._domain = domains[0]
+      elif len(domains) > 1:
+         self._domain = MultiDomain(domains)
          
    def conditions(self, s_conds):
       conds = {}
@@ -121,4 +147,8 @@ class GrackleRunner(Runner):
             conds[name] = {}
          conds[name][cname] = vals
       return conds
+
+   @property
+   def domain(self):
+      return self._domain
 

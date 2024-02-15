@@ -103,7 +103,7 @@ def inits(state):
       print("> INIT CONFIG: %s: %s" % (state.nicks[conf], rep))
 
 def scenario(state, ini, unused=None):
-   show = lambda dic: " ".join(["%s=%s"%(x,dic[x]) for x in sorted(dic)])
+   show = lambda dic: "\n>   "+"\n>   ".join(["%s=%s"%(x,dic[x]) for x in sorted(dic)])
    print(">" )
    print("> === GRACKLE RUNNING ===")
    print(">")
@@ -128,6 +128,7 @@ def scenario(state, ini, unused=None):
    #print("> runner = %s" % ini["runner"])
    #print("> trainer = %s" % ini["trainer"])
    print("> trainer.config: %s" % show(state.trainer.config))
+   print("> domain = %s" % repr(state.trainer.runner.domain))
 
    print(">")
    print("> Loaded %d evals" % len(state.evals.insts))

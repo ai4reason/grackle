@@ -82,7 +82,7 @@ class State:
          setup(self.evals)
       else:
          self.evals = self.trains
-      
+       
       check("trainer")
       t_runner = runner("trainer", direct=True)
       self.trainer = load_class(ini["trainer"])(t_runner)

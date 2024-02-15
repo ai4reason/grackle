@@ -3,7 +3,8 @@ import tempfile
 import os 
 from os import path, getenv
 from .runner import GrackleRunner
-from grackle.trainer.prover9.domain import DEFAULTS
+#from grackle.trainer.prover9.domain import DEFAULTS
+from grackle.trainer.prover9.default import DefaultDomain
 
 P_BINARY = "prover9"
 P_STATIC = "-f "     # is Prover9's flag for input files (strategies and problems)
@@ -79,23 +80,21 @@ def make_lines(params, selector, builder, master="counter", deactive="none"):
    return lines
 
 def make_actions(params):
-   lines = "\nlist(actions).\n"
+   lines = ""
    lines += make_lines(params, "flg", make_action_flag, "counter", "none")
    lines += make_lines(params, "cng", make_action_change, "counter", "none")
-   lines += "end_of_list.\n"
-   return lines
+   return f"\nlist(actions).\n{lines}end_of_list.\n" if lines.strip() else ""
 
 def make_given(params):
-   lines = "\nlist(given_selection).\n"
+   lines = ""
    lines += make_lines(params, "hgh", make_given_high, "ratio", "0")
    lines += make_lines(params, "low", make_given_low, "ratio", "0")
-   lines += "end_of_list.\n"
-   return lines
+   return f"\nlist(given_selection).\n{lines}end_of_list.\n" if lines.strip() else ""
 
-def make_strategy(params):
-   for x in DEFAULTS:
+def make_strategy(params, defaults):
+   for x in defaults:
       if x.startswith("a__") and x not in params:
-         params[x] = DEFAULTS[x]
+         params[x] = defaults[x]
    params = {x[3:]:y for (x,y) in params.items() if x.startswith(f"a__")}
    return make_actions(params) + make_given(params)
 
@@ -104,14 +103,10 @@ class Prover9Runner(GrackleRunner):
    def __init__(self, config={}):
       GrackleRunner.__init__(self, config)
       self.default("penalty", 100000000)
+      self.default_domain(DefaultDomain)
       #self.conds = self.conditions(CONDITIONS)
       self.temp_file_to_delete = ''  # for the temp files
 
-   def args(self, params):
-         def one(arg, val):
-            return f"-flag {arg} {val}"
-         return " ".join([one(x,params[x]) for x in sorted(params)])
-   
    # Create a temporary strategy file in memory
    # Explanation: Prover9 doesn' take strategies like Vampire directly, 
    # Prover9 needs an input file with strategies, so we create one. 
@@ -126,20 +121,16 @@ class Prover9Runner(GrackleRunner):
             else:
                converted_parameter = f"assign({key}, {value}).\n"
             temp_file.write(converted_parameter)
-         advanced = make_strategy(params)
+         advanced = make_strategy(params, self.domain.defaults)
          temp_file.write(advanced+"\n")
          temp_file.write("assign(max_megs, 2048).\n")
       return temp_file.name
    
 
    def cmd(self, params, inst):
-      #print("CMD")
       params = self.clean(params)
-      #args = self.args(params)
       temp_strategy_file = self.create_temp_strategy_file(params)
       self.temp_file_to_delete = temp_strategy_file
-      #print(f"Temporary strategy file path: {temp_strategy_file}") 
-      #print("This temp file should be deleted later: ",self.temp_file_to_delete) 
       problem = path.join(getenv("PYPROVE_BENCHMARKS", "."), inst)
       vlimit = P_LIMIT % self.config["timeout"] if "timeout" in self.config else ""
       timeout = TIMEOUT % (self.config["timeout"]+1) if "timeout" in self.config else ""
@@ -186,6 +177,6 @@ class Prover9Runner(GrackleRunner):
       return result in P_OK
 
    def clean(self, params):
-      params = {x:params[x] for x in params if params[x] != DEFAULTS[x]}
+      params = {x:params[x] for x in params if params[x] != self.domain.defaults[x]}
       return params
 
