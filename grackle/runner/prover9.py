@@ -46,11 +46,11 @@ DEF_PART = dict(ratio=0, order="weight")
 
 def make_action_flag(cur, selector=None):
    cur = DEF_ACTION | cur
-   return "%(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
+   return "   %(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
 
 def make_action_change(cur, selector=None):
    cur = DEF_ACTION | cur
-   return "%(counter)s=%(cond)s -> assign(%(action)s, %(value)s).\n" % cur
+   return "   %(counter)s=%(cond)s -> assign(%(action)s, %(value)s).\n" % cur
 
 def make_cond(cur, selector=None):
    cur = DEF_COND | cur
@@ -64,15 +64,22 @@ def make_cond(cur, selector=None):
       sign = "" if cur['neg'] == "no" else "-"
       return f"{sign}{cur['cond']}{cont}"
 
+def make_keepdel_cond(cur, selector=None):
+   DEF_COND["cond"] = "none"
+   prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
+   return f"   {prop}.\n"
+
 def make_given_low(cur, selector=None):
    cur = DEF_PART | cur
+   DEF_COND["cond"] = "positive"
    prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
-   return f"part({selector}, low, {cur['order']}, {prop}) = {cur['ratio']}.\n"
+   return f"   part({selector}, low, {cur['order']}, {prop}) = {cur['ratio']}.\n"
 
 def make_given_high(cur, selector=None):
    cur = DEF_PART | cur
+   DEF_COND["cond"] = "positive"
    prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
-   return f"part({selector}, high, {cur['order']}, {prop}) = {cur['ratio']}.\n"
+   return f"   part({selector}, high, {cur['order']}, {prop}) = {cur['ratio']}.\n"
 
 def make_lines(params, selector, builder, master="counter", deactive="none"):
    def move(val=None):
@@ -104,15 +111,23 @@ def make_given(params):
    lines += make_lines(params, "low", make_given_low, "ratio", "0")
    nonempty = lines.strip() != ""
    if nonempty:
-      lines += "part(default, low, age, all) = 1.\n" 
+      lines += "   part(default, low, age, all) = 1.\n" 
    return f"\nlist(given_selection).\n{lines}end_of_list.\n" if nonempty else ""
+
+def make_keepdel(params):
+   keps = make_lines(params, "kep", make_keepdel_cond, "prp0_cond", "none")
+   dels = make_lines(params, "del", make_keepdel_cond, "prp0_cond", "none")
+   lines = ""
+   lines += f"\nlist(keep).\n{keps}end_of_list.\n" if keps.strip() else ""
+   lines += f"\nlist(delete).\n{dels}end_of_list.\n" if dels.strip() else ""
+   return lines
 
 def make_strategy(params, defaults):
    #for x in defaults:
    #   if x.startswith("a__") and x not in params:
    #      params[x] = defaults[x]
    params = {x[3:]:y for (x,y) in params.items() if x.startswith(f"a__")}
-   return make_actions(params) + make_given(params)
+   return make_actions(params) + make_given(params) + make_keepdel(params)
 
 class Prover9Runner(GrackleRunner):
 

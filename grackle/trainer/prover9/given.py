@@ -57,11 +57,10 @@ class GivenDomain(CustomDomain):
    
    def add_param(self, name, domain, default=None, acc=None):
       super().add_param(name, domain, default)
-      if acc: acc.append(name)
+      if acc is not None: acc.append(name)
 
    def add_part(self, name): 
       acc = []
-      deps = []
       self.add_param(f"{name}_ratio", RATIO),
       self.add_param(f"{name}_order", ORDER, acc=acc),
       for n in range(self.n_conds):
