@@ -36,7 +36,8 @@ depth
 level
 """.strip().split("\n"))
 
-IGNORED = ["Fatal error:  renum_vars_recurse: too many variables"]
+IGNORED = ["Fatal error:  renum_vars_recurse: too many variables",
+           "Fatal error:  sread_term error"]
 
 def make_action_flag(cur, selector=None):
    return "%(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
