@@ -29,7 +29,7 @@ depth
 level
 """.strip().split("\n")
 
-RATIO=[0,1,2,3,4,5,10,20,50]
+RATIO=[0,1,2,3,4,5,10,20,50,200]
 VALUES=[1,2,3,5,7,10,15,20,50,100,500,1000]
 ACTIVE=[x for x in RATIO if x != 0]
 

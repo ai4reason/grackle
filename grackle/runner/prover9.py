@@ -76,7 +76,7 @@ def make_lines(params, selector, builder, master="counter", deactive="none"):
    key = None
    cur = None
    move(0)
-   while key in params and params[key] != deactive:
+   while key in params and str(params[key]) != deactive:
       lines += builder(cur, selector+key[0])
       move()
    return lines
@@ -91,7 +91,10 @@ def make_given(params):
    lines = ""
    lines += make_lines(params, "hgh", make_given_high, "ratio", "0")
    lines += make_lines(params, "low", make_given_low, "ratio", "0")
-   return f"\nlist(given_selection).\n{lines}end_of_list.\n" if lines.strip() else ""
+   nonempty = lines.strip() != ""
+   if nonempty:
+      lines += "part(default, low, age, all) = 1.\n" 
+   return f"\nlist(given_selection).\n{lines}end_of_list.\n" if nonempty else ""
 
 def make_strategy(params, defaults):
    for x in defaults:
@@ -111,25 +114,29 @@ class Prover9Runner(GrackleRunner):
       #self.conds = self.conditions(CONDITIONS)
       self.temp_file_to_delete = ''  # for the temp files
 
+
+   def args(self, params):
+      lines = []
+      for key in params:
+         if key == "max_megs" or key.startswith("a__"): # advanced features
+            continue
+         value = params[key]
+         if value in ["set", "clear"]:
+            lines.append(f"{value}({key}).")
+         else:
+            lines.append(f"assign({key}, {value}).")
+      lines.append(make_strategy(params, self.domain.defaults))
+      lines.append("assign(max_megs, 2048).")
+      lines.append("clear(print_given).")
+      return "\n".join(lines)
+
    # Create a temporary strategy file in memory
    # Explanation: Prover9 doesn' take strategies like Vampire directly, 
    # Prover9 needs an input file with strategies, so we create one. 
    def create_temp_strategy_file(self, params):
-      with tempfile.NamedTemporaryFile(mode='w+', delete=False, prefix="prover9-strat-") as temp_file:
-         for key in params:
-            if key == "max_megs" or key.startswith("a__"): # advanced features
-               continue
-            value = params[key]
-            if value in ["set", "clear"]:
-               converted_parameter = f"{value}({key}).\n"
-            else:
-               converted_parameter = f"assign({key}, {value}).\n"
-            temp_file.write(converted_parameter)
-         advanced = make_strategy(params, self.domain.defaults)
-         temp_file.write(advanced+"\n")
-         temp_file.write("assign(max_megs, 2048).\nclear(print_given).\n")
-      return temp_file.name
-   
+      with tempfile.NamedTemporaryFile(mode='w+', delete=False, prefix="prover9-strat-") as f_tmp:
+         f_tmp.write(self.args(params))
+      return f_tmp.name
 
    def cmd(self, params, inst):
       params = self.clean(params)
