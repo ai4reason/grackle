@@ -5,7 +5,6 @@ class MultiDomain(GrackleDomain):
    def __init__(self, domains):
       self.reset()
       for domain in domains:
-         print(f"add {str(domain)}")
          self.add(domain)
    
    def __repr__(self):
