@@ -1,4 +1,4 @@
-from ..customdomain import CustomDomain
+from ..domain.customdomain import CustomDomain
 
 FLAG="""
 reuse_denials

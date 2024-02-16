@@ -1,4 +1,4 @@
-from ..customdomain import CustomDomain
+from ..domain.customdomain import CustomDomain
 
 BASIC="""
 positive
@@ -18,8 +18,8 @@ factor
 paramodulant
 back_demodulant
 subsumer
-all
 """.strip().split("\n")
+# all
 
 INTS="""
 weight

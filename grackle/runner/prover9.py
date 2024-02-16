@@ -39,13 +39,21 @@ level
 IGNORED = ["Fatal error:  renum_vars_recurse: too many variables",
            "Fatal error:  sread_term error"]
 
+# update this whenever prover9.actions.ActionsDomain / GivenDomain change the default
+DEF_ACTION = dict(counter="none", cond=100, action="set", flag="reuse_denials", value=0)
+DEF_COND = dict(cond="positive", neg="yes", val=1, connect="and")
+DEF_PART = dict(ratio=0, order="weight")
+
 def make_action_flag(cur, selector=None):
+   cur = DEF_ACTION | cur
    return "%(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
 
 def make_action_change(cur, selector=None):
+   cur = DEF_ACTION | cur
    return "%(counter)s=%(cond)s -> assign(%(action)s, %(value)s).\n" % cur
 
 def make_cond(cur, selector=None):
+   cur = DEF_COND | cur
    cont = "" if "connect" not in cur else (" & " if cur['connect'] == "and" else " | ")
    if "cond" not in cur:
       return ""
@@ -57,10 +65,12 @@ def make_cond(cur, selector=None):
       return f"{sign}{cur['cond']}{cont}"
 
 def make_given_low(cur, selector=None):
+   cur = DEF_PART | cur
    prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
    return f"part({selector}, low, {cur['order']}, {prop}) = {cur['ratio']}.\n"
 
 def make_given_high(cur, selector=None):
+   cur = DEF_PART | cur
    prop = make_lines(cur, "prp", make_cond, "cond", "none").rstrip(" |&")
    return f"part({selector}, high, {cur['order']}, {prop}) = {cur['ratio']}.\n"
 
@@ -98,9 +108,9 @@ def make_given(params):
    return f"\nlist(given_selection).\n{lines}end_of_list.\n" if nonempty else ""
 
 def make_strategy(params, defaults):
-   for x in defaults:
-      if x.startswith("a__") and x not in params:
-         params[x] = defaults[x]
+   #for x in defaults:
+   #   if x.startswith("a__") and x not in params:
+   #      params[x] = defaults[x]
    params = {x[3:]:y for (x,y) in params.items() if x.startswith(f"a__")}
    return make_actions(params) + make_given(params)
 
