@@ -1,46 +1,5 @@
 from ..domain.customdomain import CustomDomain
 
-BASIC="""
-positive
-negative
-mixed
-unit
-horn
-definite
-has_equality
-true
-false
-initial
-resolvent
-hyper_resolvent
-ur_resolvent
-factor
-paramodulant
-back_demodulant
-subsumer
-""".strip().split("\n")
-# all
-
-INTS="""
-weight
-literals
-variables
-depth
-level
-""".strip().split("\n")
-
-RATIO=[0,1,2,3,4,5,10,20,50,200]
-VALUES=[1,2,3,5,7,10,15,20,50,100,500,1000]
-ACTIVE=[x for x in RATIO if x != 0]
-
-ORDER=["weight", "age", "random"]
-YESNO=["yes", "no"]
-ANDOR=["and", "or"]
-
-INACTIVE=frozenset(
-  "age_part,true_part,false_part,weight_part,random_part".split(",")
-)
-
 class GivenDomain(CustomDomain):
    
    def __init__(self, low=2, high=2, conds=2, **kwargs):
@@ -89,3 +48,44 @@ class GivenDomain(CustomDomain):
          for x in INACTIVE:
             self.add_dep(x, f"a__{typ}0_ratio", [0])
  
+BASIC="""
+positive
+negative
+mixed
+unit
+horn
+definite
+has_equality
+true
+false
+initial
+resolvent
+hyper_resolvent
+ur_resolvent
+factor
+paramodulant
+back_demodulant
+subsumer
+""".strip().split("\n")
+# all
+
+INTS="""
+weight
+literals
+variables
+depth
+level
+""".strip().split("\n")
+
+RATIO=[0,1,2,3,4,5,10,20,50,200]
+VALUES=[1,2,3,5,7,10,15,20,50,100,500,1000]
+ACTIVE=[x for x in RATIO if x != 0]
+
+ORDER=["weight", "age", "random"]
+YESNO=["yes", "no"]
+ANDOR=["and", "or"]
+
+INACTIVE=frozenset(
+  "age_part,true_part,false_part,weight_part,random_part".split(",")
+)
+
