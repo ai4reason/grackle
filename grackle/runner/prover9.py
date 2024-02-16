@@ -36,6 +36,8 @@ depth
 level
 """.strip().split("\n"))
 
+IGNORED = ["Fatal error:  renum_vars_recurse: too many variables"]
+
 def make_action_flag(cur, selector=None):
    return "%(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
 
@@ -103,6 +105,8 @@ class Prover9Runner(GrackleRunner):
    def __init__(self, config={}):
       GrackleRunner.__init__(self, config)
       self.default("penalty", 100000000)
+      penalty = self.config["penalty"]
+      self.default("penalty.error", penalty*1000)
       self.default_domain(DefaultDomain)
       #self.conds = self.conditions(CONDITIONS)
       self.temp_file_to_delete = ''  # for the temp files
@@ -123,7 +127,7 @@ class Prover9Runner(GrackleRunner):
             temp_file.write(converted_parameter)
          advanced = make_strategy(params, self.domain.defaults)
          temp_file.write(advanced+"\n")
-         temp_file.write("assign(max_megs, 2048).\n")
+         temp_file.write("assign(max_megs, 2048).\nclear(print_given).\n")
       return temp_file.name
    
 
@@ -145,6 +149,9 @@ class Prover9Runner(GrackleRunner):
         result = "THEOREM PROVED"
       else:
          if ("SEARCH FAILED" not in out) and ("Fatal error" in out):
+            for ignored in IGNORED:
+               if ignored in out:
+                  return [self.config["penalty.error"], self.config["timeout"], "IGNORED", -1]
             return None # report error
          result = "SEARCH FAILED"  
       ok = self.success(result)
