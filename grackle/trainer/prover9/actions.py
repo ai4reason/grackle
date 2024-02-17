@@ -10,16 +10,20 @@ class ActionsDomain(CustomDomain):
       self.init()
 
    def init(self):
-      # flag changing actions:
-      for n in range(self.n_flag):
-         self.add_flag(f"a__flg{n}")
+      self.add_actions("flg", self.n_flag, self.add_flag)
+      self.add_actions("cng", self.n_val,  self.add_val)
+   
+   def split(self, params):
+      cond = lambda x: x.startswith("a__flg") or x.startswith("a__cng")
+      fixed = {x:y for (x,y) in params.items() if not cond(x)}
+      params = {x:y for (x,y) in params.items() if cond(x)}
+      return (params, fixed)
+
+   def add_actions(self, typ, count, add):
+      for n in range(count):
+         add(f"a__{typ}{n}")
          for m in range(n):
-            self.add_dep(f"a__flg{n}_counter", f"a__flg{m}_counter", ACTIVE)
-      # value changing actions:
-      for n in range(self.n_val):
-         self.add_val(f"a__cng{n}")
-         for m in range(n):
-            self.add_dep(f"a__cng{n}_counter", f"a__cng{m}_counter", ACTIVE)
+            self.add_dep(f"a__{typ}{n}_counter", f"a__{typ}{m}_counter", ACTIVE)
 
    def add_flag(self, name): 
       self.add_param(f"{name}_counter", COUNTER, "none")
@@ -37,7 +41,7 @@ class ActionsDomain(CustomDomain):
       self.add_param(f"{name}_value", VAL),
       self.add_dep(f"{name}_cond", f"{name}_counter", ACTIVE),
       self.add_dep(f"{name}_action",f"{name}_counter", ACTIVE),
-      self.add_dep(f"{name}_flag", f"{name}_counter", ACTIVE),
+      self.add_dep(f"{name}_value", f"{name}_counter", ACTIVE),
  
 FLAG="""
 reuse_denials

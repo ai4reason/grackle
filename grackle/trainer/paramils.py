@@ -1,8 +1,9 @@
 import json
 from os import path
 
-from grackle.trainer.trainer import Trainer
-from grackle.paramils import reparamils
+from .trainer import Trainer
+from .stage import StageTrainer
+from ..paramils import reparamils
 
 SCENARIO = """
 algo = %s
@@ -28,10 +29,11 @@ class ParamilsTrainer(Trainer):
    def domains(self, params):
       return self.runner.domain.dump()
    
-   def improve(self, state, conf, insts):
-      cwd = path.join("training", "iter-%03d-%s"%(state.it, self.confname(conf)))
+   def improve(self, state, conf, insts, params=None):
+      direct = params is not None # conf's params are directly provided
+      cwd = path.join("training", "iter-%03d-%s"%(state.it, conf))
       cwd = path.join(cwd, self.runner.config["nick"]) if "nick" in self.runner.config else cwd
-      params = self.recall(conf)
+      params = self.runner.recall(conf) if not direct else params
       algo = "grackle-wrapper.py %s" % repr(json.dumps(self.runner.config))
       scenario = SCENARIO % (algo, state.trainer.runner.config["timeout"], state.trainer.config["timeout"])
       params = reparamils.launch(
@@ -44,15 +46,22 @@ class ParamilsTrainer(Trainer):
          restarts=self.config["restarts"],
          cores=state.cores,
          logs=self.config["log"])
+
       params = self.runner.clean(params)
-      return self.name(params) 
+      return params if direct else self.runner.name(params) 
 
-   def recall(self, conf):
-      return self.runner.recall(conf)
+   #def recall(self, conf):
+   #   return self.runner.recall(conf)
 
-   def name(self, params):
-      return self.runner.name(params)
+   #def name(self, params):
+   #   return self.runner.name(params)
 
-   def confname(self, conf):
-      return conf
+   #def confname(self):
+   #   return self._confname 
+
+class ParamilsStageTrainer(StageTrainer):
+
+   def __init__(self, runner, config={}):
+      trainer = ParamilsTrainer(runner, config)
+      StageTrainer.__init__(self, runner, trainer, config)
 

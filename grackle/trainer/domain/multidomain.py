@@ -22,3 +22,17 @@ class MultiDomain(CustomDomain):
       self._forbiddens.extend(domain.forbiddens)
       self._domains.append(domain)
 
+   @property
+   def domains(self):
+      return self._domains
+
+   def join(self, params, fixed):
+      return params | fixed
+
+   def split(self, params):
+      fixed = {}
+      for domain in self.domains:
+         (params, fixed0) = domain.split(params)
+         fixed.update(fixed0)
+      return (params, fixed)
+

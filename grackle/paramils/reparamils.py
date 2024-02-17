@@ -8,7 +8,9 @@ import grackle.paramils.results
 
 def reparamils(scenariofile, outdir, cwd, binary="param_ils_2_3_run.rb", count=1, N=10, validN="800", init="1", out=None, time_limit=None, restarts=False):
    def run(numRun, currentInit):
-      arg = [binary, "-numRun", str(numRun), "-scenariofile", scenariofile, "-N", str(N), "-validN", validN, "-output_level", "0", "-userunlog", "0", "-init", currentInit]
+      arg = [binary, "-numRun", str(numRun), "-scenariofile", scenariofile, "-N", str(N), "-validN", validN, "-output_level", "0", "-userunlog", "0"] 
+      if open(os.path.join(cwd,currentInit)).read().strip():
+         arg.extend(["-init", currentInit])
       outlog = open((out % numRun) if out else os.devnull, "w")
       return subprocess.Popen(arg,stdout=outlog,close_fds=True,cwd=cwd)
 

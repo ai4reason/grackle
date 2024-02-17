@@ -85,9 +85,11 @@ class State:
        
       check("trainer")
       t_runner = runner("trainer", direct=True)
-      self.trainer = load_class(ini["trainer"])(t_runner)
-      self.trainer.config["cls"] = ini["trainer"]
-      copy(self.trainer.config, "trainer.")
+      config = {"cls": ini["trainer"]}
+      copy(config, "trainer.")
+      self.trainer = load_class(ini["trainer"])(t_runner, config)
+      #self.trainer.config["cls"] = ini["trainer"]
+      #copy(self.trainer.config, "trainer.")
       copy(self.trainer.runner.config, "trainer.runner.")
 
       copy(self.unsolved, "unsolved.", use=False)

@@ -15,6 +15,12 @@ class KeepDeleteDomain(CustomDomain):
       self.add_conditions("kep", self.n_keep)
       self.add_conditions("del", self.n_delete)
    
+   def split(self, params):
+      cond = lambda x: x.startswith("a__kep") or x.startswith("a__del")
+      fixed = {x:y for (x,y) in params.items() if not cond(x)}
+      params = {x:y for (x,y) in params.items() if cond(x)}
+      return (params, fixed)
+
    def add_param(self, name, domain, default=None, acc=None):
       super().add_param(name, domain, default)
       if acc is not None: acc.append(name)

@@ -152,3 +152,7 @@ class GrackleRunner(Runner):
    def domain(self):
       return self._domain
 
+   @domain.setter
+   def domain(self, value):
+      self._domain = value
+

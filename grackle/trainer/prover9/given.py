@@ -14,6 +14,12 @@ class GivenDomain(CustomDomain):
       self.add_parts("low", self.n_low)
       self.add_parts("hgh", self.n_high)
    
+   def split(self, params):
+      cond = lambda x: x.startswith("a__low") or x.startswith("a__hgh")
+      fixed = {x:y for (x,y) in params.items() if not cond(x)}
+      params = {x:y for (x,y) in params.items() if cond(x)}
+      return (params, fixed)
+
    def add_param(self, name, domain, default=None, acc=None):
       super().add_param(name, domain, default)
       if acc is not None: acc.append(name)

@@ -5,6 +5,12 @@ class DefaultDomain(GrackleDomain):
    def __init__(self, **kwargs):
       GrackleDomain.__init__(self, **kwargs)
    
+   def split(self, params):
+      cond = lambda x: x.startswith("a__")
+      fixed = {x:y for (x,y) in params.items() if cond(x)}
+      params = {x:y for (x,y) in params.items() if not cond(x)}
+      return (params, fixed)
+
    @property
    def params(self):
       return PARAMS

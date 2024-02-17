@@ -43,16 +43,17 @@ IGNORED = [
 ]
 
 # update this whenever prover9.actions.ActionsDomain / GivenDomain change the default
-DEF_ACTION = dict(counter="none", cond=100, action="set", flag="reuse_denials", value=0)
+DEF_FLAG = dict(counter="none", cond=100, action="set", flag="reuse_denials")
+DEF_CHANGE = dict(counter="none", cond=100, action="max_given", value=0)
 DEF_COND = dict(cond="positive", neg="yes", val=1, connect="and")
 DEF_PART = dict(ratio=0, order="weight")
 
 def make_action_flag(cur, selector=None):
-   cur = DEF_ACTION | cur
+   cur = DEF_FLAG | cur
    return "   %(counter)s=%(cond)s -> %(action)s(%(flag)s).\n" % cur
 
 def make_action_change(cur, selector=None):
-   cur = DEF_ACTION | cur
+   cur = DEF_CHANGE | cur
    return "   %(counter)s=%(cond)s -> assign(%(action)s, %(value)s).\n" % cur
 
 def make_cond(cur, selector=None):
@@ -146,14 +147,24 @@ class Prover9Runner(GrackleRunner):
 
    def args(self, params):
       lines = []
-      for key in params:
+      a_set = []
+      a_clear = []
+      a_assign = []
+      for (key, val) in params.items():
          if key == "max_megs" or key.startswith("a__"): # advanced features
             continue
-         value = params[key]
-         if value in ["set", "clear"]:
-            lines.append(f"{value}({key}).")
+         if val == "set": 
+            a_set.append(key)
+         elif val == "clear":
+            a_clear.append(key)
          else:
-            lines.append(f"assign({key}, {value}).")
+            a_assign.append((key, val))
+      lines.extend([f"clear({key})." for key in sorted(a_clear)])
+      if a_clear: lines.append("")
+      lines.extend([f"set({key})." for key in sorted(a_set)])
+      if a_set: lines.append("")
+      lines.extend([f"assign({key}, {val})." for (key,val) in sorted(a_assign)])
+      if a_assign: lines.append("")
       lines.append(make_strategy(params, self.domain.defaults))
       lines.append("assign(max_megs, 2048).")
       lines.append("clear(print_given).")

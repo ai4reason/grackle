@@ -15,6 +15,10 @@ class GrackleDomain:
    def __repr__(self):
       args = [f"{x}={y}" for (x,y) in self._kwargs.items()]
       return f"{type(self).__name__}({','.join(args)})"
+    
+   @property
+   def name(self):
+      return f"{type(self).__name__}"
    
    @property
    def params(self):
@@ -31,6 +35,12 @@ class GrackleDomain:
    @property
    def forbiddens(self):
       return []
+
+   def join(self, params, fixed):
+      return params | fixed
+
+   def split(self, params):
+      return (params, {})
 
    def dump_param(self, key, defaults=None):
       def default(key):
