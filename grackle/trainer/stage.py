@@ -8,7 +8,6 @@ class StageTrainer(Trainer):
       assert(isinstance(runner.domain, MultiDomain))
       Trainer.__init__(self, runner, config)
       self._trainer = trainer
-      self._confname = "unknown"
 
    def improve(self, state, conf, insts):
       orig = self.runner.domain
