@@ -36,8 +36,11 @@ depth
 level
 """.strip().split("\n"))
 
-IGNORED = ["Fatal error:  renum_vars_recurse: too many variables",
-           "Fatal error:  sread_term error"]
+IGNORED = [
+   "Fatal error:  renum_vars_recurse: too many variables",
+   "Fatal error:  sread_term error",
+   "Fatal error:  sos_displace2, cannot find worst clause",
+]
 
 # update this whenever prover9.actions.ActionsDomain / GivenDomain change the default
 DEF_ACTION = dict(counter="none", cond=100, action="set", flag="reuse_denials", value=0)
