@@ -40,7 +40,13 @@ IGNORED = [
    "Fatal error:  renum_vars_recurse: too many variables",
    "Fatal error:  sread_term error",
    "Fatal error:  sos_displace2, cannot find worst clause",
+   "Fatal error:  Circular relational definitions",
 ]
+      
+HEADER = """
+assign(max_megs, 2048).
+clear(print_given).
+"""
 
 # update this whenever prover9.actions.ActionsDomain / GivenDomain change the default
 DEF_FLAG = dict(counter="none", cond=100, action="set", flag="reuse_denials")
@@ -166,9 +172,12 @@ class Prover9Runner(GrackleRunner):
       lines.extend([f"assign({key}, {val})." for (key,val) in sorted(a_assign)])
       if a_assign: lines.append("")
       lines.append(make_strategy(params, self.domain.defaults))
-      lines.append("assign(max_megs, 2048).")
-      lines.append("clear(print_given).")
-      return "\n".join(lines)
+      header = "\n".join(lines)
+      if not header.strip():
+         # empty strategy
+         header = "set(auto).\n"
+      header += HEADER
+      return header
 
    # Create a temporary strategy file in memory
    # Explanation: Prover9 doesn' take strategies like Vampire directly, 
