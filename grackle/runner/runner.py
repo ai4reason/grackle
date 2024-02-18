@@ -7,7 +7,7 @@ import multiprocessing
 
 from .. import log
 from ..tools import load_class
-from ..trainer.domain.multidomain import MultiDomain
+from ..trainer.domain.multi import MultiDomain
 
 def wrapper(args):
    (runner, (entity, inst)) = args

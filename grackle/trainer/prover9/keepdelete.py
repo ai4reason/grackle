@@ -1,4 +1,4 @@
-from ..domain.customdomain import CustomDomain
+from ..domain.custom import CustomDomain
 from .given import BASIC, INTS, YESNO, ANDOR, VALUES
 
 class KeepDeleteDomain(CustomDomain):

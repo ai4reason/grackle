@@ -1,5 +1,5 @@
 from .trainer import Trainer
-from .domain.multidomain import MultiDomain
+from .domain.multi import MultiDomain
 from .. import log
 
 class StageTrainer(Trainer):

@@ -1,4 +1,4 @@
-from ..domain.multidomain import MultiDomain
+from ..domain.multi import MultiDomain
 from .default import DefaultDomain
 from .actions import ActionsDomain
 from .given import GivenDomain

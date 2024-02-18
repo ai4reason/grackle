@@ -1,4 +1,4 @@
-from ..domain.customdomain import CustomDomain
+from ..domain.custom import CustomDomain
 
 class ActionsDomain(CustomDomain):
    

@@ -1,4 +1,4 @@
-from ..domain.grackledomain import GrackleDomain
+from ..domain.grackle import GrackleDomain
 
 class DefaultDomain(GrackleDomain):
 

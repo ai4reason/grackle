@@ -1,4 +1,4 @@
-from .customdomain import CustomDomain
+from .custom import CustomDomain
 
 class MultiDomain(CustomDomain):
    
