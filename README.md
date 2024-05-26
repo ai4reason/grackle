@@ -22,6 +22,8 @@ cd grackle
 pip install . 
 ```
 
+(This might be currently broken, follow the instructions below please.)
+
 ### Developers installation notes
 
 This is a manual installation for developers and it is intended to be done instead of the standard `pip` installation.
